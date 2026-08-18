@@ -70,7 +70,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahELA v1.8.0</div>
+			<div class="sidebar__version">MahELA v1.9.0</div>
 		</div>
 	</aside>
 
@@ -165,38 +165,16 @@
 			<!-- SCHEDULE -->
 			<div class="tab-panel" data-tab-panel="panel" data-tab-id="schedule">
 				<h3 style="font-size:13.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); margin-bottom:12px;" data-i18n="schedule_upcoming">Upcoming</h3>
-				<div class="session-list" style="margin-bottom:30px;">
-					<div class="session-row">
-						<div class="session-row__date"><span class="session-row__date-day">19</span><span class="session-row__date-month">Aug</span></div>
-						<div class="session-row__info"><div class="session-row__time">17:00 – 18:00</div><div class="session-row__sub">Wednesday · 60 min</div></div>
-						<div class="session-row__actions"><span class="badge badge--accent" data-i18n="schedule_scheduled">Scheduled</span></div>
-					</div>
-					<div class="session-row">
-						<div class="session-row__date"><span class="session-row__date-day">26</span><span class="session-row__date-month">Aug</span></div>
-						<div class="session-row__info"><div class="session-row__time">17:00 – 18:00</div><div class="session-row__sub">Wednesday · 60 min</div></div>
-						<div class="session-row__actions"><span class="badge badge--accent" data-i18n="schedule_scheduled">Scheduled</span></div>
-					</div>
-				</div>
+				<div class="session-list" id="panel-schedule-upcoming" style="margin-bottom:30px;"></div>
 				<h3 style="font-size:13.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); margin-bottom:12px;" data-i18n="schedule_past">Past Sessions</h3>
-				<div class="session-list">
-					<div class="session-row">
-						<div class="session-row__date"><span class="session-row__date-day">12</span><span class="session-row__date-month">Aug</span></div>
-						<div class="session-row__info"><div class="session-row__time">17:00 – 18:00</div><div class="session-row__sub">Wednesday · 60 min</div></div>
-						<div class="session-row__actions"><span class="badge badge--success" data-i18n="schedule_held">Held</span></div>
-					</div>
-					<div class="session-row">
-						<div class="session-row__date"><span class="session-row__date-day">5</span><span class="session-row__date-month">Aug</span></div>
-						<div class="session-row__info"><div class="session-row__time">17:00 – 18:00</div><div class="session-row__sub">Wednesday · 60 min</div></div>
-						<div class="session-row__actions"><span class="badge badge--success" data-i18n="schedule_held">Held</span></div>
-					</div>
-				</div>
+				<div class="session-list" id="panel-schedule-past"></div>
 			</div>
 
 			<!-- BALANCE -->
 			<div class="tab-panel" data-tab-panel="panel" data-tab-id="balance">
 				<div class="finance-hero">
 					<div class="card finance-hero__card">
-						<div class="finance-hero__value">4</div>
+						<div class="finance-hero__value" id="panel-sessions-held">—</div>
 						<div class="finance-hero__label" data-i18n="student_sessions_held">Sessions Held</div>
 					</div>
 					<div class="card finance-hero__card">
@@ -204,7 +182,7 @@
 						<div class="finance-hero__label" data-i18n="student_since_settlement">Since Last Settlement</div>
 					</div>
 					<div class="card finance-hero__card finance-hero__card--highlight">
-						<div class="finance-hero__value" data-currency="1000000">—</div>
+						<div class="finance-hero__value" id="panel-total-due">—</div>
 						<div class="finance-hero__label" data-i18n="student_total_due">Total Due</div>
 					</div>
 				</div>
@@ -218,22 +196,7 @@
 			<!-- MESSAGES -->
 			<div class="tab-panel" data-tab-panel="panel" data-tab-id="messages">
 				<div class="card chat-panel" style="padding:24px;">
-					<div class="chat-panel__thread" id="chat-thread">
-						<div class="message-bubble message-bubble--in">
-							<span class="message-bubble__avatar" style="background:var(--c-pink); color:var(--c-ink);">JD</span>
-							<div class="message-bubble__content">
-								<div class="message-bubble__text">Yes, all set! I'll send the reading passage beforehand.</div>
-								<span class="message-bubble__time">Yesterday, 14:10</span>
-							</div>
-						</div>
-						<div class="message-bubble message-bubble--out">
-							<div class="message-bubble__content">
-								<div class="message-bubble__text">Perfect, thank you!</div>
-								<span class="message-bubble__time">Yesterday, 14:11</span>
-							</div>
-							<span class="message-bubble__avatar" style="background:var(--student-accent); color:var(--c-ink);">EK</span>
-						</div>
-					</div>
+					<div class="chat-panel__thread" id="chat-thread"></div>
 					<form class="chat-panel__input" onsubmit="sendMessage(event)">
 						<input type="text" id="chat-input" data-i18n-ph="messages_placeholder" placeholder="Type a message…" autocomplete="off">
 						<button type="submit" class="btn btn--primary btn--small" data-i18n="messages_send">Send</button>
@@ -247,6 +210,7 @@
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/theme.js"></script>
 <script src="assets/js/clock.js"></script>
+<script src="assets/js/sessions-data.js"></script>
 <script src="assets/js/radar-chart.js"></script>
 <script src="assets/js/app.js"></script>
 <script>
@@ -256,20 +220,143 @@
 		color: 'var(--student-accent)'
 	} );
 
+	var STUDENT_KEY = 'elena'; // this panel always represents Elena's own logged-in view
+
+	/* ---------- Schedule tab (read-only: class type, status, teacher notes) ---------- */
+	var CLASS_TYPE_ICONS = {
+		'in-person': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1M9 13h1M14 9h1M14 13h1"/></svg>',
+		online: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="4" width="14" height="10" rx="1"/><path d="M8 20h4M10 14v6M17 8l5-3v10l-5-3"/></svg>'
+	};
+	function classTypeBadgeHTML( classType, lang ) {
+		var dict = window.mahtelaI18n.dict;
+		var label = classType === 'online' ? dict.class_type_online[ lang ] : dict.class_type_in_person[ lang ];
+		var cls = classType === 'online' ? 'class-type-badge--online' : 'class-type-badge--in-person';
+		return '<span class="class-type-badge ' + cls + '">' + CLASS_TYPE_ICONS[ classType ] + label + '</span>';
+	}
+	function statusBadgeHTML( s, lang ) {
+		var dict = window.mahtelaI18n.dict;
+		if ( s.status === 'held' ) { return '<span class="badge badge--success">' + dict.schedule_held[ lang ] + '</span>'; }
+		if ( s.status === 'cancelled' ) {
+			var reasonKey = s.cancelReason === 'teacher' ? 'cancel_reason_teacher' : ( s.cancelReason === 'student' ? 'cancel_reason_student' : 'cancel_reason_noshow' );
+			return '<span class="badge" style="background:rgba(192,69,63,0.12); color:#C0453F;">' + dict.status_cancelled[ lang ] + ' · ' + dict[ reasonKey ][ lang ] + '</span>';
+		}
+		return '<span class="badge badge--accent">' + dict.schedule_scheduled[ lang ] + '</span>';
+	}
+	function panelEscapeHtml( s ) { var d = document.createElement( 'div' ); d.textContent = s; return d.innerHTML; }
+	function panelPad2( n ) { return n < 10 ? '0' + n : '' + n; }
+	function panelTimeToMinutes( t ) { var p = t.split( ':' ); return parseInt( p[ 0 ], 10 ) * 60 + parseInt( p[ 1 ], 10 ); }
+
+	function renderScheduleRow( s, lang ) {
+		var endMin = panelTimeToMinutes( s.time ) + s.duration;
+		var endStr = panelPad2( Math.floor( endMin / 60 ) ) + ':' + panelPad2( endMin % 60 );
+		var noteHTML = s.note ? '<div class="session-note">' + panelEscapeHtml( s.note ) + '</div>' : '';
+		var row = document.createElement( 'div' );
+		row.className = 'session-row';
+		row.innerHTML =
+			'<div class="session-row__date" data-date="' + s.date + '"><span class="session-row__date-day" data-date-part="day"></span><span class="session-row__date-month" data-date-part="month"></span></div>' +
+			'<div class="session-row__info">' +
+				'<div class="session-row__time">' + s.time + ' – ' + endStr + '</div>' +
+				'<div class="session-row__sub" data-date="' + s.date + '"><span data-date-part="weekday"></span> · ' + s.duration + ' <span data-i18n-inline="overview_minutes"></span></div>' +
+				noteHTML +
+			'</div>' +
+			'<div class="session-row__actions" style="flex-direction:column; align-items:flex-end; gap:6px;">' + classTypeBadgeHTML( s.classType, lang ) + statusBadgeHTML( s, lang ) + '</div>';
+		row.querySelector( '[data-i18n-inline="overview_minutes"]' ).textContent = window.mahtelaI18n.dict.overview_minutes[ lang ];
+		return row;
+	}
+
+	function renderScheduleTab() {
+		var lang = window.mahtelaI18n.currentLang();
+		var sessions = window.mahtelaData.loadSessions().filter( function ( s ) { return s.studentKey === STUDENT_KEY; } );
+		sessions.sort( function ( a, b ) { return ( a.date + a.time ).localeCompare( b.date + b.time ); } );
+		var todayISO = new Date().toISOString().slice( 0, 10 );
+
+		var upcoming = sessions.filter( function ( s ) { return s.date >= todayISO && s.status !== 'cancelled'; } );
+		var past = sessions.filter( function ( s ) { return s.date < todayISO || s.status === 'cancelled'; } ).reverse();
+
+		var upcomingList = document.getElementById( 'panel-schedule-upcoming' );
+		var pastList = document.getElementById( 'panel-schedule-past' );
+		if ( ! upcomingList ) { return; }
+
+		upcomingList.innerHTML = '';
+		upcoming.forEach( function ( s ) { upcomingList.appendChild( renderScheduleRow( s, lang ) ); } );
+		pastList.innerHTML = '';
+		past.forEach( function ( s ) { pastList.appendChild( renderScheduleRow( s, lang ) ); } );
+
+		window.mahtelaCalendar.applyScheduleDates();
+	}
+
+	renderScheduleTab();
+	document.addEventListener( 'mahtela:langchange', renderScheduleTab );
+	document.addEventListener( 'mahtela:calendarchange', renderScheduleTab );
+	document.addEventListener( 'mahtela:sessionschange', renderScheduleTab );
+
+	/* ---------- Balance tab ---------- */
+	var ELENA_RATE = 250000;
+
+	function isChargeable( s ) {
+		return s.status === 'held' || ( s.status === 'cancelled' && s.chargeApplied === true );
+	}
+
+	function renderBalanceTab() {
+		var lang = window.mahtelaI18n.currentLang();
+		var unsettled = window.mahtelaData.loadSessions().filter( function ( s ) {
+			return s.studentKey === STUDENT_KEY && isChargeable( s ) && ! s.settled;
+		} );
+		document.getElementById( 'panel-sessions-held' ).textContent = lang === 'fa'
+			? String( unsettled.length ).replace( /[0-9]/g, function ( d ) { return '۰۱۲۳۴۵۶۷۸۹'[ d ]; } )
+			: unsettled.length;
+		document.getElementById( 'panel-total-due' ).textContent = window.mahtelaI18n.formatToman( unsettled.length * ELENA_RATE, lang );
+	}
+
+	renderBalanceTab();
+	document.addEventListener( 'mahtela:langchange', renderBalanceTab );
+	document.addEventListener( 'mahtela:sessionschange', renderBalanceTab );
+
+	/* ---------- Messages tab ---------- */
+	function renderMessagesTab() {
+		var convos = window.mahtelaData.loadConversations();
+		var convo = convos[ STUDENT_KEY ];
+		var thread = document.getElementById( 'chat-thread' );
+		if ( ! thread || ! convo ) { return; }
+		thread.innerHTML = '';
+
+		convo.messages.forEach( function ( m ) {
+			// The shared data is stored from the TEACHER's perspective
+			// (dir:'in' = from the student, dir:'out' = from the teacher),
+			// so it's inverted here to show correctly from the student's
+			// own point of view: their own messages appear as "out".
+			var isMine = m.dir === 'in';
+			var bubble = document.createElement( 'div' );
+			bubble.className = 'message-bubble message-bubble--' + ( isMine ? 'out' : 'in' );
+			var teacherAvatar = '<span class="message-bubble__avatar" style="background:var(--c-pink); color:var(--c-ink);">JD</span>';
+			var mineAvatar = '<span class="message-bubble__avatar" style="background:var(--student-accent); color:var(--c-ink);">' + convo.initials + '</span>';
+			bubble.innerHTML = ( isMine ? '' : teacherAvatar ) +
+				'<div class="message-bubble__content"><div class="message-bubble__text">' + m.html + '</div><span class="message-bubble__time">' + m.time + '</span></div>' +
+				( isMine ? mineAvatar : '' );
+			thread.appendChild( bubble );
+		} );
+		thread.scrollTop = thread.scrollHeight;
+	}
+
+	renderMessagesTab();
+	document.addEventListener( 'mahtela:messageschange', renderMessagesTab );
+
 	function sendMessage( e ) {
 		e.preventDefault();
 		var input = document.getElementById( 'chat-input' );
 		var text = input.value.trim();
 		if ( ! text ) { return; }
-		var thread = document.getElementById( 'chat-thread' );
-		var bubble = document.createElement( 'div' );
-		bubble.className = 'message-bubble message-bubble--out';
-		bubble.innerHTML = '<div class="message-bubble__content"><div class="message-bubble__text"></div><span class="message-bubble__time">Just now</span></div>' +
-			'<span class="message-bubble__avatar" style="background:var(--student-accent); color:var(--c-ink);">EK</span>';
-		bubble.querySelector( '.message-bubble__text' ).textContent = text;
-		thread.appendChild( bubble );
-		thread.scrollTop = thread.scrollHeight;
+		var convos = window.mahtelaData.loadConversations();
+		if ( ! convos[ STUDENT_KEY ] ) { return; }
+		convos[ STUDENT_KEY ].messages.push( { dir: 'in', html: escapeHtmlLocal( text ), time: window.mahtelaI18n.currentLang() === 'fa' ? 'اکنون' : 'Just now' } );
+		window.mahtelaData.saveConversations( convos );
 		input.value = '';
+	}
+
+	function escapeHtmlLocal( s ) {
+		var d = document.createElement( 'div' );
+		d.textContent = s;
+		return d.innerHTML;
 	}
 </script>
 </body>

@@ -69,8 +69,43 @@
 			} );
 		}
 
-		function send() {
-			var html = editor.innerHTML.trim();
+		/**
+	 * Restricts composer output to exactly the tags the toolbar itself can
+	 * produce (bold/italic/underline/line breaks) and strips everything
+	 * else -- attributes included. The composer is a real contenteditable
+	 * field, so a rich paste could otherwise inject arbitrary markup
+	 * (event handler attributes, embedded elements, etc.) that would later
+	 * be re-inserted as raw HTML wherever the message is rendered.
+	 */
+	var ALLOWED_TAGS = { B: true, STRONG: true, I: true, EM: true, U: true, BR: true, DIV: true, SPAN: true };
+
+	function sanitizeComposerHtml( html ) {
+		var container = document.createElement( 'div' );
+		container.innerHTML = html;
+
+		( function clean( node ) {
+			Array.prototype.slice.call( node.childNodes ).forEach( function ( child ) {
+				if ( child.nodeType === 1 ) {
+					if ( ! ALLOWED_TAGS[ child.tagName ] ) {
+						// Unwrap disallowed elements instead of dropping their
+						// text content, so e.g. a pasted <a> still keeps its label.
+						while ( child.firstChild ) { node.insertBefore( child.firstChild, child ); }
+						node.removeChild( child );
+						return;
+					}
+					Array.prototype.slice.call( child.attributes ).forEach( function ( attr ) { child.removeAttribute( attr.name ); } );
+					clean( child );
+				} else if ( child.nodeType !== 3 ) {
+					node.removeChild( child ); // comments, etc.
+				}
+			} );
+		}( container ) );
+
+		return container.innerHTML;
+	}
+
+	function send() {
+			var html = sanitizeComposerHtml( editor.innerHTML.trim() );
 			var text = editor.textContent.trim();
 			if ( ! text ) { return; }
 			root.dispatchEvent( new CustomEvent( 'chat-composer:send', { bubbles: true, detail: { html: html, text: text } } ) );

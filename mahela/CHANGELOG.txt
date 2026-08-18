@@ -1,8 +1,57 @@
 MahELA Prototype — Changelog
 ==============================
 
-v1.8.0 — Current
+v1.9.0 — Current
 ------------------
+- Class type (In-Person / Online): selectable whenever a session is
+  booked or edited (teacher-schedule.html's Book/Manage Session
+  modals, student-detail.html's Add/Manage Session modals), shown as
+  a badge next to the student's name everywhere a session appears --
+  schedule grid blocks, session rows, the unsettled-sessions checklist.
+- Session status is now a real state machine, not just Held/Scheduled:
+  Scheduled / Held / Cancelled, with cancellation carrying who
+  cancelled (teacher / student / student no-show) and whether the
+  teacher chooses to charge for it. A no-show the teacher still
+  travelled for can be billed; a cancellation with enough notice
+  doesn't have to be. Finance calculations respect this -- only Held
+  sessions and charged cancellations count toward what's owed.
+- Teacher can leave a per-session note, visible to the student on
+  their own Schedule tab (read-only there).
+- Finance tab: the settlement-request box now auto-computes the
+  session count and amount from whichever unsettled sessions are
+  currently checked -- only the message text is teacher-editable --
+  and actually sends that as a real message to the student via the
+  shared messaging data, showing up in messages.html.
+- Built a shared, localStorage-backed data layer (assets/js/
+  sessions-data.js) so teacher-schedule.html, student-detail.html,
+  student-panel.html, and messages.html all read and write the SAME
+  session and conversation state instead of each hardcoding its own
+  disconnected copy -- this is what makes "cancel a class -> the
+  student sees it" and "request settlement -> a real message arrives"
+  actually work across pages. Made it defensive against old-shape
+  data already sitting in someone's localStorage from before these
+  fields existed (backfills missing fields instead of producing
+  undefined and breaking the UI) -- verified in Node.
+- Fixed two real, pre-existing bugs found while wiring this up:
+  student-detail.html's and student-panel.html's Messages tabs always
+  showed Elena's hardcoded sample conversation regardless of which
+  student's profile was actually open; both now show the real,
+  correct thread for whichever student you're viewing.
+- Sanitized the chat composer's output: it's a real contenteditable
+  field, so a rich paste could previously carry arbitrary markup
+  (script tags, onerror/onclick attributes, javascript: URLs) into
+  stored messages that later get re-inserted as raw HTML. Now
+  restricted to exactly the tags the toolbar itself produces
+  (bold/italic/underline/line breaks); everything else is unwrapped
+  to plain text. Verified against 8 attack patterns with a real DOM
+  (jsdom) before trusting it, not just a hand-written mock.
+- Ran a full end-to-end simulation of the real user flow (book ->
+  cancel with a fee -> compute what's owed -> mark settled -> send a
+  settlement message) in Node before considering this feature done,
+  not just individual unit checks.
+
+v1.8.0
+--------
 - Built the real Schedule page (the sidebar link went nowhere before):
   a weekly timetable grid, Saturday to Friday, half-hour slots from
   08:00 to 20:00. Click any open slot to book a student into it --

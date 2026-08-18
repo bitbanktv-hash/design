@@ -54,7 +54,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahELA v1.8.0</div>
+			<div class="sidebar__version">MahELA v1.9.0</div>
 		</div>
 	</aside>
 
@@ -124,47 +124,15 @@
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/theme.js"></script>
 <script src="assets/js/clock.js"></script>
+<script src="assets/js/sessions-data.js"></script>
 <script src="assets/js/app.js"></script>
 <script src="assets/js/chat.js"></script>
 <script>
-	var CONVERSATIONS = {
-		elena: {
-			name: 'Elena Kim', initials: 'EK', gender: 'female',
-			messages: [
-				{ dir: 'in',  html: 'Hi! Just wanted to check — are we still on for Wednesday at 5?', time: 'Yesterday, 14:02' },
-				{ dir: 'out', html: "Yes, all set! I'll send the reading passage beforehand.", time: 'Yesterday, 14:10' },
-				{ dir: 'in',  html: 'Perfect, thank you!', time: 'Yesterday, 14:11' }
-			]
-		},
-		daniel: {
-			name: 'Daniel Cruz', initials: 'DC', gender: 'male',
-			messages: [
-				{ dir: 'in', html: 'Sorry, can we move Thursday to 11 instead of 10?', time: 'Mon, 09:20' },
-				{ dir: 'out', html: 'Sure, 11:00 works. See you then!', time: 'Mon, 09:24' }
-			]
-		},
-		sara: {
-			name: 'Sara Ahmadi', initials: 'SA', gender: 'female',
-			messages: [
-				{ dir: 'in', html: "Thanks for today's session, the essay feedback was really helpful.", time: 'Fri, 18:40' }
-			]
-		},
-		marco: {
-			name: 'Marco Rossi', initials: 'MR', gender: 'male',
-			messages: [
-				{ dir: 'out', html: 'Reminder: bring your workbook to the next class.', time: 'Wed, 20:05' },
-				{ dir: 'in', html: '👍 got it', time: 'Wed, 20:07' }
-			]
-		},
-		yuki: {
-			name: 'Yuki Tanaka', initials: 'YT', gender: 'female',
-			messages: [
-				{ dir: 'in', html: 'Can we reschedule this week?', time: 'Sun, 12:00' },
-				{ dir: 'out', html: 'Of course — what day works better for you?', time: 'Sun, 12:15' }
-			]
-		}
-	};
-
+	/* Conversations now come from the shared data layer (assets/js/
+	   sessions-data.js) so a settlement-request message sent from
+	   student-detail.html's Finance tab actually shows up here, and
+	   anything sent from here persists across reloads. */
+	var CONVERSATIONS = window.mahtelaData.loadConversations();
 	var CONVERSATION_ORDER = [ 'elena', 'daniel', 'sara', 'marco', 'yuki' ];
 	var activeKey = null;
 
@@ -250,12 +218,22 @@
 	document.querySelector( '.chat-composer' ).addEventListener( 'chat-composer:send', function ( e ) {
 		if ( ! activeKey ) { return; }
 		CONVERSATIONS[ activeKey ].messages.push( { dir: 'out', html: e.detail.html, time: window.mahtelaI18n.currentLang() === 'fa' ? 'اکنون' : 'Just now' } );
-		renderThread( activeKey );
-		renderConversationList( document.getElementById( 'conversation-search' ).value );
+		window.mahtelaData.saveConversations( CONVERSATIONS );
+		// mahtela:messageschange (dispatched by saveConversations) re-renders
+		// both the thread and the list -- no need to do it again here.
 	} );
 
 	document.addEventListener( 'mahtela:langchange', function () {
 		renderConversationList( document.getElementById( 'conversation-search' ).value );
+	} );
+
+	/* Single source of re-rendering whenever conversation data changes,
+	   whether that's this page sending a message or another page (e.g.
+	   a settlement request from student-detail.html's Finance tab). */
+	document.addEventListener( 'mahtela:messageschange', function () {
+		CONVERSATIONS = window.mahtelaData.loadConversations();
+		renderConversationList( document.getElementById( 'conversation-search' ).value );
+		if ( activeKey ) { renderThread( activeKey ); }
 	} );
 
 	var params = new URLSearchParams( window.location.search );

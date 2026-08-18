@@ -76,7 +76,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahELA v1.8.0</div>
+			<div class="sidebar__version">MahELA v1.9.0</div>
 		</div>
 	</aside>
 
@@ -236,54 +236,10 @@
 				</div>
 
 				<h3 style="font-size:13.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); margin-bottom:12px;" data-i18n="schedule_upcoming">Upcoming</h3>
-				<div class="session-list" style="margin-bottom:30px;">
-					<div class="session-row" data-date="2026-08-19">
-						<div class="session-row__date"><span class="session-row__date-day" data-date-part="day">19</span><span class="session-row__date-month" data-date-part="month">Aug</span></div>
-						<div class="session-row__info">
-							<div class="session-row__time">17:00 – 18:00</div>
-							<div class="session-row__sub"><span data-date-part="weekday">Wednesday</span> · 60 min · <span data-currency="250000">—</span></div>
-						</div>
-						<div class="session-row__actions">
-							<span class="badge badge--accent" data-i18n="schedule_scheduled">Scheduled</span>
-							<button type="button" class="btn btn--soft btn--small" onclick="markHeld(this)" data-i18n="schedule_mark_held">Mark as Held</button>
-						</div>
-					</div>
-					<div class="session-row" data-date="2026-08-26">
-						<div class="session-row__date"><span class="session-row__date-day" data-date-part="day">26</span><span class="session-row__date-month" data-date-part="month">Aug</span></div>
-						<div class="session-row__info">
-							<div class="session-row__time">17:00 – 18:00</div>
-							<div class="session-row__sub"><span data-date-part="weekday">Wednesday</span> · 60 min · <span data-currency="250000">—</span></div>
-						</div>
-						<div class="session-row__actions">
-							<span class="badge badge--accent" data-i18n="schedule_scheduled">Scheduled</span>
-							<button type="button" class="btn btn--soft btn--small" onclick="markHeld(this)" data-i18n="schedule_mark_held">Mark as Held</button>
-						</div>
-					</div>
-				</div>
+				<div class="session-list" id="schedule-upcoming-list" style="margin-bottom:30px;"></div>
 
 				<h3 style="font-size:13.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); margin-bottom:12px;" data-i18n="schedule_past">Past Sessions</h3>
-				<div class="session-list">
-					<div class="session-row" data-date="2026-08-12">
-						<div class="session-row__date"><span class="session-row__date-day" data-date-part="day">12</span><span class="session-row__date-month" data-date-part="month">Aug</span></div>
-						<div class="session-row__info"><div class="session-row__time">17:00 – 18:00</div><div class="session-row__sub"><span data-date-part="weekday">Wednesday</span> · 60 min · <span data-currency="250000">—</span></div></div>
-						<div class="session-row__actions"><span class="badge badge--success" data-i18n="schedule_held">Held</span></div>
-					</div>
-					<div class="session-row" data-date="2026-08-05">
-						<div class="session-row__date"><span class="session-row__date-day" data-date-part="day">5</span><span class="session-row__date-month" data-date-part="month">Aug</span></div>
-						<div class="session-row__info"><div class="session-row__time">17:00 – 18:00</div><div class="session-row__sub"><span data-date-part="weekday">Wednesday</span> · 60 min · <span data-currency="250000">—</span></div></div>
-						<div class="session-row__actions"><span class="badge badge--success" data-i18n="schedule_held">Held</span></div>
-					</div>
-					<div class="session-row" data-date="2026-07-29">
-						<div class="session-row__date"><span class="session-row__date-day" data-date-part="day">29</span><span class="session-row__date-month" data-date-part="month">Jul</span></div>
-						<div class="session-row__info"><div class="session-row__time">17:00 – 18:00</div><div class="session-row__sub"><span data-date-part="weekday">Wednesday</span> · 60 min · <span data-currency="250000">—</span></div></div>
-						<div class="session-row__actions"><span class="badge" style="background:rgba(192,69,63,0.12); color:#C0453F;" data-i18n="schedule_missed">Missed</span></div>
-					</div>
-					<div class="session-row" data-date="2026-07-22">
-						<div class="session-row__date"><span class="session-row__date-day" data-date-part="day">22</span><span class="session-row__date-month" data-date-part="month">Jul</span></div>
-						<div class="session-row__info"><div class="session-row__time">17:00 – 18:00</div><div class="session-row__sub"><span data-date-part="weekday">Wednesday</span> · 60 min · <span data-currency="250000">—</span></div></div>
-						<div class="session-row__actions"><span class="badge badge--success" data-i18n="schedule_held">Held</span></div>
-					</div>
-				</div>
+				<div class="session-list" id="schedule-past-list"></div>
 			</div>
 
 			<!-- FINANCE -->
@@ -299,17 +255,13 @@
 						<div class="finance-hero__label" data-i18n="finance_settled_until">Settled until</div>
 					</div>
 					<div class="card finance-hero__card">
-						<div class="finance-hero__value">4</div>
+						<div class="finance-hero__value" id="finance-sessions-since">—</div>
 						<div class="finance-hero__label" data-i18n="finance_sessions_since">Sessions since settlement</div>
 					</div>
 					<div class="card finance-hero__card finance-hero__card--highlight">
-						<div class="finance-hero__value" data-currency="1000000">—</div>
+						<div class="finance-hero__value" id="finance-amount-due">—</div>
 						<div class="finance-hero__label" data-i18n="finance_amount_due">Amount due</div>
 					</div>
-				</div>
-
-				<div style="display:flex; gap:12px; margin-bottom:28px; flex-wrap:wrap;">
-					<button type="button" class="btn btn--accent" onclick="mahtelaToast('Settlement request sent to Elena.')" data-i18n="finance_request_settlement">Request Settlement</button>
 				</div>
 
 				<div class="card" style="padding:24px; margin-bottom:20px;">
@@ -321,41 +273,32 @@
 						</label>
 					</div>
 
-					<div class="session-list" id="unsettled-session-list">
-						<label class="session-row settle-row" data-date="2026-07-22">
-							<input type="checkbox" class="settle-checkbox" data-amount="250000" checked style="width:auto; margin-inline-end:6px;">
-							<span class="session-row__date"><span class="session-row__date-day" data-date-part="day">22</span><span class="session-row__date-month" data-date-part="month">Jul</span></span>
-							<span class="session-row__info"><span class="session-row__time">17:00 – 18:00</span><span class="session-row__sub"><span data-date-part="weekday">Wednesday</span> · 60 min</span></span>
-							<span class="session-row__actions"><span data-currency="250000">—</span></span>
-						</label>
-						<label class="session-row settle-row" data-date="2026-07-29">
-							<input type="checkbox" class="settle-checkbox" data-amount="250000" checked style="width:auto; margin-inline-end:6px;">
-							<span class="session-row__date"><span class="session-row__date-day" data-date-part="day">29</span><span class="session-row__date-month" data-date-part="month">Jul</span></span>
-							<span class="session-row__info"><span class="session-row__time">17:00 – 18:00</span><span class="session-row__sub"><span data-date-part="weekday">Wednesday</span> · 60 min</span></span>
-							<span class="session-row__actions"><span data-currency="250000">—</span></span>
-						</label>
-						<label class="session-row settle-row" data-date="2026-08-05">
-							<input type="checkbox" class="settle-checkbox" data-amount="250000" checked style="width:auto; margin-inline-end:6px;">
-							<span class="session-row__date"><span class="session-row__date-day" data-date-part="day">5</span><span class="session-row__date-month" data-date-part="month">Aug</span></span>
-							<span class="session-row__info"><span class="session-row__time">17:00 – 18:00</span><span class="session-row__sub"><span data-date-part="weekday">Wednesday</span> · 60 min</span></span>
-							<span class="session-row__actions"><span data-currency="250000">—</span></span>
-						</label>
-						<label class="session-row settle-row" data-date="2026-08-12">
-							<input type="checkbox" class="settle-checkbox" data-amount="250000" checked style="width:auto; margin-inline-end:6px;">
-							<span class="session-row__date"><span class="session-row__date-day" data-date-part="day">12</span><span class="session-row__date-month" data-date-part="month">Aug</span></span>
-							<span class="session-row__info"><span class="session-row__time">17:00 – 18:00</span><span class="session-row__sub"><span data-date-part="weekday">Wednesday</span> · 60 min</span></span>
-							<span class="session-row__actions"><span data-currency="250000">—</span></span>
-						</label>
-					</div>
+					<div class="session-list" id="unsettled-session-list"></div>
+					<p id="unsettled-empty-state" style="display:none; text-align:center; color:var(--ink-faint); padding:16px 0; margin:0;"></p>
 
 					<div style="display:flex; align-items:center; justify-content:space-between; margin-top:20px; padding-top:16px; border-top:1px dashed var(--border); flex-wrap:wrap; gap:12px;">
 						<span style="font-size:13.5px; font-weight:700;">
 							<span data-i18n="finance_selected_label">Selected</span>:
-							<span id="settle-selected-count">4</span> <span data-i18n="finance_sessions_word">sessions</span> ·
+							<span id="settle-selected-count">0</span> <span data-i18n="finance_sessions_word">sessions</span> ·
 							<span id="settle-selected-total" style="font-family:var(--font-mono);">—</span>
 						</span>
 						<button type="button" class="btn btn--primary" id="settle-selected-btn" data-i18n="finance_settle_selected">Settle Selected</button>
 					</div>
+				</div>
+
+				<div class="card" style="padding:24px; margin-bottom:20px;">
+					<h3 style="font-size:15px; margin-bottom:4px;" data-i18n="finance_request_settlement">Request Settlement</h3>
+					<div class="form-field" style="margin-top:14px; margin-bottom:0;">
+						<label for="settlement-message" data-i18n="settlement_message_label">Message</label>
+						<textarea id="settlement-message" rows="3" data-i18n-ph="settlement_message_default" placeholder="Hi! Here's a summary of your recent sessions — let me know if you have any questions."></textarea>
+					</div>
+					<div class="settlement-summary-box">
+						<div>
+							<div class="settlement-summary-box__value" id="settlement-summary-line">0 sessions · —</div>
+							<div class="settlement-summary-box__hint" data-i18n="settlement_summary_note">Added automatically from your selection above.</div>
+						</div>
+					</div>
+					<button type="button" class="btn btn--accent" id="request-settlement-btn" data-i18n="finance_request_settlement">Request Settlement</button>
 				</div>
 
 				<div class="card" style="padding:24px;">
@@ -369,29 +312,7 @@
 			<!-- MESSAGES -->
 			<div class="tab-panel" data-tab-panel="student" data-tab-id="messages">
 				<div class="card chat-panel" style="padding:24px;">
-					<div class="chat-panel__thread" id="chat-thread">
-						<div class="message-bubble message-bubble--in">
-							<span class="message-bubble__avatar">EK</span>
-							<div class="message-bubble__content">
-								<div class="message-bubble__text">Hi! Just wanted to check — are we still on for Wednesday at 5?</div>
-								<span class="message-bubble__time">Yesterday, 14:02</span>
-							</div>
-						</div>
-						<div class="message-bubble message-bubble--out">
-							<div class="message-bubble__content">
-								<div class="message-bubble__text">Yes, all set! I'll send the reading passage beforehand.</div>
-								<span class="message-bubble__time">Yesterday, 14:10</span>
-							</div>
-							<span class="message-bubble__avatar" style="background:var(--c-pink); color:var(--c-ink);">JD</span>
-						</div>
-						<div class="message-bubble message-bubble--in">
-							<span class="message-bubble__avatar">EK</span>
-							<div class="message-bubble__content">
-								<div class="message-bubble__text">Perfect, thank you!</div>
-								<span class="message-bubble__time">Yesterday, 14:11</span>
-							</div>
-						</div>
-					</div>
+					<div class="chat-panel__thread" id="chat-thread"></div>
 					<div class="chat-composer">
 						<div class="chat-composer__toolbar">
 							<button type="button" class="chat-composer__tool" data-cmd="bold" data-i18n-aria="messages_bold" aria-label="Bold" title="Bold"><b>B</b></button>
@@ -449,17 +370,80 @@
 			<h2 class="modal-box__title" data-i18n="schedule_add">+ Add Session</h2>
 			<button type="button" class="modal-box__close" data-modal-close aria-label="Close">&times;</button>
 		</div>
-		<form onsubmit="event.preventDefault(); mahtelaToast('Session added to schedule.'); document.getElementById('modal-add-session').classList.remove('is-open'); document.body.style.overflow='';">
+		<form id="add-session-form">
 			<div class="form-grid">
 				<div class="form-field"><label for="student-detail-date">Date</label><input id="student-detail-date" type="date" required></div>
 				<div class="form-field"><label for="student-detail-time">Time</label><input id="student-detail-time" type="time" required></div>
 			</div>
-			<div class="form-field"><label data-i18n="field_session_duration" for="student-detail-field-session-duration">Session Duration (minutes)</label><input id="student-detail-field-session-duration" type="number" value="60" min="15" step="15"></div>
+			<div class="form-grid">
+				<div class="form-field"><label data-i18n="field_session_duration" for="student-detail-field-session-duration">Session Duration (minutes)</label><input id="student-detail-field-session-duration" type="number" value="60" min="15" step="15"></div>
+				<div class="form-field">
+					<label for="add-session-classtype" data-i18n="class_type">Class Type</label>
+					<select id="add-session-classtype">
+						<option value="in-person" data-i18n="class_type_in_person">In-Person</option>
+						<option value="online" data-i18n="class_type_online">Online</option>
+					</select>
+				</div>
+			</div>
 			<div class="form-actions">
 				<button type="button" class="btn btn--ghost" data-modal-close data-i18n="btn_cancel">Cancel</button>
 				<button type="submit" class="btn btn--primary" data-i18n="btn_save">Save</button>
 			</div>
 		</form>
+	</div>
+</div>
+
+<!-- Manage session modal (class type, status, cancellation, note) -->
+<div class="modal-overlay" id="modal-manage-session">
+	<div class="modal-box">
+		<div class="modal-box__head">
+			<h2 class="modal-box__title" data-i18n="modal_manage_session_title">Manage Session</h2>
+			<button type="button" class="modal-box__close" data-modal-close aria-label="Close">&times;</button>
+		</div>
+		<p style="font-size:13px; color:var(--ink-soft); margin-top:-10px; margin-bottom:18px;" id="manage-session-datetime">—</p>
+
+		<div class="form-field">
+			<label for="manage-session-classtype" data-i18n="class_type">Class Type</label>
+			<select id="manage-session-classtype">
+				<option value="in-person" data-i18n="class_type_in_person">In-Person</option>
+				<option value="online" data-i18n="class_type_online">Online</option>
+			</select>
+		</div>
+
+		<div class="form-field">
+			<label data-i18n="col_status">Status</label>
+			<div class="seg-control" id="manage-session-status-control" role="radiogroup" aria-label="Session status">
+				<button type="button" class="seg-control__btn" role="radio" data-status="scheduled" data-i18n="schedule_scheduled">Scheduled</button>
+				<button type="button" class="seg-control__btn" role="radio" data-status="held" data-i18n="schedule_held">Held</button>
+				<button type="button" class="seg-control__btn" role="radio" data-status="cancelled" data-i18n="status_cancelled">Cancelled</button>
+			</div>
+		</div>
+
+		<div class="cancel-subform" id="manage-session-cancel-subform" style="display:none;">
+			<div class="form-field" style="margin-bottom:10px;">
+				<label for="manage-session-cancel-reason" data-i18n="cancel_reason_label">Who cancelled?</label>
+				<select id="manage-session-cancel-reason">
+					<option value="teacher" data-i18n="cancel_reason_teacher">Teacher cancelled</option>
+					<option value="student" data-i18n="cancel_reason_student">Student cancelled</option>
+					<option value="no-show" data-i18n="cancel_reason_noshow">Student didn't show up</option>
+				</select>
+			</div>
+			<label data-i18n="charge_applied_label">Charge for this class?</label>
+			<div class="charge-toggle">
+				<button type="button" class="charge-toggle__btn" id="manage-session-charge-yes" data-i18n="charge_applied_yes">Apply fee</button>
+				<button type="button" class="charge-toggle__btn" id="manage-session-charge-no" data-i18n="charge_applied_no">No fee</button>
+			</div>
+		</div>
+
+		<div class="form-field" style="margin-top:16px; margin-bottom:0;">
+			<label for="manage-session-note" data-i18n="session_note_label">Note for student</label>
+			<textarea id="manage-session-note" rows="3" data-i18n-ph="session_note_ph" placeholder="How did the class go? Visible to the student."></textarea>
+		</div>
+
+		<div class="form-actions">
+			<button type="button" class="btn btn--ghost" data-modal-close data-i18n="btn_cancel">Cancel</button>
+			<button type="button" class="btn btn--primary" id="manage-session-save-btn" data-i18n="btn_save_session">Save</button>
+		</div>
 	</div>
 </div>
 
@@ -500,6 +484,7 @@
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/theme.js"></script>
 <script src="assets/js/clock.js"></script>
+<script src="assets/js/sessions-data.js"></script>
 <script src="assets/js/radar-chart.js"></script>
 <script src="assets/js/app.js"></script>
 <script src="assets/js/chat.js"></script>
@@ -517,6 +502,8 @@
 		marco:  { name: 'Marco Rossi',  initials: 'MR', gender: 'male',   levelValue: 'B1', levelLabel: 'Intermediate · B1',        levelBadge: 'badge--warning', rate: 250000, duration: 60, since: '2026-02-20', skills: { listening: 60, speaking: 55, reading: 65, writing: 50 } },
 		yuki:   { name: 'Yuki Tanaka',  initials: 'YT', gender: 'female', levelValue: 'A2', levelLabel: 'Pre-Intermediate · A2',    levelBadge: 'badge--neutral', rate: 220000, duration: 45, since: '2026-04-05',  skills: { listening: 45, speaking: 38, reading: 50, writing: 32 } }
 	};
+
+	var SESSIONS = window.mahtelaData.loadSessions();
 
 	function currentStudentKey() {
 		var params = new URLSearchParams( window.location.search );
@@ -573,15 +560,215 @@
 		document.getElementById( 'student-since-value' ).textContent = window.mahtelaCalendar.formatFullDate( s.since, window.mahtelaI18n.currentLang() );
 	} );
 
-	function markHeld( btn ) {
-		var row = btn.closest( '.session-row' );
-		var actions = row.querySelector( '.session-row__actions' );
-		actions.innerHTML = '<span class="badge badge--success">Held</span>';
-		mahtelaToast( 'Session marked as held.' );
+	/* ---------- shared helpers ---------- */
+	function pad2( n ) { return n < 10 ? '0' + n : '' + n; }
+	function timeToMinutes( t ) { var p = t.split( ':' ); return parseInt( p[ 0 ], 10 ) * 60 + parseInt( p[ 1 ], 10 ); }
+	function escapeHtml( s ) {
+		var d = document.createElement( 'div' );
+		d.textContent = s;
+		return d.innerHTML;
 	}
 
-	/* Settlement checklist: pick any mix of unsettled sessions, or all of
-	   them at once, and see the running total update live before settling. */
+	var CLASS_TYPE_ICONS = {
+		'in-person': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1M9 13h1M14 9h1M14 13h1"/></svg>',
+		online: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="4" width="14" height="10" rx="1"/><path d="M8 20h4M10 14v6M17 8l5-3v10l-5-3"/></svg>'
+	};
+
+	function classTypeBadgeHTML( classType, lang ) {
+		var dict = window.mahtelaI18n.dict;
+		var label = classType === 'online' ? dict.class_type_online[ lang ] : dict.class_type_in_person[ lang ];
+		var cls = classType === 'online' ? 'class-type-badge--online' : 'class-type-badge--in-person';
+		return '<span class="class-type-badge ' + cls + '">' + CLASS_TYPE_ICONS[ classType ] + label + '</span>';
+	}
+
+	function statusBadgeHTML( s, lang ) {
+		var dict = window.mahtelaI18n.dict;
+		if ( s.status === 'held' ) { return '<span class="badge badge--success">' + dict.schedule_held[ lang ] + '</span>'; }
+		if ( s.status === 'cancelled' ) {
+			var reasonKey = s.cancelReason === 'teacher' ? 'cancel_reason_teacher' : ( s.cancelReason === 'student' ? 'cancel_reason_student' : 'cancel_reason_noshow' );
+			return '<span class="badge" style="background:rgba(192,69,63,0.12); color:#C0453F;">' + dict.status_cancelled[ lang ] + ' · ' + dict[ reasonKey ][ lang ] + '</span>';
+		}
+		return '<span class="badge badge--accent">' + dict.schedule_scheduled[ lang ] + '</span>';
+	}
+
+	function isChargeable( s ) {
+		return s.status === 'held' || ( s.status === 'cancelled' && s.chargeApplied === true );
+	}
+
+	function studentSessions() {
+		var key = currentStudentKey();
+		return SESSIONS.filter( function ( s ) { return s.studentKey === key; } );
+	}
+
+	/* ---------- Schedule tab ---------- */
+	function renderSessionRow( s, lang ) {
+		var student = STUDENTS[ s.studentKey ];
+		var endMin = timeToMinutes( s.time ) + s.duration;
+		var endStr = pad2( Math.floor( endMin / 60 ) ) + ':' + pad2( endMin % 60 );
+		var noteHTML = s.note ? '<div class="session-note">' + escapeHtml( s.note ) + '</div>' : '';
+
+		var row = document.createElement( 'div' );
+		row.className = 'session-row';
+		row.style.cursor = 'pointer';
+		row.innerHTML =
+			'<div class="session-row__date" data-date="' + s.date + '"><span class="session-row__date-day" data-date-part="day"></span><span class="session-row__date-month" data-date-part="month"></span></div>' +
+			'<div class="session-row__info">' +
+				'<div class="session-row__time">' + s.time + ' – ' + endStr + '</div>' +
+				'<div class="session-row__sub" data-date="' + s.date + '"><span data-date-part="weekday"></span> · ' + s.duration + ' <span data-i18n-inline="overview_minutes"></span> · <span data-currency="' + student.rate + '">—</span></div>' +
+				noteHTML +
+			'</div>' +
+			'<div class="session-row__actions" style="flex-direction:column; align-items:flex-end; gap:6px;">' + classTypeBadgeHTML( s.classType, lang ) + statusBadgeHTML( s, lang ) + '</div>';
+		row.querySelector( '[data-i18n-inline="overview_minutes"]' ).textContent = window.mahtelaI18n.dict.overview_minutes[ lang ];
+		row.addEventListener( 'click', function () { openManageSession( s.id ); } );
+		return row;
+	}
+
+	function renderScheduleTab() {
+		var lang = window.mahtelaI18n.currentLang();
+		var sessions = studentSessions().slice().sort( function ( a, b ) {
+			return ( a.date + a.time ).localeCompare( b.date + b.time );
+		} );
+		var todayISO = new Date().toISOString().slice( 0, 10 );
+
+		var upcoming = sessions.filter( function ( s ) { return s.date >= todayISO && s.status !== 'cancelled'; } );
+		var past = sessions.filter( function ( s ) { return s.date < todayISO || s.status === 'cancelled'; } ).reverse();
+
+		var upcomingList = document.getElementById( 'schedule-upcoming-list' );
+		var pastList = document.getElementById( 'schedule-past-list' );
+		if ( ! upcomingList ) { return; }
+
+		upcomingList.innerHTML = '';
+		upcoming.forEach( function ( s ) { upcomingList.appendChild( renderSessionRow( s, lang ) ); } );
+
+		pastList.innerHTML = '';
+		past.forEach( function ( s ) { pastList.appendChild( renderSessionRow( s, lang ) ); } );
+
+		window.mahtelaCalendar.applyScheduleDates();
+		window.mahtelaI18n.apply( lang );
+	}
+
+	/* ---------- Manage Session modal ---------- */
+	var activeSessionId = null;
+	var pendingStatus = null, pendingChargeApplied = null;
+
+	function findSession( id ) { return SESSIONS.filter( function ( s ) { return s.id === id; } )[ 0 ]; }
+
+	function openManageSession( id ) {
+		var s = findSession( id );
+		if ( ! s ) { return; }
+		activeSessionId = id;
+		pendingStatus = s.status;
+		pendingChargeApplied = s.chargeApplied;
+
+		var lang = window.mahtelaI18n.currentLang();
+		var cal = window.mahtelaCalendar.resolve( lang );
+		document.getElementById( 'manage-session-datetime' ).textContent = window.mahtelaCalendar.formatScheduleDate( s.date, s.time, lang, cal );
+		document.getElementById( 'manage-session-classtype' ).value = s.classType;
+		document.getElementById( 'manage-session-note' ).value = s.note || '';
+		document.getElementById( 'manage-session-cancel-reason' ).value = s.cancelReason || 'teacher';
+
+		setStatusUI( s.status );
+		setChargeUI( s.chargeApplied );
+
+		document.getElementById( 'modal-manage-session' ).classList.add( 'is-open' );
+		document.body.style.overflow = 'hidden';
+	}
+
+	function setStatusUI( status ) {
+		pendingStatus = status;
+		document.querySelectorAll( '#manage-session-status-control .seg-control__btn' ).forEach( function ( btn ) {
+			btn.setAttribute( 'aria-checked', btn.getAttribute( 'data-status' ) === status ? 'true' : 'false' );
+		} );
+		document.getElementById( 'manage-session-cancel-subform' ).style.display = status === 'cancelled' ? 'block' : 'none';
+	}
+
+	function setChargeUI( charge ) {
+		pendingChargeApplied = charge;
+		document.getElementById( 'manage-session-charge-yes' ).setAttribute( 'aria-pressed', charge === true ? 'true' : 'false' );
+		document.getElementById( 'manage-session-charge-no' ).setAttribute( 'aria-pressed', charge === false ? 'true' : 'false' );
+	}
+
+	document.getElementById( 'manage-session-status-control' ).addEventListener( 'seg-change', function ( e ) {
+		setStatusUI( e.detail.value );
+		if ( e.detail.value === 'cancelled' && pendingChargeApplied === null ) { setChargeUI( false ); }
+	} );
+	document.getElementById( 'manage-session-charge-yes' ).addEventListener( 'click', function () { setChargeUI( true ); } );
+	document.getElementById( 'manage-session-charge-no' ).addEventListener( 'click', function () { setChargeUI( false ); } );
+
+	document.getElementById( 'manage-session-save-btn' ).addEventListener( 'click', function () {
+		var s = findSession( activeSessionId );
+		if ( ! s ) { return; }
+		s.classType = document.getElementById( 'manage-session-classtype' ).value;
+		s.status = pendingStatus;
+		s.note = document.getElementById( 'manage-session-note' ).value.trim();
+		if ( pendingStatus === 'cancelled' ) {
+			s.cancelReason = document.getElementById( 'manage-session-cancel-reason' ).value;
+			s.chargeApplied = pendingChargeApplied === null ? false : pendingChargeApplied;
+		} else {
+			s.cancelReason = null;
+			s.chargeApplied = null;
+		}
+		window.mahtelaData.saveSessions( SESSIONS );
+		document.getElementById( 'modal-manage-session' ).classList.remove( 'is-open' );
+		document.body.style.overflow = '';
+		mahtelaToast( window.mahtelaI18n.dict.session_updated_toast[ window.mahtelaI18n.currentLang() ] );
+	} );
+
+	/* ---------- Add Session modal ---------- */
+	document.getElementById( 'add-session-form' ).addEventListener( 'submit', function ( e ) {
+		e.preventDefault();
+		var date = document.getElementById( 'student-detail-date' ).value;
+		var time = document.getElementById( 'student-detail-time' ).value;
+		if ( ! date || ! time ) { return; }
+		SESSIONS.push( {
+			id: 'sd' + Date.now(),
+			date: date, time: time,
+			duration: parseInt( document.getElementById( 'student-detail-field-session-duration' ).value, 10 ) || 60,
+			studentKey: currentStudentKey(),
+			classType: document.getElementById( 'add-session-classtype' ).value,
+			status: 'scheduled', cancelReason: null, chargeApplied: null, note: '', settled: false
+		} );
+		window.mahtelaData.saveSessions( SESSIONS );
+		document.getElementById( 'modal-add-session' ).classList.remove( 'is-open' );
+		document.body.style.overflow = '';
+		e.target.reset();
+		mahtelaToast( 'Session added to schedule.' );
+	} );
+
+	/* ---------- Finance tab ---------- */
+	function renderFinanceTab() {
+		var lang = window.mahtelaI18n.currentLang();
+		var student = STUDENTS[ currentStudentKey() ];
+		var unsettled = studentSessions().filter( function ( s ) { return isChargeable( s ) && ! s.settled; } );
+
+		document.getElementById( 'finance-sessions-since' ).textContent = unsettled.length;
+		document.getElementById( 'finance-amount-due' ).textContent = window.mahtelaI18n.formatToman( unsettled.length * student.rate, lang );
+
+		var list = document.getElementById( 'unsettled-session-list' );
+		var emptyState = document.getElementById( 'unsettled-empty-state' );
+		list.innerHTML = '';
+
+		unsettled.sort( function ( a, b ) { return ( a.date + a.time ).localeCompare( b.date + b.time ); } ).forEach( function ( s ) {
+			var endMin = timeToMinutes( s.time ) + s.duration;
+			var endStr = pad2( Math.floor( endMin / 60 ) ) + ':' + pad2( endMin % 60 );
+			var label = document.createElement( 'label' );
+			label.className = 'session-row settle-row';
+			label.innerHTML =
+				'<input type="checkbox" class="settle-checkbox" data-amount="' + student.rate + '" data-session-id="' + s.id + '" checked style="width:auto; margin-inline-end:6px;">' +
+				'<span class="session-row__date" data-date="' + s.date + '"><span class="session-row__date-day" data-date-part="day"></span><span class="session-row__date-month" data-date-part="month"></span></span>' +
+				'<span class="session-row__info"><span class="session-row__time">' + s.time + ' – ' + endStr + '</span><span class="session-row__sub" data-date="' + s.date + '"><span data-date-part="weekday"></span></span></span>' +
+				'<span class="session-row__actions">' + classTypeBadgeHTML( s.classType, lang ) + '<span data-currency="' + student.rate + '">—</span></span>';
+			list.appendChild( label );
+		} );
+
+		emptyState.style.display = unsettled.length ? 'none' : 'block';
+		emptyState.textContent = lang === 'fa' ? 'همه‌چیز تسویه‌ست.' : 'All settled up.';
+
+		window.mahtelaCalendar.applyScheduleDates();
+		document.querySelectorAll( '.settle-checkbox' ).forEach( function ( cb ) { cb.addEventListener( 'change', updateSettleSummary ); } );
+		updateSettleSummary();
+	}
+
 	function updateSettleSummary() {
 		var checkboxes = document.querySelectorAll( '.settle-checkbox' );
 		var checked = Array.prototype.filter.call( checkboxes, function ( cb ) { return cb.checked; } );
@@ -589,56 +776,102 @@
 		var lang = window.mahtelaI18n.currentLang();
 
 		var countEl = document.getElementById( 'settle-selected-count' );
-		var totalEl = document.getElementById( 'settle-selected-total' );
-		var selectAll = document.getElementById( 'settle-select-all' );
-		var settleBtn = document.getElementById( 'settle-selected-btn' );
 		if ( ! countEl ) { return; }
-
 		countEl.textContent = checked.length;
-		totalEl.textContent = window.mahtelaI18n.formatToman( total, lang );
+		document.getElementById( 'settle-selected-total' ).textContent = window.mahtelaI18n.formatToman( total, lang );
+
+		var selectAll = document.getElementById( 'settle-select-all' );
 		selectAll.checked = checkboxes.length > 0 && checked.length === checkboxes.length;
 		selectAll.indeterminate = checked.length > 0 && checked.length < checkboxes.length;
-		settleBtn.disabled = checked.length === 0;
+		document.getElementById( 'settle-selected-btn' ).disabled = checked.length === 0;
+
+		var summaryLine = document.getElementById( 'settlement-summary-line' );
+		var sessionsWord = window.mahtelaI18n.dict.finance_sessions_word[ lang ];
+		summaryLine.textContent = checked.length + ' ' + sessionsWord + ' · ' + window.mahtelaI18n.formatToman( total, lang );
+		document.getElementById( 'request-settlement-btn' ).disabled = checked.length === 0;
 	}
 
-	document.querySelectorAll( '.settle-checkbox' ).forEach( function ( cb ) {
-		cb.addEventListener( 'change', updateSettleSummary );
+	document.getElementById( 'settle-select-all' ).addEventListener( 'change', function ( e ) {
+		var isChecked = e.target.checked;
+		document.querySelectorAll( '.settle-checkbox' ).forEach( function ( cb ) { cb.checked = isChecked; } );
+		updateSettleSummary();
 	} );
 
-	var settleSelectAllEl = document.getElementById( 'settle-select-all' );
-	if ( settleSelectAllEl ) {
-		settleSelectAllEl.addEventListener( 'change', function ( e ) {
-			var isChecked = e.target.checked;
-			document.querySelectorAll( '.settle-checkbox' ).forEach( function ( cb ) { cb.checked = isChecked; } );
-			updateSettleSummary();
-		} );
-	}
+	document.getElementById( 'settle-selected-btn' ).addEventListener( 'click', function () {
+		var checked = document.querySelectorAll( '.settle-checkbox:checked' );
+		var ids = Array.prototype.map.call( checked, function ( cb ) { return cb.getAttribute( 'data-session-id' ); } );
+		SESSIONS.forEach( function ( s ) { if ( ids.indexOf( s.id ) !== -1 ) { s.settled = true; } } );
+		window.mahtelaData.saveSessions( SESSIONS );
+		mahtelaToast( ids.length + ' session(s) marked as settled.' );
+		renderFinanceTab();
+	} );
 
-	var settleBtnEl = document.getElementById( 'settle-selected-btn' );
-	if ( settleBtnEl ) {
-		settleBtnEl.addEventListener( 'click', function () {
-			var checked = document.querySelectorAll( '.settle-checkbox:checked' );
-			var count = checked.length;
-			checked.forEach( function ( cb ) { cb.closest( '.settle-row' ).remove(); } );
-			mahtelaToast( count + ' session(s) marked as settled.' );
-			updateSettleSummary();
-		} );
-	}
+	document.getElementById( 'request-settlement-btn' ).addEventListener( 'click', function () {
+		var lang = window.mahtelaI18n.currentLang();
+		var checked = document.querySelectorAll( '.settle-checkbox:checked' );
+		if ( ! checked.length ) {
+			mahtelaToast( window.mahtelaI18n.dict.settlement_select_first[ lang ] );
+			return;
+		}
+		var total = Array.prototype.reduce.call( checked, function ( sum, cb ) { return sum + parseFloat( cb.getAttribute( 'data-amount' ) ); }, 0 );
+		var customText = document.getElementById( 'settlement-message' ).value.trim() || window.mahtelaI18n.dict.settlement_message_default[ lang ];
+		var sessionsWord = window.mahtelaI18n.dict.finance_sessions_word[ lang ];
+		var summaryText = checked.length + ' ' + sessionsWord + ' · ' + window.mahtelaI18n.formatToman( total, lang );
+		var fullMessage = escapeHtml( customText ) + '<br><br><strong>' + summaryText + '</strong>';
 
-	document.addEventListener( 'mahtela:langchange', updateSettleSummary );
-	updateSettleSummary();
+		window.mahtelaData.sendMessageTo( currentStudentKey(), fullMessage );
+		mahtelaToast( window.mahtelaI18n.dict.settlement_sent_toast[ lang ] );
+	} );
+
+	document.addEventListener( 'mahtela:langchange', function () {
+		renderScheduleTab();
+		renderFinanceTab();
+	} );
+	document.addEventListener( 'mahtela:calendarchange', function () {
+		renderScheduleTab();
+		renderFinanceTab();
+	} );
+	document.addEventListener( 'mahtela:sessionschange', function () {
+		SESSIONS = window.mahtelaData.loadSessions();
+		renderScheduleTab();
+		renderFinanceTab();
+	} );
+
+	renderScheduleTab();
+	renderFinanceTab();
 
 	document.querySelector( '.chat-composer' ).addEventListener( 'chat-composer:send', function ( e ) {
-		var thread = document.getElementById( 'chat-thread' );
-		var bubble = document.createElement( 'div' );
-		bubble.className = 'message-bubble message-bubble--out';
-		bubble.innerHTML = '<div class="message-bubble__content"><div class="message-bubble__text"></div><span class="message-bubble__time">' +
-			( window.mahtelaI18n.currentLang() === 'fa' ? 'اکنون' : 'Just now' ) + '</span></div>' +
-			'<span class="message-bubble__avatar" style="background:var(--c-pink); color:var(--c-ink);">JD</span>';
-		bubble.querySelector( '.message-bubble__text' ).innerHTML = e.detail.html;
-		thread.appendChild( bubble );
-		thread.scrollTop = thread.scrollHeight;
+		var key = currentStudentKey();
+		var convos = window.mahtelaData.loadConversations();
+		if ( ! convos[ key ] ) { return; }
+		convos[ key ].messages.push( { dir: 'out', html: e.detail.html, time: window.mahtelaI18n.currentLang() === 'fa' ? 'اکنون' : 'Just now' } );
+		window.mahtelaData.saveConversations( convos );
+		// mahtela:messageschange (below) re-renders the thread.
 	} );
+
+	function renderMessagesTab() {
+		var key = currentStudentKey();
+		var convos = window.mahtelaData.loadConversations();
+		var convo = convos[ key ];
+		var thread = document.getElementById( 'chat-thread' );
+		if ( ! thread || ! convo ) { return; }
+		thread.innerHTML = '';
+
+		convo.messages.forEach( function ( m ) {
+			var bubble = document.createElement( 'div' );
+			bubble.className = 'message-bubble message-bubble--' + m.dir;
+			var avatarIn = m.dir === 'in' ? '<span class="message-bubble__avatar">' + convo.initials + '</span>' : '';
+			var avatarOut = m.dir === 'out' ? '<span class="message-bubble__avatar" style="background:var(--c-pink); color:var(--c-ink);">JD</span>' : '';
+			bubble.innerHTML = avatarIn +
+				'<div class="message-bubble__content"><div class="message-bubble__text">' + m.html + '</div><span class="message-bubble__time">' + m.time + '</span></div>' +
+				avatarOut;
+			thread.appendChild( bubble );
+		} );
+		thread.scrollTop = thread.scrollHeight;
+	}
+
+	renderMessagesTab();
+	document.addEventListener( 'mahtela:messageschange', renderMessagesTab );
 </script>
 </body>
 </html>
