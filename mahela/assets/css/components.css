@@ -99,7 +99,7 @@
 	flex-shrink: 0;
 }
 .stat-card__icon svg { width: 22px; height: 22px; }
-.stat-card__icon--brand { background: rgba(244,120,176,0.16); color: var(--brand-strong); }
+.stat-card__icon--brand { background: var(--brand-soft); color: var(--brand-strong); }
 .stat-card__icon--accent { background: rgba(0,160,181,0.14); color: var(--accent-strong); }
 .stat-card__icon--warning { background: rgba(255,169,52,0.16); color: #B36A00; }
 .stat-card__number { font-family: var(--font-mono); font-size: 24px; font-weight: 700; line-height: 1.1; }
@@ -120,7 +120,7 @@
 }
 html[dir="rtl"] .search-input input { padding: 11px 42px 11px 16px; }
 html[dir="rtl"] .search-input svg { inset-inline-start: auto; inset-inline-end: 15px; }
-.search-input input:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 4px rgba(244,120,176,0.14); }
+.search-input input:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 4px var(--brand-focus-ring); }
 
 /* ==========================================================================
    Student cards (dashboard grid)
@@ -182,7 +182,7 @@ html[dir="rtl"] .search-input svg { inset-inline-start: auto; inset-inline-end: 
 .quick-link-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
 .quick-link-card__icon {
 	width: 44px; height: 44px; border-radius: 13px; display: flex; align-items: center; justify-content: center;
-	background: rgba(244,120,176,0.14); color: var(--brand-strong);
+	background: var(--brand-soft); color: var(--brand-strong);
 }
 .quick-link-card__title { font-size: 15.5px; font-weight: 700; }
 .quick-link-card__desc { font-size: 13px; color: var(--ink-soft); margin: 0; }
@@ -195,7 +195,7 @@ html[dir="rtl"] .search-input svg { inset-inline-start: auto; inset-inline-end: 
 }
 .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
 	outline: none; border-color: var(--brand); background: var(--surface);
-	box-shadow: 0 0 0 4px rgba(244,120,176,0.14);
+	box-shadow: 0 0 0 4px var(--brand-focus-ring);
 }
 .form-field--checkbox { flex-direction: row; align-items: center; gap: 10px; }
 .form-field--checkbox input { width: auto; }
@@ -639,7 +639,7 @@ html[dir="rtl"] .switch input:checked + .switch__track::before { transform: tran
 	border: 1.5px solid var(--border); color: var(--ink-soft);
 	transition: all .15s ease;
 }
-.charge-toggle__btn[aria-pressed="true"] { border-color: var(--brand); background: rgba(244,120,176,0.1); color: var(--brand-strong); }
+.charge-toggle__btn[aria-pressed="true"] { border-color: var(--brand); background: var(--brand-soft); color: var(--brand-strong); }
 
 .seg-control {
 	display: flex;

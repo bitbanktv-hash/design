@@ -1,8 +1,43 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.12.0 — Current
+v1.13.0 — Current
 ------------------
+- Fixed a real navigation bug: clicking "Messages" in the sidebar while
+  already on student-panel.html did nothing, though the exact same
+  link worked fine when clicked from Settings. Root cause: the tab
+  deep-link logic (open the tab named in the URL hash) only ran once,
+  on the initial page load -- a same-page anchor click just updates
+  the hash without a full reload, so it never ran again. Now also
+  listens for the hashchange event and re-applies. Verified with a
+  real DOM simulation of the exact reported scenario, not just the
+  "works on fresh load" case that was already passing.
+- Role-based chrome color: the teacher and admin panels no longer
+  share the same pink used for female-student gender accents. Teacher
+  pages now use gold (#F7B801), admin pages use indigo (#7678ED), both
+  scoped via a single [data-role] attribute on <html> so every
+  existing component that already references var(--brand) picks up
+  the right color automatically -- no per-component overrides needed.
+  Checked ink-text contrast on both new colors (teacher ~9.9:1 base /
+  ~7.7:1 hover, admin ~5:1 base / ~6:1 hover) before committing to
+  them; all clear WCAG AA. Replaced several chrome-related hardcoded
+  pink rgba() values (shadow glow, badges, focus rings) with proper
+  tokens so they respect the role color too, instead of just the
+  --brand/--brand-strong properties that were already variables.
+  While doing this, caught and fixed a real cross-contamination bug it
+  would otherwise have introduced: female students' own accent color
+  (--student-accent-strong) was defined as var(--brand-strong), so on
+  a teacher-role page (student-detail.html) it would have silently
+  inherited the teacher's gold instead of staying pink. Decoupled it
+  to a fixed value. Settings.html (which serves all three roles from
+  one file) sets the attribute dynamically based on which role's
+  section is active.
+- Dashboard titles now say which role they belong to: "Dashboard"
+  became "Teacher Dashboard" and "Overview" became "Admin Dashboard",
+  in both the page heading and the browser tab title.
+
+v1.12.0
+--------
 - Renamed the product: "MahELA" is now "MahFLA" everywhere (titles,
   sidebar wordmark, version tag), in both languages -- the brand name
   is no longer translated to a Persian phonetic spelling, per explicit

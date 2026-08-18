@@ -122,7 +122,7 @@
 		action_view_profile: { en: 'View Profile', fa: 'مشاهده‌ی پروفایل' },
 
 		// Admin dashboard
-		admin_dash_title: { en: 'Overview', fa: 'نمای کلی' },
+		admin_dash_title: { en: 'Admin Dashboard', fa: 'داشبورد ادمین' },
 		admin_dash_sub: { en: "Everything happening across the system, all in one place.", fa: 'هر اتفاقی که توی کل سیستم می‌افته، همه‌جا یه‌جا.' },
 		kpi_total_teachers: { en: 'Total Teachers', fa: 'مجموع معلم‌ها' },
 		kpi_total_students: { en: 'Total Students', fa: 'مجموع شاگردان' },
@@ -175,7 +175,7 @@
 		// Teacher dashboard
 		dash_title: { en: 'Your Students', fa: 'شاگردهای تو' },
 		dash_sub: { en: "Here's everyone you're currently teaching.", fa: 'این‌ها همه‌ی کسایی هستن که الان بهشون درس می‌دی.' },
-		teacher_dash_title: { en: 'Dashboard', fa: 'داشبورد' },
+		teacher_dash_title: { en: 'Teacher Dashboard', fa: 'داشبورد معلم' },
 		teacher_dash_sub: { en: 'A quick look at your students, schedule, and balance.', fa: 'یه نگاه سریع به شاگردها، برنامه، و حساب‌وکتابت.' },
 		quicklink_students_desc: { en: 'View, search, and add students.', fa: 'شاگردها رو ببین، جست‌وجو کن، یا اضافه کن.' },
 		quicklink_schedule_desc: { en: 'See and book your weekly timetable.', fa: 'برنامه‌ی هفتگی‌ت رو ببین و کلاس رزرو کن.' },

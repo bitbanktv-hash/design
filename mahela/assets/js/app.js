@@ -129,6 +129,8 @@
 	}
 
 	function initTabs() {
+		var hashHandlers = [];
+
 		document.querySelectorAll( '[data-tabs]' ).forEach( function ( group ) {
 			var groupName = group.getAttribute( 'data-tabs' );
 			var buttons = Array.prototype.slice.call( document.querySelectorAll( '[data-tab-btn="' + groupName + '"]' ) );
@@ -203,12 +205,24 @@
 				} );
 			} );
 
-			// Deep-link support: open the tab named in the URL hash on load.
-			var hash = window.location.hash.replace( '#', '' );
-			if ( hash ) {
+			// Deep-link support: open the tab named in the URL hash. Run once
+			// now (initial load) and register for re-checking on hashchange
+			// below -- a same-page anchor click (e.g. a sidebar link to
+			// "thispage.html#messages" while already on thispage.html)
+			// updates the hash without a full reload, so DOMContentLoaded
+			// never fires again and this needs to run a second time.
+			function applyHash() {
+				var hash = window.location.hash.replace( '#', '' );
+				if ( ! hash ) { return; }
 				var matchBtn = document.querySelector( '[data-tab-btn="' + groupName + '"][data-tab-target="' + hash + '"]' );
 				if ( matchBtn ) { activate( matchBtn, false ); }
 			}
+			applyHash();
+			hashHandlers.push( applyHash );
+		} );
+
+		window.addEventListener( 'hashchange', function () {
+			hashHandlers.forEach( function ( fn ) { fn(); } );
 		} );
 	}
 
