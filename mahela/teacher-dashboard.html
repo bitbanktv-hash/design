@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dashboard — MahELA</title>
+<title>Dashboard — MahFLA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -20,14 +20,18 @@
 		<div class="sidebar__brand">
 			<span class="sidebar__logo">M</span>
 			<div class="sidebar__brand-text">
-				<span class="sidebar__brand-name" data-i18n="brand_name">MahELA</span>
-				<span class="sidebar__brand-tagline" data-i18n="brand_tagline">Mahta English Learning Academy</span>
+				<span class="sidebar__brand-name" data-i18n="brand_name">MahFLA</span>
+				<span class="sidebar__brand-tagline" data-i18n="brand_tagline">Mahta Foreign Language Academy</span>
 			</div>
 		</div>
 		<nav class="sidebar__nav">
 			<a href="teacher-dashboard.html" class="sidebar__link is-active">
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
 				<span data-i18n="nav_dashboard">Dashboard</span>
+			</a>
+			<a href="teacher-students.html" class="sidebar__link">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="12" width="8" height="9" rx="2"/><rect x="3" y="14" width="8" height="7" rx="2"/></svg>
+				<span data-i18n="nav_students">Students</span>
 			</a>
 			<a href="teacher-schedule.html" class="sidebar__link">
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
@@ -55,7 +59,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahELA v1.11.0</div>
+			<div class="sidebar__version">MahFLA v1.12.0</div>
 		</div>
 	</aside>
 
@@ -87,8 +91,8 @@
 		<div class="page-body">
 			<div class="page-head page-head--row reveal-on-load" style="--rl-delay:0ms">
 				<div>
-					<h1 class="page-head__title" data-i18n="dash_title">Your Students</h1>
-					<p class="page-head__sub" data-i18n="dash_sub">Here's everyone you're currently teaching.</p>
+					<h1 class="page-head__title" data-i18n="teacher_dash_title">Dashboard</h1>
+					<p class="page-head__sub" data-i18n="teacher_dash_sub">A quick look at your students, schedule, and balance.</p>
 				</div>
 			</div>
 
@@ -98,7 +102,7 @@
 						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg>
 					</span>
 					<div>
-						<div class="stat-card__number" data-i18n-number="5">5</div>
+						<div class="stat-card__number" id="kpi-active-students">—</div>
 						<div class="stat-card__label" data-i18n="dash_stat_students">Active Students</div>
 					</div>
 				</div>
@@ -107,7 +111,7 @@
 						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
 					</span>
 					<div>
-						<div class="stat-card__number" data-i18n-number="7">7</div>
+						<div class="stat-card__number" id="kpi-sessions-week">—</div>
 						<div class="stat-card__label" data-i18n="dash_stat_sessions_week">Sessions This Week</div>
 					</div>
 				</div>
@@ -116,85 +120,42 @@
 						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
 					</span>
 					<div>
-						<div class="stat-card__number" data-currency="1860000">—</div>
+						<div class="stat-card__number" id="kpi-unsettled-balance">—</div>
 						<div class="stat-card__label" data-i18n="dash_stat_unsettled">Unsettled Balance</div>
 					</div>
 				</div>
 			</div>
 
-			<div class="toolbar">
-				<div class="search-input">
-					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
-					<input type="text" id="student-search" data-i18n-ph="dash_search_ph" placeholder="Search students…">
-				</div>
-				<button type="button" class="btn btn--primary" data-modal-open="modal-add-student" data-i18n="dash_add_student">+ Add Student</button>
+			<div class="quick-link-grid">
+				<a href="teacher-students.html" class="card quick-link-card">
+					<span class="quick-link-card__icon">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="12" width="8" height="9" rx="2"/><rect x="3" y="14" width="8" height="7" rx="2"/></svg>
+					</span>
+					<div>
+						<div class="quick-link-card__title" data-i18n="nav_students">Students</div>
+						<p class="quick-link-card__desc" data-i18n="quicklink_students_desc">View, search, and add students.</p>
+					</div>
+				</a>
+				<a href="teacher-schedule.html" class="card quick-link-card">
+					<span class="quick-link-card__icon" style="background:rgba(0,160,181,0.14); color:var(--accent-strong);">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
+					</span>
+					<div>
+						<div class="quick-link-card__title" data-i18n="nav_schedule">Schedule</div>
+						<p class="quick-link-card__desc" data-i18n="quicklink_schedule_desc">See and book your weekly timetable.</p>
+					</div>
+				</a>
+				<a href="messages.html" class="card quick-link-card">
+					<span class="quick-link-card__icon" style="background:rgba(152,197,78,0.16); color:var(--success-strong);">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+					</span>
+					<div>
+						<div class="quick-link-card__title" data-i18n="nav_messages">Messages</div>
+						<p class="quick-link-card__desc" data-i18n="quicklink_messages_desc">Chat with your students.</p>
+					</div>
+				</a>
 			</div>
-
-			<div class="student-grid reveal-group" id="student-grid"></div>
-			<p id="no-results" style="display:none; text-align:center; color:var(--ink-faint); padding:40px 0;">No students match your search.</p>
 		</div>
-	</div>
-</div>
-
-<!-- Add Student modal -->
-<div class="modal-overlay" id="modal-add-student">
-	<div class="modal-box">
-		<div class="modal-box__head">
-			<h2 class="modal-box__title" data-i18n="modal_add_student_title">Add a New Student</h2>
-			<button type="button" class="modal-box__close" data-modal-close aria-label="Close">&times;</button>
-		</div>
-		<form id="add-student-form" onsubmit="event.preventDefault(); if(!window.mahtelaValidate.validateForm(this)){return;} submitAddStudent();">
-			<div class="form-field">
-				<label data-i18n="field_student_name" for="teacher-dashboard-field-student-name">Student's full name</label>
-				<input id="teacher-dashboard-field-student-name" type="text" placeholder="e.g. Alex Morgan" required>
-			</div>
-			<div class="form-grid">
-				<div class="form-field">
-					<label for="teacher-dashboard-email-for-their-login"><span class="required-mark" aria-hidden="true">*</span> <span data-i18n="field_student_email">Email (for their login)</span></label>
-					<input id="teacher-dashboard-email-for-their-login" type="email" data-validate="email" placeholder="alex@example.com" required>
-					<span class="form-field__error" data-i18n="validate_email_error">Enter a valid email address.</span>
-				</div>
-				<div class="form-field">
-					<label for="teacher-dashboard-mobile-number"><span class="required-mark" aria-hidden="true">*</span> <span data-i18n="settings_phone">Mobile Number</span></label>
-					<input id="teacher-dashboard-mobile-number" type="tel" data-validate="phone" placeholder="+98 912 000 0000" dir="ltr" required>
-					<span class="form-field__error" data-i18n="validate_phone_error">Enter a valid mobile number.</span>
-				</div>
-			</div>
-			<div class="form-grid">
-				<div class="form-field">
-					<label data-i18n="field_level" for="teacher-dashboard-field-level">Current Level</label>
-					<select id="teacher-dashboard-field-level">
-						<option value="A1">Beginner · A1</option>
-						<option value="A2">Pre-Intermediate · A2</option>
-						<option value="B1">Intermediate · B1</option>
-						<option value="B2">Upper-Intermediate · B2</option>
-						<option value="C1">Advanced · C1</option>
-						<option value="C2">Proficient · C2</option>
-					</select>
-				</div>
-				<div class="form-field">
-					<label data-i18n="field_gender" for="teacher-dashboard-field-gender">Gender</label>
-					<select id="teacher-dashboard-field-gender">
-						<option value="female" data-i18n="gender_female">Female</option>
-						<option value="male" data-i18n="gender_male">Male</option>
-					</select>
-				</div>
-			</div>
-			<div class="form-grid">
-				<div class="form-field">
-					<label data-i18n="field_session_duration" for="teacher-dashboard-field-session-duration">Session Duration (minutes)</label>
-					<input id="teacher-dashboard-field-session-duration" type="number" value="60" min="15" step="15">
-				</div>
-				<div class="form-field">
-					<label data-i18n="field_session_price" for="teacher-dashboard-field-session-price">Price per Session (Toman)</label>
-					<input id="teacher-dashboard-field-session-price" type="text" inputmode="numeric" class="currency-input" value="250000" dir="ltr">
-				</div>
-			</div>
-			<div class="form-actions">
-				<button type="button" class="btn btn--ghost" data-modal-close data-i18n="btn_cancel">Cancel</button>
-				<button type="submit" class="btn btn--primary" data-i18n="btn_save">Save</button>
-			</div>
-		</form>
 	</div>
 </div>
 
@@ -207,98 +168,52 @@
 <script>
 	var CURRENT_TEACHER_ID = 'jane'; // this dashboard always represents Jane Doe's logged-in view
 
-	function renderStudentGrid( filterText ) {
-		var students = window.mahtelaRoster.loadStudents();
-		var sessions = window.mahtelaData.loadSessions();
-		var grid = document.getElementById( 'student-grid' );
-		grid.innerHTML = '';
-		var q = ( filterText || '' ).trim().toLowerCase();
-		var shown = 0;
-		var todayISO = new Date().toISOString().slice( 0, 10 );
+	/* Saturday-first week bounds, matching the convention used throughout
+	   the app (teacher-schedule.html's weekly grid). */
+	function currentWeekRange() {
+		var now = new Date();
+		var day = now.getDay();
+		var diffToSat = ( day + 1 ) % 7;
+		var start = new Date( now.getFullYear(), now.getMonth(), now.getDate() - diffToSat );
+		var end = new Date( start.getFullYear(), start.getMonth(), start.getDate() + 6 );
+		function iso( d ) { return d.getFullYear() + '-' + String( d.getMonth() + 1 ).padStart( 2, '0' ) + '-' + String( d.getDate() ).padStart( 2, '0' ); }
+		return { start: iso( start ), end: iso( end ) };
+	}
 
-		Object.keys( students )
+	function isChargeable( s ) {
+		return s.status === 'held' || ( s.status === 'cancelled' && s.chargeApplied === true );
+	}
+
+	function renderOverview() {
+		var lang = window.mahtelaI18n.currentLang();
+		var fmt = new Intl.NumberFormat( lang === 'fa' ? 'fa-IR' : 'en-US' );
+
+		var students = window.mahtelaRoster.loadStudents();
+		var myStudents = Object.keys( students )
 			.map( function ( key ) { return students[ key ]; } )
-			.filter( function ( s ) { return s.teacherId === CURRENT_TEACHER_ID; } )
-			.forEach( function ( s ) {
-				if ( q && s.name.toLowerCase().indexOf( q ) === -1 ) { return; }
-				shown++;
+			.filter( function ( s ) { return s.teacherId === CURRENT_TEACHER_ID; } );
+		var myKeys = myStudents.map( function ( s ) { return s.key; } );
 
-				var upcoming = sessions
-					.filter( function ( sess ) { return sess.studentKey === s.key && sess.date >= todayISO && sess.status !== 'cancelled'; } )
-					.sort( function ( a, b ) { return ( a.date + a.time ).localeCompare( b.date + b.time ); } )[ 0 ];
-				var level = window.mahtelaRoster.levelInfo( s.level );
+		var sessions = window.mahtelaData.loadSessions().filter( function ( s ) { return myKeys.indexOf( s.studentKey ) !== -1; } );
 
-				var card = document.createElement( 'a' );
-				card.href = 'student-detail.html?student=' + s.key;
-				card.className = 'card student-card';
-				card.setAttribute( 'data-gender', s.gender );
+		document.getElementById( 'kpi-active-students' ).textContent = fmt.format( myStudents.length );
 
-				var metaHTML = upcoming
-					? '<span data-i18n="dash_next_class">Next class</span>: <span data-date="' + upcoming.date + '" data-time="' + upcoming.time + '"></span>'
-					: '<span data-i18n="dash_no_upcoming">No upcoming class scheduled</span>';
+		var week = currentWeekRange();
+		var sessionsThisWeek = sessions.filter( function ( s ) { return s.date >= week.start && s.date <= week.end && s.status !== 'cancelled'; } );
+		document.getElementById( 'kpi-sessions-week' ).textContent = fmt.format( sessionsThisWeek.length );
 
-				card.innerHTML =
-					'<div class="student-card__head">' +
-						'<span class="student-card__avatar"></span>' +
-						'<div><div class="student-card__name"></div><span class="badge ' + level.badge + '"></span></div>' +
-					'</div>' +
-					'<div class="student-card__meta">' +
-						'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>' +
-						metaHTML +
-					'</div>';
-				card.querySelector( '.student-card__avatar' ).textContent = s.initials;
-				card.querySelector( '.student-card__name' ).textContent = s.name;
-				card.querySelector( '.badge' ).textContent = level.label;
-				grid.appendChild( card );
-			} );
-
-		document.getElementById( 'no-results' ).style.display = shown === 0 ? 'block' : 'none';
-		window.mahtelaI18n.apply( window.mahtelaI18n.currentLang() );
-		window.mahtelaCalendar.applyScheduleDates();
+		var studentsByKey = {};
+		myStudents.forEach( function ( s ) { studentsByKey[ s.key ] = s; } );
+		var unsettledTotal = sessions
+			.filter( function ( s ) { return isChargeable( s ) && ! s.settled; } )
+			.reduce( function ( sum, s ) { return sum + ( studentsByKey[ s.studentKey ] ? studentsByKey[ s.studentKey ].rate : 0 ); }, 0 );
+		document.getElementById( 'kpi-unsettled-balance' ).textContent = window.mahtelaI18n.formatToman( unsettledTotal, lang );
 	}
 
-	function submitAddStudent() {
-		var students = window.mahtelaRoster.loadStudents();
-		var name = document.getElementById( 'teacher-dashboard-field-student-name' ).value.trim();
-		var key = window.mahtelaRoster.slugify( name, Object.keys( students ) );
-
-		students[ key ] = {
-			key: key, name: name,
-			initials: window.mahtelaRoster.initials( name ),
-			gender: document.getElementById( 'teacher-dashboard-field-gender' ).value,
-			level: document.getElementById( 'teacher-dashboard-field-level' ).value,
-			rate: parseInt( document.getElementById( 'teacher-dashboard-field-session-price' ).value.replace( /[^0-9]/g, '' ), 10 ) || 0,
-			duration: parseInt( document.getElementById( 'teacher-dashboard-field-session-duration' ).value, 10 ) || 60,
-			since: new Date().toISOString().slice( 0, 10 ),
-			skills: { listening: 0, speaking: 0, reading: 0, writing: 0 },
-			email: document.getElementById( 'teacher-dashboard-email-for-their-login' ).value.trim(),
-			phone: document.getElementById( 'teacher-dashboard-mobile-number' ).value.trim(),
-			teacherId: CURRENT_TEACHER_ID
-		};
-		window.mahtelaRoster.saveStudents( students );
-
-		document.getElementById( 'modal-add-student' ).classList.remove( 'is-open' );
-		document.body.style.overflow = '';
-		document.getElementById( 'add-student-form' ).reset();
-		mahtelaToast( 'Student added.' );
-	}
-
-	renderStudentGrid();
-	document.getElementById( 'student-search' ).addEventListener( 'input', function ( e ) {
-		renderStudentGrid( e.target.value );
-	} );
-	document.addEventListener( 'mahtela:studentschange', function () {
-		renderStudentGrid( document.getElementById( 'student-search' ).value );
-	} );
-	document.addEventListener( 'mahtela:sessionschange', function () {
-		renderStudentGrid( document.getElementById( 'student-search' ).value );
-	} );
-	document.addEventListener( 'mahtela:langchange', function () {
-		renderStudentGrid( document.getElementById( 'student-search' ).value );
-	} );
-	document.addEventListener( 'mahtela:calendarchange', function () {
-		renderStudentGrid( document.getElementById( 'student-search' ).value );
-	} );
+	renderOverview();
+	document.addEventListener( 'mahtela:studentschange', renderOverview );
+	document.addEventListener( 'mahtela:sessionschange', renderOverview );
+	document.addEventListener( 'mahtela:langchange', renderOverview );
 </script>
 </body>
 </html>

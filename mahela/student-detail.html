@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Elena Kim — MahELA</title>
+<title>Elena Kim — MahFLA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -41,14 +41,18 @@
 		<div class="sidebar__brand">
 			<span class="sidebar__logo">M</span>
 			<div class="sidebar__brand-text">
-				<span class="sidebar__brand-name" data-i18n="brand_name">MahELA</span>
-				<span class="sidebar__brand-tagline" data-i18n="brand_tagline">Mahta English Learning Academy</span>
+				<span class="sidebar__brand-name" data-i18n="brand_name">MahFLA</span>
+				<span class="sidebar__brand-tagline" data-i18n="brand_tagline">Mahta Foreign Language Academy</span>
 			</div>
 		</div>
 		<nav class="sidebar__nav">
 			<a href="teacher-dashboard.html" class="sidebar__link">
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
 				<span data-i18n="nav_dashboard">Dashboard</span>
+			</a>
+			<a href="teacher-students.html" class="sidebar__link">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="12" width="8" height="9" rx="2"/><rect x="3" y="14" width="8" height="7" rx="2"/></svg>
+				<span data-i18n="nav_students">Students</span>
 			</a>
 			<a href="teacher-schedule.html" class="sidebar__link">
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
@@ -76,7 +80,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahELA v1.11.0</div>
+			<div class="sidebar__version">MahFLA v1.12.0</div>
 		</div>
 	</aside>
 
@@ -251,7 +255,7 @@
 
 				<div class="finance-hero">
 					<div class="card finance-hero__card">
-						<div class="finance-hero__value">Aug 1</div>
+						<div class="finance-hero__value" data-date="2026-08-01" data-date-style="full">—</div>
 						<div class="finance-hero__label" data-i18n="finance_settled_until">Settled until</div>
 					</div>
 					<div class="card finance-hero__card">
@@ -434,10 +438,13 @@
 					<option value="no-show" data-i18n="cancel_reason_noshow">Student didn't show up</option>
 				</select>
 			</div>
-			<label data-i18n="charge_applied_label">Charge for this class?</label>
-			<div class="charge-toggle">
-				<button type="button" class="charge-toggle__btn" id="manage-session-charge-yes" data-i18n="charge_applied_yes">Apply fee</button>
-				<button type="button" class="charge-toggle__btn" id="manage-session-charge-no" data-i18n="charge_applied_no">No fee</button>
+			<p id="manage-session-teacher-cancel-note" style="font-size:11.5px; color:var(--ink-faint); display:none;" data-i18n="teacher_cancel_no_charge_note">No fee applies when the teacher cancels.</p>
+			<div id="manage-session-charge-section">
+				<label data-i18n="charge_applied_label">Charge for this class?</label>
+				<div class="charge-toggle">
+					<button type="button" class="charge-toggle__btn" id="manage-session-charge-yes" data-i18n="charge_applied_yes">Apply fee</button>
+					<button type="button" class="charge-toggle__btn" id="manage-session-charge-no" data-i18n="charge_applied_no">No fee</button>
+				</div>
 			</div>
 		</div>
 
@@ -515,7 +522,7 @@
 		var s = STUDENTS[ currentStudentKey() ];
 		var level = window.mahtelaRoster.levelInfo( s.level );
 
-		document.title = s.name + ' — MahELA';
+		document.title = s.name + ' — MahFLA';
 		document.getElementById( 'student-avatar' ).textContent = s.initials;
 		document.getElementById( 'student-name' ).textContent = s.name;
 
@@ -665,7 +672,7 @@
 			'<div class="session-row__date" data-date="' + s.date + '"><span class="session-row__date-day" data-date-part="day"></span><span class="session-row__date-month" data-date-part="month"></span></div>' +
 			'<div class="session-row__info">' +
 				'<div class="session-row__time">' + s.time + ' – ' + endStr + '</div>' +
-				'<div class="session-row__sub" data-date="' + s.date + '"><span data-date-part="weekday"></span> · ' + s.duration + ' <span data-i18n-inline="overview_minutes"></span> · <span data-currency="' + student.rate + '">—</span></div>' +
+				'<div class="session-row__sub" data-date="' + s.date + '"><span data-date-part="weekday"></span> · ' + s.duration + ' <span data-i18n-inline="overview_minutes"></span></div>' +
 				noteHTML +
 			'</div>' +
 			'<div class="session-row__actions" style="flex-direction:column; align-items:flex-end; gap:6px;">' + classTypeBadgeHTML( s.classType, lang ) + statusBadgeHTML( s, lang ) + '</div>';
@@ -733,6 +740,25 @@
 			btn.tabIndex = checked ? 0 : -1;
 		} );
 		document.getElementById( 'manage-session-cancel-subform' ).style.display = status === 'cancelled' ? 'block' : 'none';
+		if ( status === 'cancelled' ) { updateChargeVisibility(); }
+	}
+
+	/**
+	 * A teacher-initiated cancellation never charges the student -- that
+	 * choice only makes sense when the STUDENT cancelled or didn't show
+	 * up. Hides the fee toggle entirely when "Teacher cancelled" is
+	 * selected and forces chargeApplied to false.
+	 */
+	function updateChargeVisibility() {
+		var reason = document.getElementById( 'manage-session-cancel-reason' ).value;
+		var isTeacherReason = reason === 'teacher';
+		document.getElementById( 'manage-session-charge-section' ).style.display = isTeacherReason ? 'none' : 'block';
+		document.getElementById( 'manage-session-teacher-cancel-note' ).style.display = isTeacherReason ? 'block' : 'none';
+		if ( isTeacherReason ) {
+			setChargeUI( false );
+		} else if ( pendingChargeApplied === null ) {
+			setChargeUI( false );
+		}
 	}
 
 	function setChargeUI( charge ) {
@@ -743,8 +769,8 @@
 
 	document.getElementById( 'manage-session-status-control' ).addEventListener( 'seg-change', function ( e ) {
 		setStatusUI( e.detail.value );
-		if ( e.detail.value === 'cancelled' && pendingChargeApplied === null ) { setChargeUI( false ); }
 	} );
+	document.getElementById( 'manage-session-cancel-reason' ).addEventListener( 'change', updateChargeVisibility );
 	document.getElementById( 'manage-session-charge-yes' ).addEventListener( 'click', function () { setChargeUI( true ); } );
 	document.getElementById( 'manage-session-charge-no' ).addEventListener( 'click', function () { setChargeUI( false ); } );
 
@@ -756,7 +782,7 @@
 		s.note = document.getElementById( 'manage-session-note' ).value.trim();
 		if ( pendingStatus === 'cancelled' ) {
 			s.cancelReason = document.getElementById( 'manage-session-cancel-reason' ).value;
-			s.chargeApplied = pendingChargeApplied === null ? false : pendingChargeApplied;
+			s.chargeApplied = s.cancelReason === 'teacher' ? false : ( pendingChargeApplied === null ? false : pendingChargeApplied );
 		} else {
 			s.cancelReason = null;
 			s.chargeApplied = null;

@@ -1,8 +1,51 @@
-MahELA Prototype — Changelog
+MahFLA Prototype — Changelog
 ==============================
 
-v1.11.0 — Current
+v1.12.0 — Current
 ------------------
+- Renamed the product: "MahELA" is now "MahFLA" everywhere (titles,
+  sidebar wordmark, version tag), in both languages -- the brand name
+  is no longer translated to a Persian phonetic spelling, per explicit
+  request. Tagline changed to "Mahta Foreign Language Academy" /
+  "آکادمی زبان خارجی مهتا" (also fixed the fallback tagline text that
+  was still hardcoded to the old English-only wording on 11 pages,
+  which the earlier MahELA->MahFLA replace didn't touch since it's a
+  different string).
+- Cancellation charging is now constrained by who cancelled: selecting
+  "Teacher cancelled" hides the fee toggle entirely and forces no
+  charge (a teacher's own cancellation should never bill the student);
+  only "Student cancelled" or "no-show" reveals the fee choice. Backed
+  by a second guard at save time so a stale toggle click can't sneak a
+  charge through. Fixed in both the teacher's and the student-detail
+  Manage Session modals.
+- Fixed "Settled until" showing a literal hardcoded "Aug 1" regardless
+  of language/calendar -- it was never wired to the date system at
+  all. Now a real ISO date rendered through the same formatter as
+  everywhere else, in both the teacher's Finance tab and the student's
+  own Balance tab.
+- Class price no longer shows on the Schedule tab's session rows --
+  it now lives only in Finance, where it belongs.
+- Every student now has realistic sample data (previously only Elena
+  did): an upcoming class, two held classes, and one cancelled class
+  each, with a different cancellation reason/charge combination per
+  student so the new who-cancelled logic and Finance tab both have
+  real data to test against.
+- Built a dedicated Students page (teacher-students.html) -- the full
+  roster, search, and Add Student flow, moved out of the Dashboard so
+  it's reachable directly from the sidebar instead of only via
+  Dashboard's content. Dashboard itself is now a proper overview: three
+  stat cards (Active Students, Sessions This Week, Unsettled Balance)
+  computed live from real data instead of static placeholder numbers,
+  plus quick-link cards to Students/Schedule/Messages. Added the
+  Students nav item to every teacher-facing sidebar. Also moved the
+  quick-link-card pattern (previously duplicated inline only in
+  admin-dashboard.html) into the shared stylesheet so both dashboards
+  use the same definition. Verified end-to-end: a student added on the
+  new page immediately reflects in the Dashboard's Active Students
+  count.
+
+v1.11.0
+--------
 - Fixed a real, load-bearing bug found via screenshots: the session
   Status buttons (Scheduled/Held/Cancelled) in the Manage Session
   modal didn't work at all -- clicking did nothing, and they rendered

@@ -9,8 +9,8 @@
 
 	var DICT = {
 		// Shared / nav
-		brand_name: { en: 'MahELA', fa: 'مه‌ای‌ال‌ای' },
-		brand_tagline: { en: 'Mahta English Learning Academy', fa: 'آکادمی یادگیری انگلیسی مهتا' },
+		brand_name: { en: 'MahFLA', fa: 'MahFLA' },
+		brand_tagline: { en: 'Mahta Foreign Language Academy', fa: 'آکادمی زبان خارجی مهتا' },
 		nav_dashboard: { en: 'Dashboard', fa: 'داشبورد' },
 		nav_students: { en: 'Students', fa: 'شاگردان' },
 		nav_schedule: { en: 'Schedule', fa: 'زمان‌بندی' },
@@ -175,6 +175,11 @@
 		// Teacher dashboard
 		dash_title: { en: 'Your Students', fa: 'شاگردهای تو' },
 		dash_sub: { en: "Here's everyone you're currently teaching.", fa: 'این‌ها همه‌ی کسایی هستن که الان بهشون درس می‌دی.' },
+		teacher_dash_title: { en: 'Dashboard', fa: 'داشبورد' },
+		teacher_dash_sub: { en: 'A quick look at your students, schedule, and balance.', fa: 'یه نگاه سریع به شاگردها، برنامه، و حساب‌وکتابت.' },
+		quicklink_students_desc: { en: 'View, search, and add students.', fa: 'شاگردها رو ببین، جست‌وجو کن، یا اضافه کن.' },
+		quicklink_schedule_desc: { en: 'See and book your weekly timetable.', fa: 'برنامه‌ی هفتگی‌ت رو ببین و کلاس رزرو کن.' },
+		quicklink_messages_desc: { en: 'Chat with your students.', fa: 'با شاگردهات چت کن.' },
 		dash_search_ph: { en: 'Search students…', fa: 'جست‌وجوی شاگرد…' },
 		dash_add_student: { en: '+ Add Student', fa: '+ افزودن شاگرد' },
 		dash_stat_students: { en: 'Active Students', fa: 'شاگردهای فعال' },
@@ -246,6 +251,7 @@
 		charge_applied_label: { en: 'Charge for this class?', fa: 'هزینه‌ی این کلاس گرفته بشه؟' },
 		charge_applied_yes: { en: 'Apply fee', fa: 'اعمال هزینه' },
 		charge_applied_no: { en: 'No fee', fa: 'بدون هزینه' },
+		teacher_cancel_no_charge_note: { en: 'No fee applies when the teacher cancels.', fa: 'وقتی معلم کنسل می‌کنه، هزینه‌ای اعمال نمی‌شه.' },
 		session_note_label: { en: 'Note for student', fa: 'یادداشت برای شاگرد' },
 		session_note_ph: { en: 'How did the class go? Visible to the student.', fa: 'کلاس چطور بود؟ برای شاگرد نمایش داده می‌شه.' },
 		session_note_none: { en: 'No note yet.', fa: 'هنوز یادداشتی نیست.' },
