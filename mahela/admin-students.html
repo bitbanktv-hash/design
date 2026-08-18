@@ -54,7 +54,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahELA v1.9.1</div>
+			<div class="sidebar__version">MahELA v1.10.0</div>
 		</div>
 	</aside>
 
@@ -142,18 +142,25 @@
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/theme.js"></script>
 <script src="assets/js/clock.js"></script>
+<script src="assets/js/roster-data.js"></script>
 <script src="assets/js/app.js"></script>
 <script>
-	var ALL_STUDENTS = [
-		{ key: 'elena',  name: 'Elena Kim',   teacher: 'Jane Doe',    email: 'elena@example.com',  phone: '+98 912 111 1111', level: 'B2', color: 'c-pink' },
-		{ key: 'daniel', name: 'Daniel Cruz', teacher: 'Jane Doe',    email: 'daniel@example.com', phone: '+98 912 222 2222', level: 'A1', color: 'c-teal' },
-		{ key: 'sara',   name: 'Sara Ahmadi', teacher: 'Alex Turner', email: 'sara@example.com',   phone: '+98 912 333 3333', level: 'C1', color: 'c-orange' },
-		{ key: 'marco',  name: 'Marco Rossi', teacher: 'Alex Turner', email: 'marco@example.com',  phone: '+98 912 444 4444', level: 'B1', color: 'c-green' },
-		{ key: 'yuki',   name: 'Yuki Tanaka', teacher: 'Sam Lee',     email: 'yuki@example.com',   phone: '+98 912 555 5555', level: 'A2', color: 'brand-strong' }
-	];
-
 	function initials( name ) {
 		return name.split( ' ' ).map( function ( p ) { return p[ 0 ]; } ).join( '' ).slice( 0, 2 ).toUpperCase();
+	}
+
+	function allStudentsWithTeacherNames() {
+		var students = window.mahtelaRoster.loadStudents();
+		var teachers = window.mahtelaRoster.loadTeachers();
+		return Object.keys( students ).map( function ( key ) {
+			var s = students[ key ];
+			var teacher = teachers[ s.teacherId ];
+			return {
+				key: s.key, name: s.name, gender: s.gender,
+				teacher: teacher ? teacher.name : '—',
+				email: s.email, phone: s.phone, level: s.level
+			};
+		} );
 	}
 
 	function renderStudents( list ) {
@@ -163,9 +170,10 @@
 
 		list.forEach( function ( s ) {
 			var tr = document.createElement( 'tr' );
+			tr.setAttribute( 'data-gender', s.gender );
 			tr.innerHTML =
 				'<td><div class="data-table__user">' +
-					'<span class="data-table__avatar" style="background:var(--' + s.color + ');">' + initials( s.name ) + '</span>' +
+					'<span class="data-table__avatar">' + initials( s.name ) + '</span>' +
 					'<span class="data-table__name">' + s.name + '</span>' +
 				'</div></td>' +
 				'<td>' + s.teacher + '</td>' +
@@ -182,13 +190,16 @@
 		document.getElementById( 'admin-students-no-results' ).style.display = list.length === 0 ? 'block' : 'none';
 	}
 
-	renderStudents( ALL_STUDENTS );
+	renderStudents( allStudentsWithTeacherNames() );
 	document.addEventListener( 'mahtela:langchange', function () { renderStudents( currentFiltered() ); } );
+	document.addEventListener( 'mahtela:studentschange', function () { renderStudents( currentFiltered() ); } );
+	document.addEventListener( 'mahtela:teacherschange', function () { renderStudents( currentFiltered() ); } );
 
 	function currentFiltered() {
+		var all = allStudentsWithTeacherNames();
 		var q = document.getElementById( 'admin-student-search' ).value.trim().toLowerCase();
-		if ( ! q ) { return ALL_STUDENTS; }
-		return ALL_STUDENTS.filter( function ( s ) {
+		if ( ! q ) { return all; }
+		return all.filter( function ( s ) {
 			return s.name.toLowerCase().indexOf( q ) !== -1 || s.teacher.toLowerCase().indexOf( q ) !== -1;
 		} );
 	}

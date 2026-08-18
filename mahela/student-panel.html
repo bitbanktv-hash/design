@@ -48,10 +48,10 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="12" width="8" height="9" rx="2"/><rect x="3" y="14" width="8" height="7" rx="2"/></svg>
 				<span data-i18n="student_panel_title">My Panel</span>
 			</a>
-			<a href="#" class="sidebar__link">
+			<a href="student-panel.html#messages" class="sidebar__link">
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
 				<span data-i18n="nav_messages">Messages</span>
-				<span class="badge badge--brand" style="margin-inline-start:auto;">1</span>
+				<span class="badge badge--brand" style="margin-inline-start:auto;" data-i18n-number="1">1</span>
 			</a>
 			<a href="settings.html?role=student" class="sidebar__link">
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 9 19.35a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.65 15a1.7 1.7 0 0 0-1.56-1.04H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.65 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.65a1.7 1.7 0 0 0 1.04-1.56V3a2 2 0 0 1 4 0v.09A1.7 1.7 0 0 0 15 4.65a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.35 9a1.7 1.7 0 0 0 1.56 1.04H21a2 2 0 0 1 0 4h-.09A1.7 1.7 0 0 0 19.4 15Z"/></svg>
@@ -70,7 +70,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahELA v1.9.1</div>
+			<div class="sidebar__version">MahELA v1.10.0</div>
 		</div>
 	</aside>
 
@@ -150,20 +150,20 @@
 						<div class="radar-wrap__chart" id="my-skills-radar"></div>
 						<div>
 							<div class="skill-bar">
-								<div class="skill-bar__head"><span data-i18n="skills_listening">Listening</span><span>78</span></div>
-								<div class="skill-bar__track"><div class="skill-bar__fill" style="width:78%; background:var(--c-pink);"></div></div>
+								<div class="skill-bar__head"><span data-i18n="skills_listening">Listening</span><span id="panel-skill-val-listening">—</span></div>
+								<div class="skill-bar__track"><div class="skill-bar__fill" id="panel-skill-fill-listening" style="width:0%; background:var(--c-pink);"></div></div>
 							</div>
 							<div class="skill-bar">
-								<div class="skill-bar__head"><span data-i18n="skills_speaking">Speaking</span><span>62</span></div>
-								<div class="skill-bar__track"><div class="skill-bar__fill" style="width:62%; background:var(--c-orange);"></div></div>
+								<div class="skill-bar__head"><span data-i18n="skills_speaking">Speaking</span><span id="panel-skill-val-speaking">—</span></div>
+								<div class="skill-bar__track"><div class="skill-bar__fill" id="panel-skill-fill-speaking" style="width:0%; background:var(--c-orange);"></div></div>
 							</div>
 							<div class="skill-bar">
-								<div class="skill-bar__head"><span data-i18n="skills_reading">Reading</span><span>85</span></div>
-								<div class="skill-bar__track"><div class="skill-bar__fill" style="width:85%; background:var(--c-teal);"></div></div>
+								<div class="skill-bar__head"><span data-i18n="skills_reading">Reading</span><span id="panel-skill-val-reading">—</span></div>
+								<div class="skill-bar__track"><div class="skill-bar__fill" id="panel-skill-fill-reading" style="width:0%; background:var(--c-teal);"></div></div>
 							</div>
 							<div class="skill-bar" style="margin-bottom:0;">
-								<div class="skill-bar__head"><span data-i18n="skills_writing">Writing</span><span>58</span></div>
-								<div class="skill-bar__track"><div class="skill-bar__fill" style="width:58%; background:var(--c-green);"></div></div>
+								<div class="skill-bar__head"><span data-i18n="skills_writing">Writing</span><span id="panel-skill-val-writing">—</span></div>
+								<div class="skill-bar__track"><div class="skill-bar__fill" id="panel-skill-fill-writing" style="width:0%; background:var(--c-green);"></div></div>
 							</div>
 						</div>
 					</div>
@@ -210,17 +210,34 @@
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/theme.js"></script>
 <script src="assets/js/clock.js"></script>
+<script src="assets/js/roster-data.js"></script>
 <script src="assets/js/sessions-data.js"></script>
 <script src="assets/js/radar-chart.js"></script>
 <script src="assets/js/app.js"></script>
 <script>
-	MahtelaRadar.render( document.getElementById( 'my-skills-radar' ), {
-		labels: [ 'Listening', 'Speaking', 'Reading', 'Writing' ],
-		values: [ 78, 62, 85, 58 ],
-		color: 'var(--student-accent)'
-	} );
+	function renderSkillsTab() {
+		var lang = window.mahtelaI18n.currentLang();
+		var s = window.mahtelaRoster.loadStudents()[ STUDENT_KEY ];
+		if ( ! s ) { return; }
+		var fmt = new Intl.NumberFormat( lang === 'fa' ? 'fa-IR' : 'en-US' );
+
+		[ 'listening', 'speaking', 'reading', 'writing' ].forEach( function ( key ) {
+			document.getElementById( 'panel-skill-val-' + key ).textContent = fmt.format( s.skills[ key ] );
+			document.getElementById( 'panel-skill-fill-' + key ).style.width = s.skills[ key ] + '%';
+		} );
+
+		MahtelaRadar.render( document.getElementById( 'my-skills-radar' ), {
+			labels: [ 'Listening', 'Speaking', 'Reading', 'Writing' ],
+			values: [ s.skills.listening, s.skills.speaking, s.skills.reading, s.skills.writing ],
+			color: 'var(--student-accent)'
+		} );
+	}
 
 	var STUDENT_KEY = 'elena'; // this panel always represents Elena's own logged-in view
+
+	renderSkillsTab();
+	document.addEventListener( 'mahtela:langchange', renderSkillsTab );
+	document.addEventListener( 'mahtela:studentschange', renderSkillsTab );
 
 	/* ---------- Schedule tab (read-only: class type, status, teacher notes) ---------- */
 	var CLASS_TYPE_ICONS = {
@@ -347,7 +364,7 @@
 		var text = input.value.trim();
 		if ( ! text ) { return; }
 		var convos = window.mahtelaData.loadConversations();
-		if ( ! convos[ STUDENT_KEY ] ) { return; }
+		if ( ! convos[ STUDENT_KEY ] ) { convos[ STUDENT_KEY ] = { messages: [] }; }
 		convos[ STUDENT_KEY ].messages.push( { dir: 'in', html: escapeHtmlLocal( text ), time: window.mahtelaI18n.currentLang() === 'fa' ? 'اکنون' : 'Just now' } );
 		window.mahtelaData.saveConversations( convos );
 		input.value = '';

@@ -57,7 +57,7 @@
 			<a href="messages.html" class="sidebar__link">
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
 				<span data-i18n="nav_messages">Messages</span>
-				<span class="badge badge--brand" style="margin-inline-start:auto;">3</span>
+				<span class="badge badge--brand" style="margin-inline-start:auto;" data-i18n-number="3">3</span>
 			</a>
 			<a href="settings.html?role=teacher" class="sidebar__link">
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 9 19.35a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.65 15a1.7 1.7 0 0 0-1.56-1.04H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.65 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.65a1.7 1.7 0 0 0 1.04-1.56V3a2 2 0 0 1 4 0v.09A1.7 1.7 0 0 0 15 4.65a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.35 9a1.7 1.7 0 0 0 1.56 1.04H21a2 2 0 0 1 0 4h-.09A1.7 1.7 0 0 0 19.4 15Z"/></svg>
@@ -76,7 +76,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahELA v1.9.1</div>
+			<div class="sidebar__version">MahELA v1.10.0</div>
 		</div>
 	</aside>
 
@@ -204,22 +204,22 @@
 					<div class="history-item">
 						<span data-date="2026-08-12" data-date-style="full"></span>
 						<div class="history-item__pills">
-							<span class="history-pill" style="color:var(--c-pink);">L 78</span>
-							<span class="history-pill" style="color:var(--c-orange);">S 62</span>
-							<span class="history-pill" style="color:var(--c-teal);">R 85</span>
-							<span class="history-pill" style="color:var(--c-green);">W 58</span>
+							<span class="history-pill" style="color:var(--c-pink);">L <span data-i18n-number="78">78</span></span>
+							<span class="history-pill" style="color:var(--c-orange);">S <span data-i18n-number="62">62</span></span>
+							<span class="history-pill" style="color:var(--c-teal);">R <span data-i18n-number="85">85</span></span>
+							<span class="history-pill" style="color:var(--c-green);">W <span data-i18n-number="58">58</span></span>
 						</div>
 					</div>
 					<div class="history-item">
 						<span data-date="2026-07-15" data-date-style="full"></span>
 						<div class="history-item__pills">
-							<span class="history-pill">L 70</span><span class="history-pill">S 55</span><span class="history-pill">R 80</span><span class="history-pill">W 50</span>
+							<span class="history-pill">L <span data-i18n-number="70">70</span></span><span class="history-pill">S <span data-i18n-number="55">55</span></span><span class="history-pill">R <span data-i18n-number="80">80</span></span><span class="history-pill">W <span data-i18n-number="50">50</span></span>
 						</div>
 					</div>
 					<div class="history-item">
 						<span data-date="2026-06-10" data-date-style="full"></span>
 						<div class="history-item__pills">
-							<span class="history-pill">L 60</span><span class="history-pill">S 45</span><span class="history-pill">R 72</span><span class="history-pill">W 40</span>
+							<span class="history-pill">L <span data-i18n-number="60">60</span></span><span class="history-pill">S <span data-i18n-number="45">45</span></span><span class="history-pill">R <span data-i18n-number="72">72</span></span><span class="history-pill">W <span data-i18n-number="40">40</span></span>
 						</div>
 					</div>
 				</div>
@@ -338,7 +338,7 @@
 			<h2 class="modal-box__title" data-i18n="skills_new_assessment">+ New Assessment</h2>
 			<button type="button" class="modal-box__close" data-modal-close aria-label="Close">&times;</button>
 		</div>
-		<form onsubmit="event.preventDefault(); mahtelaToast('New assessment saved.'); document.getElementById('modal-new-assessment').classList.remove('is-open'); document.body.style.overflow='';">
+		<form id="new-assessment-form">
 			<div class="form-field">
 				<label data-i18n="skills_listening" for="student-detail-skills-listening">Listening</label>
 				<input id="student-detail-skills-listening" type="range" min="0" max="100" value="78">
@@ -454,12 +454,12 @@
 			<h2 class="modal-box__title" data-i18n="overview_edit">Edit Details</h2>
 			<button type="button" class="modal-box__close" data-modal-close aria-label="Close">&times;</button>
 		</div>
-		<form onsubmit="event.preventDefault(); mahtelaToast('Details updated.'); document.getElementById('modal-edit-student').classList.remove('is-open'); document.body.style.overflow='';">
+		<form id="edit-student-form">
 			<div class="form-grid">
 				<div class="form-field"><label data-i18n="field_level" for="edit-level-select">Current Level</label>
 					<select id="edit-level-select">
-						<option value="Beginner · A1">Beginner · A1</option><option value="Pre-Intermediate · A2">Pre-Intermediate · A2</option><option value="Intermediate · B1">Intermediate · B1</option>
-						<option value="Upper-Intermediate · B2">Upper-Intermediate · B2</option><option value="Advanced · C1">Advanced · C1</option><option value="Proficient · C2">Proficient · C2</option>
+						<option value="A1">Beginner · A1</option><option value="A2">Pre-Intermediate · A2</option><option value="B1">Intermediate · B1</option>
+						<option value="B2">Upper-Intermediate · B2</option><option value="C1">Advanced · C1</option><option value="C2">Proficient · C2</option>
 					</select>
 				</div>
 				<div class="form-field"><label data-i18n="field_gender" for="edit-gender-select">Gender</label>
@@ -484,6 +484,7 @@
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/theme.js"></script>
 <script src="assets/js/clock.js"></script>
+<script src="assets/js/roster-data.js"></script>
 <script src="assets/js/sessions-data.js"></script>
 <script src="assets/js/radar-chart.js"></script>
 <script src="assets/js/app.js"></script>
@@ -495,34 +496,28 @@
 	 * query key -- but the rendering logic below (fill in name/avatar/
 	 * level/skills from whichever record is selected) carries over as-is.
 	 */
-	var STUDENTS = {
-		elena:  { name: 'Elena Kim',    initials: 'EK', gender: 'female', levelValue: 'B2', levelLabel: 'Upper-Intermediate · B2', levelBadge: 'badge--accent',  rate: 250000, duration: 60, since: '2026-01-15', skills: { listening: 78, speaking: 62, reading: 85, writing: 58 } },
-		daniel: { name: 'Daniel Cruz',  initials: 'DC', gender: 'male',   levelValue: 'A1', levelLabel: 'Beginner · A1',            levelBadge: 'badge--neutral', rate: 200000, duration: 45, since: '2026-03-03',  skills: { listening: 35, speaking: 28, reading: 40, writing: 22 } },
-		sara:   { name: 'Sara Ahmadi',  initials: 'SA', gender: 'female', levelValue: 'C1', levelLabel: 'Advanced · C1',            levelBadge: 'badge--success', rate: 300000, duration: 60, since: '2025-11-10', skills: { listening: 90, speaking: 85, reading: 92, writing: 80 } },
-		marco:  { name: 'Marco Rossi',  initials: 'MR', gender: 'male',   levelValue: 'B1', levelLabel: 'Intermediate · B1',        levelBadge: 'badge--warning', rate: 250000, duration: 60, since: '2026-02-20', skills: { listening: 60, speaking: 55, reading: 65, writing: 50 } },
-		yuki:   { name: 'Yuki Tanaka',  initials: 'YT', gender: 'female', levelValue: 'A2', levelLabel: 'Pre-Intermediate · A2',    levelBadge: 'badge--neutral', rate: 220000, duration: 45, since: '2026-04-05',  skills: { listening: 45, speaking: 38, reading: 50, writing: 32 } }
-	};
-
+	var STUDENTS = window.mahtelaRoster.loadStudents();
 	var SESSIONS = window.mahtelaData.loadSessions();
 
 	function currentStudentKey() {
 		var params = new URLSearchParams( window.location.search );
 		var key = params.get( 'student' );
-		return ( key && STUDENTS[ key ] ) ? key : 'elena';
+		return ( key && STUDENTS[ key ] ) ? key : Object.keys( STUDENTS )[ 0 ];
 	}
 
 	function renderStudent() {
 		var s = STUDENTS[ currentStudentKey() ];
+		var level = window.mahtelaRoster.levelInfo( s.level );
 
 		document.title = s.name + ' — MahELA';
 		document.getElementById( 'student-avatar' ).textContent = s.initials;
 		document.getElementById( 'student-name' ).textContent = s.name;
 
 		var levelBadge = document.getElementById( 'student-level-badge' );
-		levelBadge.textContent = s.levelLabel;
-		levelBadge.className = 'badge ' + s.levelBadge;
+		levelBadge.textContent = level.label;
+		levelBadge.className = 'badge ' + level.badge;
 
-		document.getElementById( 'student-level-value' ).textContent = s.levelValue;
+		document.getElementById( 'student-level-value' ).textContent = s.level;
 		document.getElementById( 'student-duration-value' ).textContent = s.duration;
 		document.getElementById( 'student-since-value' ).textContent = window.mahtelaCalendar.formatFullDate( s.since, window.mahtelaI18n.currentLang() );
 
@@ -533,14 +528,19 @@
 		document.getElementById( 'student-page-body' ).setAttribute( 'data-gender', s.gender );
 
 		[ 'listening', 'speaking', 'reading', 'writing' ].forEach( function ( key ) {
-			document.getElementById( 'skill-val-' + key ).textContent = s.skills[ key ];
+			document.getElementById( 'skill-val-' + key ).textContent = new Intl.NumberFormat( window.mahtelaI18n.currentLang() === 'fa' ? 'fa-IR' : 'en-US' ).format( s.skills[ key ] );
 			document.getElementById( 'skill-fill-' + key ).style.width = s.skills[ key ] + '%';
 		} );
 
-		document.getElementById( 'edit-level-select' ).value = s.levelLabel;
+		document.getElementById( 'edit-level-select' ).value = s.level;
 		document.getElementById( 'edit-gender-select' ).value = s.gender;
 		document.getElementById( 'edit-duration-input' ).value = s.duration;
 		document.getElementById( 'edit-price-input' ).value = new Intl.NumberFormat( 'en-US' ).format( s.rate );
+
+		document.getElementById( 'student-detail-skills-listening' ).value = s.skills.listening;
+		document.getElementById( 'student-detail-skills-speaking' ).value = s.skills.speaking;
+		document.getElementById( 'student-detail-skills-reading' ).value = s.skills.reading;
+		document.getElementById( 'student-detail-skills-writing' ).value = s.skills.writing;
 
 		MahtelaRadar.render( document.getElementById( 'skills-radar' ), {
 			labels: [ 'Listening', 'Speaking', 'Reading', 'Writing' ],
@@ -549,11 +549,46 @@
 		} );
 	}
 
+	document.getElementById( 'edit-student-form' ).addEventListener( 'submit', function ( e ) {
+		e.preventDefault();
+		var key = currentStudentKey();
+		var students = window.mahtelaRoster.loadStudents();
+		var s = students[ key ];
+		s.level = document.getElementById( 'edit-level-select' ).value;
+		s.gender = document.getElementById( 'edit-gender-select' ).value;
+		s.duration = parseInt( document.getElementById( 'edit-duration-input' ).value, 10 ) || s.duration;
+		s.rate = parseInt( document.getElementById( 'edit-price-input' ).value.replace( /[^0-9]/g, '' ), 10 ) || s.rate;
+		window.mahtelaRoster.saveStudents( students );
+		document.getElementById( 'modal-edit-student' ).classList.remove( 'is-open' );
+		document.body.style.overflow = '';
+		mahtelaToast( 'Details updated.' );
+	} );
+
+	document.getElementById( 'new-assessment-form' ).addEventListener( 'submit', function ( e ) {
+		e.preventDefault();
+		var key = currentStudentKey();
+		var students = window.mahtelaRoster.loadStudents();
+		var s = students[ key ];
+		s.skills = {
+			listening: parseInt( document.getElementById( 'student-detail-skills-listening' ).value, 10 ),
+			speaking: parseInt( document.getElementById( 'student-detail-skills-speaking' ).value, 10 ),
+			reading: parseInt( document.getElementById( 'student-detail-skills-reading' ).value, 10 ),
+			writing: parseInt( document.getElementById( 'student-detail-skills-writing' ).value, 10 )
+		};
+		window.mahtelaRoster.saveStudents( students );
+		document.getElementById( 'modal-new-assessment' ).classList.remove( 'is-open' );
+		document.body.style.overflow = '';
+		mahtelaToast( 'New assessment saved.' );
+	} );
+
+	document.addEventListener( 'mahtela:studentschange', function () {
+		STUDENTS = window.mahtelaRoster.loadStudents();
+		renderStudent();
+	} );
+
 	renderStudent();
 	document.addEventListener( 'mahtela:langchange', function () {
-		var s = STUDENTS[ currentStudentKey() ];
-		document.getElementById( 'student-rate-value' ).textContent = window.mahtelaI18n.formatToman( s.rate, window.mahtelaI18n.currentLang() );
-		document.getElementById( 'student-since-value' ).textContent = window.mahtelaCalendar.formatFullDate( s.since, window.mahtelaI18n.currentLang() );
+		renderStudent();
 	} );
 	document.addEventListener( 'mahtela:calendarchange', function () {
 		var s = STUDENTS[ currentStudentKey() ];
@@ -843,7 +878,7 @@
 	document.querySelector( '.chat-composer' ).addEventListener( 'chat-composer:send', function ( e ) {
 		var key = currentStudentKey();
 		var convos = window.mahtelaData.loadConversations();
-		if ( ! convos[ key ] ) { return; }
+		if ( ! convos[ key ] ) { convos[ key ] = { messages: [] }; }
 		convos[ key ].messages.push( { dir: 'out', html: e.detail.html, time: window.mahtelaI18n.currentLang() === 'fa' ? 'اکنون' : 'Just now' } );
 		window.mahtelaData.saveConversations( convos );
 		// mahtela:messageschange (below) re-renders the thread.
@@ -851,16 +886,17 @@
 
 	function renderMessagesTab() {
 		var key = currentStudentKey();
+		var student = STUDENTS[ key ];
 		var convos = window.mahtelaData.loadConversations();
-		var convo = convos[ key ];
+		var messages = ( convos[ key ] && convos[ key ].messages ) ? convos[ key ].messages : [];
 		var thread = document.getElementById( 'chat-thread' );
-		if ( ! thread || ! convo ) { return; }
+		if ( ! thread || ! student ) { return; }
 		thread.innerHTML = '';
 
-		convo.messages.forEach( function ( m ) {
+		messages.forEach( function ( m ) {
 			var bubble = document.createElement( 'div' );
 			bubble.className = 'message-bubble message-bubble--' + m.dir;
-			var avatarIn = m.dir === 'in' ? '<span class="message-bubble__avatar">' + convo.initials + '</span>' : '';
+			var avatarIn = m.dir === 'in' ? '<span class="message-bubble__avatar">' + student.initials + '</span>' : '';
 			var avatarOut = m.dir === 'out' ? '<span class="message-bubble__avatar" style="background:var(--c-pink); color:var(--c-ink);">JD</span>' : '';
 			bubble.innerHTML = avatarIn +
 				'<div class="message-bubble__content"><div class="message-bubble__text">' + m.html + '</div><span class="message-bubble__time">' + m.time + '</span></div>' +

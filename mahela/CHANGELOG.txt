@@ -1,8 +1,53 @@
 MahELA Prototype — Changelog
 ==============================
 
-v1.9.1 — Current
+v1.10.0 — Current
 ------------------
+- Built a shared student + teacher roster (assets/js/roster-data.js),
+  localStorage-backed, so the student/teacher identity data that used
+  to be hardcoded separately in 7 different pages (teacher-dashboard,
+  student-detail, teacher-schedule, admin-students, admin-teachers,
+  messages, student-panel) now all reads and writes the SAME records.
+  This is what makes "Add Student", "Edit Details", "New Assessment",
+  and "Create Teacher" actually persist and show up everywhere else
+  instead of just flashing a toast and discarding the input -- verified
+  end-to-end in Node (add a student -> appears in their teacher's
+  roster -> messaging them actually works, which previously failed
+  silently for anyone not in the original hardcoded five).
+- Fixed two broken sidebar links: the student's "Messages" nav item
+  (in both settings.html and student-panel.html) went nowhere; both
+  now deep-link to the Messages tab.
+- Fixed a real, load-bearing runtime bug caught only by simulating the
+  page, not by syntax-checking alone: admin-students.html's search
+  still referenced the ALL_STUDENTS variable that had just been
+  replaced with a live roster lookup, which would have thrown on any
+  search input or language change.
+- Fixed the same "silently does nothing for a new student" gap in
+  three places: sessions-data.js's sendMessageTo, and the message-send
+  handlers in messages.html and student-detail.html all required a
+  conversation entry to already exist; now they create one on first
+  send instead of failing quietly.
+- Persian-completeness pass: added a generic data-i18n-number
+  mechanism to the shared i18n system (parallel to the existing
+  data-currency one) and used it to fix every plain count that was
+  still hardcoded to Latin digits regardless of language -- sidebar
+  unread badges, dashboard KPI cards, the admin teacher roster's
+  per-teacher student count, and the skill-assessment history pills.
+  Also fixed two numbers that were never localized in the first place:
+  student-detail.html's current skill values (correct data, wrong
+  digits) and its language-change handler, which only partially
+  re-rendered and would have kept the stale skill numbers even after
+  the digit-localization fix. Made "Total Teachers"/"Total Students"
+  on the admin dashboard genuinely dynamic instead of static numbers.
+- student-panel.html's own Skills tab was completely static (78/62/
+  85/58, unconnected to any real data) -- a teacher's assessment
+  update would never have shown up there. Now reads the same shared
+  roster data as everywhere else, confirmed with an end-to-end
+  simulation of a teacher updating scores and the student's own panel
+  reflecting them immediately.
+
+v1.9.1
+--------
 - Student's own panel: swapped "My Schedule" and "My Skills" tab order
   (Schedule now first/active) -- moved both the nav buttons and the
   actual panel content blocks, not just which one starts active, so

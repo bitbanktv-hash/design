@@ -36,7 +36,7 @@
 			<a href="messages.html" class="sidebar__link">
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
 				<span data-i18n="nav_messages">Messages</span>
-				<span class="badge badge--brand" style="margin-inline-start:auto;">3</span>
+				<span class="badge badge--brand" style="margin-inline-start:auto;" data-i18n-number="3">3</span>
 			</a>
 			<a href="settings.html?role=teacher" class="sidebar__link">
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 9 19.35a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.65 15a1.7 1.7 0 0 0-1.56-1.04H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.65 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.65a1.7 1.7 0 0 0 1.04-1.56V3a2 2 0 0 1 4 0v.09A1.7 1.7 0 0 0 15 4.65a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.35 9a1.7 1.7 0 0 0 1.56 1.04H21a2 2 0 0 1 0 4h-.09A1.7 1.7 0 0 0 19.4 15Z"/></svg>
@@ -55,7 +55,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahELA v1.9.1</div>
+			<div class="sidebar__version">MahELA v1.10.0</div>
 		</div>
 	</aside>
 
@@ -98,7 +98,7 @@
 						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg>
 					</span>
 					<div>
-						<div class="stat-card__number">5</div>
+						<div class="stat-card__number" data-i18n-number="5">5</div>
 						<div class="stat-card__label" data-i18n="dash_stat_students">Active Students</div>
 					</div>
 				</div>
@@ -107,7 +107,7 @@
 						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
 					</span>
 					<div>
-						<div class="stat-card__number">7</div>
+						<div class="stat-card__number" data-i18n-number="7">7</div>
 						<div class="stat-card__label" data-i18n="dash_stat_sessions_week">Sessions This Week</div>
 					</div>
 				</div>
@@ -130,77 +130,7 @@
 				<button type="button" class="btn btn--primary" data-modal-open="modal-add-student" data-i18n="dash_add_student">+ Add Student</button>
 			</div>
 
-			<div class="student-grid reveal-group" id="student-grid">
-				<a href="student-detail.html?student=elena" class="card student-card reveal-item" style="--rl-delay:60ms" data-name="elena kim" data-gender="female">
-					<div class="student-card__head">
-						<span class="student-card__avatar">EK</span>
-						<div>
-							<div class="student-card__name">Elena Kim</div>
-							<span class="badge badge--accent">Upper-Intermediate · B2</span>
-						</div>
-					</div>
-					<div class="student-card__meta">
-						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
-						<span data-i18n="dash_next_class">Next class</span>: <span data-date="2026-08-19" data-time="17:00"></span>
-					</div>
-				</a>
-
-				<a href="student-detail.html?student=daniel" class="card student-card reveal-item" style="--rl-delay:120ms" data-name="daniel cruz" data-gender="male">
-					<div class="student-card__head">
-						<span class="student-card__avatar">DC</span>
-						<div>
-							<div class="student-card__name">Daniel Cruz</div>
-							<span class="badge badge--neutral">Beginner · A1</span>
-						</div>
-					</div>
-					<div class="student-card__meta">
-						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
-						<span data-i18n="dash_next_class">Next class</span>: <span data-date="2026-08-20" data-time="10:00"></span>
-					</div>
-				</a>
-
-				<a href="student-detail.html?student=sara" class="card student-card reveal-item" style="--rl-delay:180ms" data-name="sara ahmadi" data-gender="female">
-					<div class="student-card__head">
-						<span class="student-card__avatar">SA</span>
-						<div>
-							<div class="student-card__name">Sara Ahmadi</div>
-							<span class="badge badge--success">Advanced · C1</span>
-						</div>
-					</div>
-					<div class="student-card__meta">
-						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
-						<span data-i18n="dash_no_upcoming">No upcoming class scheduled</span>
-					</div>
-				</a>
-
-				<a href="student-detail.html?student=marco" class="card student-card reveal-item" style="--rl-delay:240ms" data-name="marco rossi" data-gender="male">
-					<div class="student-card__head">
-						<span class="student-card__avatar">MR</span>
-						<div>
-							<div class="student-card__name">Marco Rossi</div>
-							<span class="badge badge--warning">Intermediate · B1</span>
-						</div>
-					</div>
-					<div class="student-card__meta">
-						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
-						<span data-i18n="dash_next_class">Next class</span>: <span data-date="2026-08-21" data-time="19:30"></span>
-					</div>
-				</a>
-
-				<a href="student-detail.html?student=yuki" class="card student-card reveal-item" style="--rl-delay:300ms" data-name="yuki tanaka" data-gender="female">
-					<div class="student-card__head">
-						<span class="student-card__avatar">YT</span>
-						<div>
-							<div class="student-card__name">Yuki Tanaka</div>
-							<span class="badge badge--neutral">Pre-Intermediate · A2</span>
-						</div>
-					</div>
-					<div class="student-card__meta">
-						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
-						<span data-i18n="dash_next_class">Next class</span>: <span data-date="2026-08-24" data-time="16:00"></span>
-					</div>
-				</a>
-			</div>
+			<div class="student-grid reveal-group" id="student-grid"></div>
 			<p id="no-results" style="display:none; text-align:center; color:var(--ink-faint); padding:40px 0;">No students match your search.</p>
 		</div>
 	</div>
@@ -213,7 +143,7 @@
 			<h2 class="modal-box__title" data-i18n="modal_add_student_title">Add a New Student</h2>
 			<button type="button" class="modal-box__close" data-modal-close aria-label="Close">&times;</button>
 		</div>
-		<form onsubmit="event.preventDefault(); if(!window.mahtelaValidate.validateForm(this)){return;} mahtelaToast('Student added.'); document.getElementById('modal-add-student').classList.remove('is-open'); document.body.style.overflow='';">
+		<form id="add-student-form" onsubmit="event.preventDefault(); if(!window.mahtelaValidate.validateForm(this)){return;} submitAddStudent();">
 			<div class="form-field">
 				<label data-i18n="field_student_name" for="teacher-dashboard-field-student-name">Student's full name</label>
 				<input id="teacher-dashboard-field-student-name" type="text" placeholder="e.g. Alex Morgan" required>
@@ -234,12 +164,12 @@
 				<div class="form-field">
 					<label data-i18n="field_level" for="teacher-dashboard-field-level">Current Level</label>
 					<select id="teacher-dashboard-field-level">
-						<option>Beginner · A1</option>
-						<option>Pre-Intermediate · A2</option>
-						<option>Intermediate · B1</option>
-						<option>Upper-Intermediate · B2</option>
-						<option>Advanced · C1</option>
-						<option>Proficient · C2</option>
+						<option value="A1">Beginner · A1</option>
+						<option value="A2">Pre-Intermediate · A2</option>
+						<option value="B1">Intermediate · B1</option>
+						<option value="B2">Upper-Intermediate · B2</option>
+						<option value="C1">Advanced · C1</option>
+						<option value="C2">Proficient · C2</option>
 					</select>
 				</div>
 				<div class="form-field">
@@ -271,18 +201,103 @@
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/theme.js"></script>
 <script src="assets/js/clock.js"></script>
+<script src="assets/js/roster-data.js"></script>
+<script src="assets/js/sessions-data.js"></script>
 <script src="assets/js/app.js"></script>
 <script>
+	var CURRENT_TEACHER_ID = 'jane'; // this dashboard always represents Jane Doe's logged-in view
+
+	function renderStudentGrid( filterText ) {
+		var students = window.mahtelaRoster.loadStudents();
+		var sessions = window.mahtelaData.loadSessions();
+		var grid = document.getElementById( 'student-grid' );
+		grid.innerHTML = '';
+		var q = ( filterText || '' ).trim().toLowerCase();
+		var shown = 0;
+		var todayISO = new Date().toISOString().slice( 0, 10 );
+
+		Object.keys( students )
+			.map( function ( key ) { return students[ key ]; } )
+			.filter( function ( s ) { return s.teacherId === CURRENT_TEACHER_ID; } )
+			.forEach( function ( s ) {
+				if ( q && s.name.toLowerCase().indexOf( q ) === -1 ) { return; }
+				shown++;
+
+				var upcoming = sessions
+					.filter( function ( sess ) { return sess.studentKey === s.key && sess.date >= todayISO && sess.status !== 'cancelled'; } )
+					.sort( function ( a, b ) { return ( a.date + a.time ).localeCompare( b.date + b.time ); } )[ 0 ];
+				var level = window.mahtelaRoster.levelInfo( s.level );
+
+				var card = document.createElement( 'a' );
+				card.href = 'student-detail.html?student=' + s.key;
+				card.className = 'card student-card';
+				card.setAttribute( 'data-gender', s.gender );
+
+				var metaHTML = upcoming
+					? '<span data-i18n="dash_next_class">Next class</span>: <span data-date="' + upcoming.date + '" data-time="' + upcoming.time + '"></span>'
+					: '<span data-i18n="dash_no_upcoming">No upcoming class scheduled</span>';
+
+				card.innerHTML =
+					'<div class="student-card__head">' +
+						'<span class="student-card__avatar"></span>' +
+						'<div><div class="student-card__name"></div><span class="badge ' + level.badge + '"></span></div>' +
+					'</div>' +
+					'<div class="student-card__meta">' +
+						'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>' +
+						metaHTML +
+					'</div>';
+				card.querySelector( '.student-card__avatar' ).textContent = s.initials;
+				card.querySelector( '.student-card__name' ).textContent = s.name;
+				card.querySelector( '.badge' ).textContent = level.label;
+				grid.appendChild( card );
+			} );
+
+		document.getElementById( 'no-results' ).style.display = shown === 0 ? 'block' : 'none';
+		window.mahtelaI18n.apply( window.mahtelaI18n.currentLang() );
+		window.mahtelaCalendar.applyScheduleDates();
+	}
+
+	function submitAddStudent() {
+		var students = window.mahtelaRoster.loadStudents();
+		var name = document.getElementById( 'teacher-dashboard-field-student-name' ).value.trim();
+		var key = window.mahtelaRoster.slugify( name, Object.keys( students ) );
+
+		students[ key ] = {
+			key: key, name: name,
+			initials: window.mahtelaRoster.initials( name ),
+			gender: document.getElementById( 'teacher-dashboard-field-gender' ).value,
+			level: document.getElementById( 'teacher-dashboard-field-level' ).value,
+			rate: parseInt( document.getElementById( 'teacher-dashboard-field-session-price' ).value.replace( /[^0-9]/g, '' ), 10 ) || 0,
+			duration: parseInt( document.getElementById( 'teacher-dashboard-field-session-duration' ).value, 10 ) || 60,
+			since: new Date().toISOString().slice( 0, 10 ),
+			skills: { listening: 0, speaking: 0, reading: 0, writing: 0 },
+			email: document.getElementById( 'teacher-dashboard-email-for-their-login' ).value.trim(),
+			phone: document.getElementById( 'teacher-dashboard-mobile-number' ).value.trim(),
+			teacherId: CURRENT_TEACHER_ID
+		};
+		window.mahtelaRoster.saveStudents( students );
+
+		document.getElementById( 'modal-add-student' ).classList.remove( 'is-open' );
+		document.body.style.overflow = '';
+		document.getElementById( 'add-student-form' ).reset();
+		mahtelaToast( 'Student added.' );
+	}
+
+	renderStudentGrid();
 	document.getElementById( 'student-search' ).addEventListener( 'input', function ( e ) {
-		var q = e.target.value.trim().toLowerCase();
-		var cards = document.querySelectorAll( '#student-grid .student-card' );
-		var visibleCount = 0;
-		cards.forEach( function ( card ) {
-			var match = card.getAttribute( 'data-name' ).indexOf( q ) !== -1;
-			card.style.display = match ? '' : 'none';
-			if ( match ) { visibleCount++; }
-		} );
-		document.getElementById( 'no-results' ).style.display = visibleCount === 0 ? 'block' : 'none';
+		renderStudentGrid( e.target.value );
+	} );
+	document.addEventListener( 'mahtela:studentschange', function () {
+		renderStudentGrid( document.getElementById( 'student-search' ).value );
+	} );
+	document.addEventListener( 'mahtela:sessionschange', function () {
+		renderStudentGrid( document.getElementById( 'student-search' ).value );
+	} );
+	document.addEventListener( 'mahtela:langchange', function () {
+		renderStudentGrid( document.getElementById( 'student-search' ).value );
+	} );
+	document.addEventListener( 'mahtela:calendarchange', function () {
+		renderStudentGrid( document.getElementById( 'student-search' ).value );
 	} );
 </script>
 </body>

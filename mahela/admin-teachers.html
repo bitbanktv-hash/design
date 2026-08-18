@@ -54,7 +54,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahELA v1.9.1</div>
+			<div class="sidebar__version">MahELA v1.10.0</div>
 		</div>
 	</aside>
 
@@ -236,24 +236,38 @@
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/theme.js"></script>
 <script src="assets/js/clock.js"></script>
+<script src="assets/js/roster-data.js"></script>
 <script src="assets/js/app.js"></script>
 <script>
-	var TEACHERS = [
-		{ id: 'jane',  name: 'Jane Doe',     email: 'jane@mahela.com',  phone: '+98 912 000 0000', students: 5, status: 'active',     color: 'c-pink',   permissions: { manage_students: true, manage_schedule: true, manage_finance: true, manage_skills: true, send_messages: true } },
-		{ id: 'alex',  name: 'Alex Turner',  email: 'alex@mahela.com',  phone: '+98 912 111 2222', students: 8, status: 'active',     color: 'c-teal',   permissions: { manage_students: true, manage_schedule: true, manage_finance: true, manage_skills: true, send_messages: true } },
-		{ id: 'maria', name: 'Maria Garcia', email: 'maria@mahela.com', phone: '+98 912 222 3333', students: 3, status: 'restricted', color: 'c-orange', permissions: { manage_students: true, manage_schedule: true, manage_finance: false, manage_skills: true, send_messages: false } },
-		{ id: 'sam',   name: 'Sam Lee',      email: 'sam@mahela.com',   phone: '+98 912 333 4444', students: 6, status: 'active',     color: 'c-green',  permissions: { manage_students: true, manage_schedule: true, manage_finance: true, manage_skills: true, send_messages: true } },
-		{ id: 'priya', name: 'Priya Patel',  email: 'priya@mahela.com', phone: '+98 912 444 5555', students: 4, status: 'active',     color: 'brand-strong', permissions: { manage_students: true, manage_schedule: true, manage_finance: true, manage_skills: true, send_messages: true } },
-		{ id: 'omar',  name: 'Omar Hassan',  email: 'omar@mahela.com',  phone: '+98 912 555 6666', students: 1, status: 'suspended',  color: 'c-teal',   permissions: { manage_students: false, manage_schedule: false, manage_finance: false, manage_skills: false, send_messages: false } }
-	];
+	var TEACHERS = [];
+	var TEACHER_STUDENTS = [];
 
-	var TEACHER_STUDENTS = [
-		{ key: 'elena',  teacherId: 'jane', name: 'Elena Kim',   email: 'elena@example.com',  level: 'B2' },
-		{ key: 'daniel', teacherId: 'jane', name: 'Daniel Cruz', email: 'daniel@example.com', level: 'A1' },
-		{ key: 'sara',   teacherId: 'alex', name: 'Sara Ahmadi', email: 'sara@example.com',   level: 'C1' },
-		{ key: 'marco',  teacherId: 'alex', name: 'Marco Rossi', email: 'marco@example.com',  level: 'B1' },
-		{ key: 'yuki',   teacherId: 'sam',  name: 'Yuki Tanaka', email: 'yuki@example.com',   level: 'A2' }
-	];
+	function reloadRosterData() {
+		var teachersObj = window.mahtelaRoster.loadTeachers();
+		var studentsObj = window.mahtelaRoster.loadStudents();
+
+		TEACHERS = Object.keys( teachersObj ).map( function ( id ) { return teachersObj[ id ]; } );
+		TEACHER_STUDENTS = Object.keys( studentsObj ).map( function ( key ) {
+			var s = studentsObj[ key ];
+			return { key: s.key, teacherId: s.teacherId, name: s.name, email: s.email, level: s.level };
+		} );
+
+		// "students" count is derived, never stored, so it can never drift
+		// from the actual roster the way a hardcoded number could.
+		TEACHERS.forEach( function ( t ) {
+			t.students = TEACHER_STUDENTS.filter( function ( s ) { return s.teacherId === t.id; } ).length;
+		} );
+	}
+	reloadRosterData();
+
+	function persistTeachers() {
+		var teachersObj = {};
+		TEACHERS.forEach( function ( t ) {
+			var stored = { id: t.id, name: t.name, email: t.email, phone: t.phone, status: t.status, color: t.color, permissions: t.permissions };
+			teachersObj[ t.id ] = stored; // "students" is intentionally left out -- it's derived, never stored
+		} );
+		window.mahtelaRoster.saveTeachers( teachersObj );
+	}
 
 	function initials( name ) {
 		return name.split( ' ' ).map( function ( p ) { return p[ 0 ]; } ).join( '' ).slice( 0, 2 ).toUpperCase();
@@ -288,7 +302,7 @@
 				'</div></td>' +
 				'<td>' + t.email + '</td>' +
 				'<td dir="ltr" style="text-align:end;">' + t.phone + '</td>' +
-				'<td>' + t.students + '</td>' +
+				'<td>' + new Intl.NumberFormat( lang === 'fa' ? 'fa-IR' : 'en-US' ).format( t.students ) + '</td>' +
 				'<td>' + statusBadge( t.status ) + '</td>' +
 				'<td><div class="data-table__actions">' +
 					'<button type="button" class="data-table__icon-btn" data-action="view-students" data-id="' + t.id + '" aria-label="' + window.mahtelaI18n.dict.action_view_students[ lang ] + '" title="' + window.mahtelaI18n.dict.action_view_students[ lang ] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></button>' +
@@ -376,6 +390,7 @@
 
 		if ( action === 'toggle-suspend' ) {
 			teacher.status = teacher.status === 'suspended' ? 'active' : 'suspended';
+			persistTeachers();
 			renderTeachers();
 			mahtelaToast( teacher.name + ( teacher.status === 'suspended' ? ' suspended.' : ' reactivated.' ) );
 		}
@@ -399,6 +414,7 @@
 		if ( teacher.status !== 'suspended' ) {
 			teacher.status = allOn ? 'active' : 'restricted';
 		}
+		persistTeachers();
 		renderTeachers();
 		window.mahtelaModal.close( document.getElementById( 'modal-permissions' ) );
 		mahtelaToast( 'Permissions updated for ' + teacher.name + '.' );
@@ -415,11 +431,34 @@
 	document.getElementById( 'create-teacher-form' ).addEventListener( 'submit', function ( e ) {
 		e.preventDefault();
 		if ( ! window.mahtelaValidate.validateForm( e.target ) ) { return; }
+
+		var name = document.getElementById( 'admin-teachers-full-name' ).value.trim();
+		var teachersObj = window.mahtelaRoster.loadTeachers();
+		var id = window.mahtelaRoster.slugify( name, Object.keys( teachersObj ) );
+		var colors = [ 'c-pink', 'c-teal', 'c-orange', 'c-green', 'brand-strong' ];
+
+		teachersObj[ id ] = {
+			id: id, name: name,
+			email: document.getElementById( 'admin-teachers-email' ).value.trim(),
+			phone: document.getElementById( 'admin-teachers-mobile-number' ).value.trim(),
+			status: 'active',
+			color: colors[ Object.keys( teachersObj ).length % colors.length ],
+			permissions: { manage_students: true, manage_schedule: true, manage_finance: true, manage_skills: true, send_messages: true }
+		};
+		window.mahtelaRoster.saveTeachers( teachersObj );
+		reloadRosterData();
+		renderTeachers();
+
 		window.mahtelaModal.close( document.getElementById( 'modal-create-teacher' ) );
+		document.getElementById( 'create-teacher-form' ).reset();
 		mahtelaToast( 'Teacher account created.' );
 	} );
 
 	document.addEventListener( 'mahtela:langchange', renderTeachers );
+	document.addEventListener( 'mahtela:studentschange', function () {
+		reloadRosterData();
+		renderTeachers();
+	} );
 	renderTeachers();
 </script>
 </body>

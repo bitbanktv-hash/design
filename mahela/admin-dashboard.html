@@ -66,7 +66,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahELA v1.9.1</div>
+			<div class="sidebar__version">MahELA v1.10.0</div>
 		</div>
 	</aside>
 
@@ -107,7 +107,7 @@
 						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
 					</span>
 					<div>
-						<div class="stat-card__number">6</div>
+						<div class="stat-card__number" id="kpi-total-teachers">—</div>
 						<div class="stat-card__label" data-i18n="kpi_total_teachers">Total Teachers</div>
 					</div>
 				</div>
@@ -116,7 +116,7 @@
 						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="12" width="8" height="9" rx="2"/><rect x="3" y="14" width="8" height="7" rx="2"/></svg>
 					</span>
 					<div>
-						<div class="stat-card__number">27</div>
+						<div class="stat-card__number" id="kpi-total-students">—</div>
 						<div class="stat-card__label" data-i18n="kpi_total_students">Total Students</div>
 					</div>
 				</div>
@@ -125,7 +125,7 @@
 						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
 					</span>
 					<div>
-						<div class="stat-card__number">142</div>
+						<div class="stat-card__number" data-i18n-number="142">142</div>
 						<div class="stat-card__label" data-i18n="kpi_sessions_month">Sessions This Month</div>
 					</div>
 				</div>
@@ -168,6 +168,21 @@
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/theme.js"></script>
 <script src="assets/js/clock.js"></script>
+<script src="assets/js/roster-data.js"></script>
 <script src="assets/js/app.js"></script>
+<script>
+	function renderKpis() {
+		var lang = window.mahtelaI18n.currentLang();
+		var teacherCount = Object.keys( window.mahtelaRoster.loadTeachers() ).length;
+		var studentCount = Object.keys( window.mahtelaRoster.loadStudents() ).length;
+		var fmt = new Intl.NumberFormat( lang === 'fa' ? 'fa-IR' : 'en-US' );
+		document.getElementById( 'kpi-total-teachers' ).textContent = fmt.format( teacherCount );
+		document.getElementById( 'kpi-total-students' ).textContent = fmt.format( studentCount );
+	}
+	renderKpis();
+	document.addEventListener( 'mahtela:langchange', renderKpis );
+	document.addEventListener( 'mahtela:teacherschange', renderKpis );
+	document.addEventListener( 'mahtela:studentschange', renderKpis );
+</script>
 </body>
 </html>

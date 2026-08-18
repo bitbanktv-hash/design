@@ -54,7 +54,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahELA v1.9.1</div>
+			<div class="sidebar__version">MahELA v1.10.0</div>
 		</div>
 	</aside>
 
@@ -125,19 +125,35 @@
 <script src="assets/js/theme.js"></script>
 <script src="assets/js/clock.js"></script>
 <script src="assets/js/sessions-data.js"></script>
+<script src="assets/js/roster-data.js"></script>
 <script src="assets/js/app.js"></script>
 <script src="assets/js/chat.js"></script>
 <script>
 	/* Conversations now come from the shared data layer (assets/js/
 	   sessions-data.js) so a settlement-request message sent from
 	   student-detail.html's Finance tab actually shows up here, and
-	   anything sent from here persists across reloads. */
+	   anything sent from here persists across reloads. The list of WHO
+	   to show comes from the shared roster (assets/js/roster-data.js),
+	   not a fixed array -- so a student added after this page was first
+	   built still shows up, with an empty thread until a first message
+	   exists either way. */
+	var CURRENT_TEACHER_ID = 'jane'; // this inbox always represents Jane Doe's logged-in view
 	var CONVERSATIONS = window.mahtelaData.loadConversations();
-	var CONVERSATION_ORDER = [ 'elena', 'daniel', 'sara', 'marco', 'yuki' ];
 	var activeKey = null;
 
+	function myStudents() {
+		var students = window.mahtelaRoster.loadStudents();
+		return Object.keys( students )
+			.map( function ( key ) { return students[ key ]; } )
+			.filter( function ( s ) { return s.teacherId === CURRENT_TEACHER_ID; } );
+	}
+
+	function threadFor( key ) {
+		return ( CONVERSATIONS[ key ] && CONVERSATIONS[ key ].messages ) ? CONVERSATIONS[ key ].messages : [];
+	}
+
 	function lastMessage( key ) {
-		var msgs = CONVERSATIONS[ key ].messages;
+		var msgs = threadFor( key );
 		return msgs.length ? msgs[ msgs.length - 1 ] : null;
 	}
 
@@ -153,21 +169,21 @@
 		var q = ( filterText || '' ).trim().toLowerCase();
 		var shown = 0;
 
-		CONVERSATION_ORDER.forEach( function ( key ) {
-			var convo = CONVERSATIONS[ key ];
-			if ( q && convo.name.toLowerCase().indexOf( q ) === -1 ) { return; }
+		myStudents().forEach( function ( s ) {
+			var key = s.key;
+			if ( q && s.name.toLowerCase().indexOf( q ) === -1 ) { return; }
 			shown++;
 
 			var last = lastMessage( key );
 			var btn = document.createElement( 'button' );
 			btn.type = 'button';
 			btn.className = 'chat-list__item' + ( key === activeKey ? ' is-active' : '' );
-			btn.setAttribute( 'data-gender', convo.gender );
+			btn.setAttribute( 'data-gender', s.gender );
 			btn.setAttribute( 'aria-current', key === activeKey ? 'true' : 'false' );
 			btn.innerHTML =
-				'<span class="chat-list__avatar">' + convo.initials + '</span>' +
+				'<span class="chat-list__avatar">' + s.initials + '</span>' +
 				'<span class="chat-list__body">' +
-					'<span class="chat-list__name">' + convo.name + '</span>' +
+					'<span class="chat-list__name">' + s.name + '</span>' +
 					'<span class="chat-list__preview">' + ( last ? plainText( last.html ) : '' ) + '</span>' +
 				'</span>' +
 				'<span class="chat-list__meta"><span class="chat-list__time">' + ( last ? last.time : '' ) + '</span></span>';
@@ -179,16 +195,17 @@
 	}
 
 	function renderThread( key ) {
-		var convo = CONVERSATIONS[ key ];
+		var student = window.mahtelaRoster.loadStudents()[ key ];
+		var messages = threadFor( key );
 		var thread = document.getElementById( 'chat-thread' );
-		document.getElementById( 'active-thread-panel' ).setAttribute( 'data-gender', convo.gender );
+		document.getElementById( 'active-thread-panel' ).setAttribute( 'data-gender', student.gender );
 		thread.innerHTML = '';
 
-		convo.messages.forEach( function ( m ) {
+		messages.forEach( function ( m ) {
 			var bubble = document.createElement( 'div' );
 			bubble.className = 'message-bubble message-bubble--' + m.dir;
 			var avatar = m.dir === 'in'
-				? '<span class="message-bubble__avatar">' + convo.initials + '</span>'
+				? '<span class="message-bubble__avatar">' + student.initials + '</span>'
 				: '';
 			var avatarOut = m.dir === 'out'
 				? '<span class="message-bubble__avatar" style="background:var(--c-pink); color:var(--c-ink);">JD</span>'
@@ -203,7 +220,7 @@
 	}
 
 	function selectConversation( key ) {
-		if ( ! CONVERSATIONS[ key ] ) { return; }
+		if ( ! window.mahtelaRoster.loadStudents()[ key ] ) { return; }
 		activeKey = key;
 		renderConversationList( document.getElementById( 'conversation-search' ).value );
 		renderThread( key );
@@ -217,6 +234,7 @@
 
 	document.querySelector( '.chat-composer' ).addEventListener( 'chat-composer:send', function ( e ) {
 		if ( ! activeKey ) { return; }
+		if ( ! CONVERSATIONS[ activeKey ] ) { CONVERSATIONS[ activeKey ] = { messages: [] }; }
 		CONVERSATIONS[ activeKey ].messages.push( { dir: 'out', html: e.detail.html, time: window.mahtelaI18n.currentLang() === 'fa' ? 'اکنون' : 'Just now' } );
 		window.mahtelaData.saveConversations( CONVERSATIONS );
 		// mahtela:messageschange (dispatched by saveConversations) re-renders
@@ -236,9 +254,14 @@
 		if ( activeKey ) { renderThread( activeKey ); }
 	} );
 
+	document.addEventListener( 'mahtela:studentschange', function () {
+		renderConversationList( document.getElementById( 'conversation-search' ).value );
+	} );
+
 	var params = new URLSearchParams( window.location.search );
 	var initialKey = params.get( 'student' );
-	selectConversation( ( initialKey && CONVERSATIONS[ initialKey ] ) ? initialKey : CONVERSATION_ORDER[ 0 ] );
+	var firstStudentKey = myStudents()[ 0 ] ? myStudents()[ 0 ].key : null;
+	selectConversation( ( initialKey && window.mahtelaRoster.loadStudents()[ initialKey ] ) ? initialKey : firstStudentKey );
 </script>
 </body>
 </html>

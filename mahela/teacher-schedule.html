@@ -54,7 +54,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahELA v1.9.1</div>
+			<div class="sidebar__version">MahELA v1.10.0</div>
 		</div>
 	</aside>
 
@@ -212,16 +212,16 @@
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/theme.js"></script>
 <script src="assets/js/clock.js"></script>
+<script src="assets/js/roster-data.js"></script>
 <script src="assets/js/sessions-data.js"></script>
 <script src="assets/js/app.js"></script>
 <script>
-	var STUDENTS = {
-		elena:  { name: 'Elena Kim',   gender: 'female' },
-		daniel: { name: 'Daniel Cruz', gender: 'male' },
-		sara:   { name: 'Sara Ahmadi', gender: 'female' },
-		marco:  { name: 'Marco Rossi', gender: 'male' },
-		yuki:   { name: 'Yuki Tanaka', gender: 'female' }
-	};
+	var CURRENT_TEACHER_ID = 'jane'; // this schedule always represents Jane Doe's logged-in view
+	var ALL_STUDENTS = window.mahtelaRoster.loadStudents();
+	var STUDENTS = {};
+	Object.keys( ALL_STUDENTS ).forEach( function ( key ) {
+		if ( ALL_STUDENTS[ key ].teacherId === CURRENT_TEACHER_ID ) { STUDENTS[ key ] = ALL_STUDENTS[ key ]; }
+	} );
 
 	var START_HOUR = 8, END_HOUR = 20; // 08:00 - 20:00, half-hour slots
 	var SLOT_COUNT = ( END_HOUR - START_HOUR ) * 2;
@@ -520,6 +520,17 @@
 	document.addEventListener( 'mahtela:calendarchange', renderGrid );
 	document.addEventListener( 'mahtela:sessionschange', function () {
 		SESSIONS = window.mahtelaData.loadSessions();
+		renderGrid();
+	} );
+	document.addEventListener( 'mahtela:studentschange', function () {
+		ALL_STUDENTS = window.mahtelaRoster.loadStudents();
+		STUDENTS = {};
+		Object.keys( ALL_STUDENTS ).forEach( function ( key ) {
+			if ( ALL_STUDENTS[ key ].teacherId === CURRENT_TEACHER_ID ) { STUDENTS[ key ] = ALL_STUDENTS[ key ]; }
+		} );
+		document.getElementById( 'book-session-student' ).innerHTML = '<option value="" data-i18n="field_select_student_ph">Choose a student…</option>';
+		populateStudentSelect();
+		window.mahtelaI18n.apply( window.mahtelaI18n.currentLang() );
 		renderGrid();
 	} );
 </script>

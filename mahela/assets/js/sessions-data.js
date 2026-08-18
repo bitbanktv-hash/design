@@ -117,7 +117,7 @@
 	 */
 	function sendMessageTo( studentKey, html ) {
 		var convos = loadConversations();
-		if ( ! convos[ studentKey ] ) { return false; }
+		if ( ! convos[ studentKey ] ) { convos[ studentKey ] = { messages: [] }; }
 		convos[ studentKey ].messages.push( { dir: 'out', html: html, time: 'Just now' } );
 		saveConversations( convos );
 		return true;

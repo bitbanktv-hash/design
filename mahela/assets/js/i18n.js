@@ -325,6 +325,21 @@
 		} );
 	}
 
+	/**
+	 * Same idea as data-currency, but for plain counts/numbers that
+	 * aren't money (KPI stat cards, student counts, etc.) -- still needs
+	 * to show Persian digits when the language is fa, just without a
+	 * currency unit attached.
+	 */
+	function applyPlainNumbers( lang ) {
+		document.querySelectorAll( '[data-i18n-number]' ).forEach( function ( el ) {
+			var value = parseFloat( el.getAttribute( 'data-i18n-number' ) );
+			if ( ! isNaN( value ) ) {
+				el.textContent = new Intl.NumberFormat( lang === 'fa' ? 'fa-IR' : 'en-US' ).format( value );
+			}
+		} );
+	}
+
 	function applyTranslations( lang ) {
 		document.documentElement.lang = lang;
 		document.documentElement.dir = lang === 'fa' ? 'rtl' : 'ltr';
@@ -363,6 +378,7 @@
 
 		if ( window.mahtelaClock ) { window.mahtelaClock.update(); }
 		applyCurrencies( lang );
+		applyPlainNumbers( lang );
 		document.dispatchEvent( new CustomEvent( 'mahtela:langchange', { detail: { lang: lang } } ) );
 	}
 
@@ -371,7 +387,7 @@
 		applyTranslations( lang );
 	}
 
-	window.mahtelaI18n = { dict: DICT, apply: applyTranslations, setLang: setLang, currentLang: currentLang, formatToman: formatToman };
+	window.mahtelaI18n = { dict: DICT, apply: applyTranslations, setLang: setLang, currentLang: currentLang, formatToman: formatToman, applyNumbers: applyPlainNumbers };
 
 	document.addEventListener( 'DOMContentLoaded', function () {
 		applyTranslations( currentLang() );
