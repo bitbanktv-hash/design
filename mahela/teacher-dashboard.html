@@ -215,25 +215,25 @@
 		</div>
 		<form onsubmit="event.preventDefault(); if(!window.mahtelaValidate.validateForm(this)){return;} mahtelaToast('Student added.'); document.getElementById('modal-add-student').classList.remove('is-open'); document.body.style.overflow='';">
 			<div class="form-field">
-				<label data-i18n="field_student_name">Student's full name</label>
-				<input type="text" placeholder="e.g. Alex Morgan" required>
+				<label data-i18n="field_student_name" for="teacher-dashboard-field-student-name">Student's full name</label>
+				<input id="teacher-dashboard-field-student-name" type="text" placeholder="e.g. Alex Morgan" required>
 			</div>
 			<div class="form-grid">
 				<div class="form-field">
-					<label><span class="required-mark">*</span> <span data-i18n="field_student_email">Email (for their login)</span></label>
-					<input type="email" data-validate="email" placeholder="alex@example.com" required>
+					<label for="teacher-dashboard-email-for-their-login"><span class="required-mark" aria-hidden="true">*</span> <span data-i18n="field_student_email">Email (for their login)</span></label>
+					<input id="teacher-dashboard-email-for-their-login" type="email" data-validate="email" placeholder="alex@example.com" required>
 					<span class="form-field__error" data-i18n="validate_email_error">Enter a valid email address.</span>
 				</div>
 				<div class="form-field">
-					<label><span class="required-mark">*</span> <span data-i18n="settings_phone">Mobile Number</span></label>
-					<input type="tel" data-validate="phone" placeholder="+98 912 000 0000" dir="ltr" required>
+					<label for="teacher-dashboard-mobile-number"><span class="required-mark" aria-hidden="true">*</span> <span data-i18n="settings_phone">Mobile Number</span></label>
+					<input id="teacher-dashboard-mobile-number" type="tel" data-validate="phone" placeholder="+98 912 000 0000" dir="ltr" required>
 					<span class="form-field__error" data-i18n="validate_phone_error">Enter a valid mobile number.</span>
 				</div>
 			</div>
 			<div class="form-grid">
 				<div class="form-field">
-					<label data-i18n="field_level">Current Level</label>
-					<select>
+					<label data-i18n="field_level" for="teacher-dashboard-field-level">Current Level</label>
+					<select id="teacher-dashboard-field-level">
 						<option>Beginner · A1</option>
 						<option>Pre-Intermediate · A2</option>
 						<option>Intermediate · B1</option>
@@ -243,8 +243,8 @@
 					</select>
 				</div>
 				<div class="form-field">
-					<label data-i18n="field_gender">Gender</label>
-					<select>
+					<label data-i18n="field_gender" for="teacher-dashboard-field-gender">Gender</label>
+					<select id="teacher-dashboard-field-gender">
 						<option value="female" data-i18n="gender_female">Female</option>
 						<option value="male" data-i18n="gender_male">Male</option>
 					</select>
@@ -252,12 +252,12 @@
 			</div>
 			<div class="form-grid">
 				<div class="form-field">
-					<label data-i18n="field_session_duration">Session Duration (minutes)</label>
-					<input type="number" value="60" min="15" step="15">
+					<label data-i18n="field_session_duration" for="teacher-dashboard-field-session-duration">Session Duration (minutes)</label>
+					<input id="teacher-dashboard-field-session-duration" type="number" value="60" min="15" step="15">
 				</div>
 				<div class="form-field">
-					<label data-i18n="field_session_price">Price per Session (Toman)</label>
-					<input type="text" inputmode="numeric" class="currency-input" value="250000" dir="ltr">
+					<label data-i18n="field_session_price" for="teacher-dashboard-field-session-price">Price per Session (Toman)</label>
+					<input id="teacher-dashboard-field-session-price" type="text" inputmode="numeric" class="currency-input" value="250000" dir="ltr">
 				</div>
 			</div>
 			<div class="form-actions">

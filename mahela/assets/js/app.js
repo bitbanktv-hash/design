@@ -28,48 +28,163 @@
 	}
 
 	function initModals() {
+		var lastTrigger = null;
+
+		function getFocusable( container ) {
+			return Array.prototype.slice.call(
+				container.querySelectorAll(
+					'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+				)
+			).filter( function ( el ) { return el.offsetParent !== null; } );
+		}
+
+		function openModal( modal, trigger ) {
+			lastTrigger = trigger || document.activeElement;
+			modal.classList.add( 'is-open' );
+			document.body.style.overflow = 'hidden';
+
+			var target = modal.querySelector( '.modal-box__close' ) || getFocusable( modal )[ 0 ];
+			if ( target ) { target.focus(); }
+		}
+
+		function closeModal( modal ) {
+			modal.classList.remove( 'is-open' );
+			document.body.style.overflow = '';
+			if ( lastTrigger && document.contains( lastTrigger ) ) { lastTrigger.focus(); }
+			lastTrigger = null;
+		}
+
+		// One-time ARIA setup: every .modal-box gets dialog semantics, tied
+		// to its own .modal-box__title, so a screen reader announces the
+		// modal's purpose the instant it opens.
+		document.querySelectorAll( '.modal-overlay' ).forEach( function ( overlay, i ) {
+			var box = overlay.querySelector( '.modal-box' );
+			var title = overlay.querySelector( '.modal-box__title' );
+			if ( ! box ) { return; }
+			box.setAttribute( 'role', 'dialog' );
+			box.setAttribute( 'aria-modal', 'true' );
+			if ( title ) {
+				if ( ! title.id ) { title.id = ( overlay.id || 'modal-' + i ) + '-title'; }
+				box.setAttribute( 'aria-labelledby', title.id );
+			}
+		} );
+
 		document.querySelectorAll( '[data-modal-open]' ).forEach( function ( btn ) {
 			btn.addEventListener( 'click', function () {
 				var id = btn.getAttribute( 'data-modal-open' );
 				var modal = document.getElementById( id );
-				if ( modal ) { modal.classList.add( 'is-open' ); document.body.style.overflow = 'hidden'; }
+				if ( modal ) { openModal( modal, btn ); }
 			} );
 		} );
 		document.querySelectorAll( '[data-modal-close]' ).forEach( function ( btn ) {
 			btn.addEventListener( 'click', function () {
 				var modal = btn.closest( '.modal-overlay' );
-				if ( modal ) { modal.classList.remove( 'is-open' ); document.body.style.overflow = ''; }
+				if ( modal ) { closeModal( modal ); }
 			} );
 		} );
 		document.querySelectorAll( '.modal-overlay' ).forEach( function ( overlay ) {
 			overlay.addEventListener( 'click', function ( e ) {
-				if ( e.target === overlay ) {
-					overlay.classList.remove( 'is-open' );
-					document.body.style.overflow = '';
-				}
+				if ( e.target === overlay ) { closeModal( overlay ); }
 			} );
+		} );
+
+		// Escape closes the topmost open modal; Tab is trapped inside it
+		// while open, per the WAI-ARIA dialog (modal) pattern.
+		document.addEventListener( 'keydown', function ( e ) {
+			var openModals = Array.prototype.slice.call( document.querySelectorAll( '.modal-overlay.is-open' ) );
+			if ( ! openModals.length ) { return; }
+			var top = openModals[ openModals.length - 1 ];
+
+			if ( e.key === 'Escape' ) {
+				closeModal( top );
+				return;
+			}
+			if ( e.key === 'Tab' ) {
+				var focusable = getFocusable( top );
+				if ( ! focusable.length ) { return; }
+				var first = focusable[ 0 ];
+				var last = focusable[ focusable.length - 1 ];
+
+				if ( e.shiftKey && document.activeElement === first ) {
+					e.preventDefault(); last.focus();
+				} else if ( ! e.shiftKey && document.activeElement === last ) {
+					e.preventDefault(); first.focus();
+				}
+			}
 		} );
 	}
 
 	function initTabs() {
 		document.querySelectorAll( '[data-tabs]' ).forEach( function ( group ) {
 			var groupName = group.getAttribute( 'data-tabs' );
-			var buttons = document.querySelectorAll( '[data-tab-btn="' + groupName + '"]' );
-			var panels = document.querySelectorAll( '[data-tab-panel="' + groupName + '"]' );
+			var buttons = Array.prototype.slice.call( document.querySelectorAll( '[data-tab-btn="' + groupName + '"]' ) );
+			var panels = Array.prototype.slice.call( document.querySelectorAll( '[data-tab-panel="' + groupName + '"]' ) );
+
+			// WAI-ARIA Tabs pattern: the group is a tablist, each button is
+			// a tab wired to its panel, and only the active tab sits in the
+			// Tab order (arrow keys move between the rest) -- built here in
+			// JS since the whole tab interface already requires JS to work.
+			group.setAttribute( 'role', 'tablist' );
+
+			function tabId( target ) { return 'tab-' + groupName + '-' + target; }
+			function panelId( target ) { return 'tabpanel-' + groupName + '-' + target; }
 
 			buttons.forEach( function ( btn ) {
-				btn.addEventListener( 'click', function () {
-					var target = btn.getAttribute( 'data-tab-target' );
+				var target = btn.getAttribute( 'data-tab-target' );
+				var selected = btn.classList.contains( 'is-active' );
+				btn.setAttribute( 'role', 'tab' );
+				btn.id = tabId( target );
+				btn.setAttribute( 'aria-controls', panelId( target ) );
+				btn.setAttribute( 'aria-selected', selected ? 'true' : 'false' );
+				btn.tabIndex = selected ? 0 : -1;
+			} );
 
-					buttons.forEach( function ( b ) { b.classList.remove( 'is-active' ); } );
-					btn.classList.add( 'is-active' );
+			panels.forEach( function ( panel ) {
+				var id = panel.getAttribute( 'data-tab-id' );
+				panel.setAttribute( 'role', 'tabpanel' );
+				panel.id = panelId( id );
+				panel.setAttribute( 'aria-labelledby', tabId( id ) );
+				panel.tabIndex = 0;
+			} );
 
-					panels.forEach( function ( panel ) {
-						panel.classList.toggle( 'is-active', panel.getAttribute( 'data-tab-id' ) === target );
-					} );
+			function activate( btn, moveFocus ) {
+				var target = btn.getAttribute( 'data-tab-target' );
 
-					if ( history.replaceState ) {
-						history.replaceState( null, '', '#' + target );
+				buttons.forEach( function ( b ) {
+					var isActive = b === btn;
+					b.classList.toggle( 'is-active', isActive );
+					b.setAttribute( 'aria-selected', isActive ? 'true' : 'false' );
+					b.tabIndex = isActive ? 0 : -1;
+				} );
+
+				panels.forEach( function ( panel ) {
+					panel.classList.toggle( 'is-active', panel.getAttribute( 'data-tab-id' ) === target );
+				} );
+
+				if ( moveFocus ) { btn.focus(); }
+
+				if ( history.replaceState ) {
+					history.replaceState( null, '', '#' + target );
+				}
+			}
+
+			buttons.forEach( function ( btn, index ) {
+				btn.addEventListener( 'click', function () { activate( btn, false ); } );
+
+				btn.addEventListener( 'keydown', function ( e ) {
+					var rtl = document.documentElement.getAttribute( 'dir' ) === 'rtl';
+					var nextKey = rtl ? 'ArrowLeft' : 'ArrowRight';
+					var prevKey = rtl ? 'ArrowRight' : 'ArrowLeft';
+					var newIndex = null;
+
+					if ( e.key === nextKey ) { newIndex = ( index + 1 ) % buttons.length; }
+					else if ( e.key === prevKey ) { newIndex = ( index - 1 + buttons.length ) % buttons.length; }
+					else if ( e.key === 'Home' ) { newIndex = 0; }
+					else if ( e.key === 'End' ) { newIndex = buttons.length - 1; }
+
+					if ( newIndex !== null ) {
+						e.preventDefault();
+						activate( buttons[ newIndex ], true );
 					}
 				} );
 			} );
@@ -78,7 +193,7 @@
 			var hash = window.location.hash.replace( '#', '' );
 			if ( hash ) {
 				var matchBtn = document.querySelector( '[data-tab-btn="' + groupName + '"][data-tab-target="' + hash + '"]' );
-				if ( matchBtn ) { matchBtn.click(); }
+				if ( matchBtn ) { activate( matchBtn, false ); }
 			}
 		} );
 	}
@@ -209,6 +324,8 @@
 			var toast = document.createElement( 'div' );
 			toast.id = 'mt-toast';
 			toast.className = 'toast';
+			toast.setAttribute( 'role', 'status' );
+			toast.setAttribute( 'aria-live', 'polite' );
 			toast.innerHTML = ( iconSvg || '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>' ) + '<span>' + message + '</span>';
 			document.body.appendChild( toast );
 

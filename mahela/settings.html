@@ -204,23 +204,23 @@
 				<h2 class="settings-section-title" data-i18n="settings_details_title">Personal Details</h2>
 				<form id="details-form" style="margin-top:18px;">
 					<div class="form-field">
-						<label data-i18n="settings_full_name">Full Name</label>
+						<label data-i18n="settings_full_name" for="field-full-name">Full Name</label>
 						<input type="text" id="field-full-name" value="Jane Doe">
 					</div>
 					<div class="form-grid">
 						<div class="form-field">
-							<label data-i18n="settings_email"><span class="required-mark">*</span> Email</label>
+							<label data-i18n="settings_email" for="field-email"><span class="required-mark" aria-hidden="true">*</span> Email</label>
 							<input type="email" id="field-email" data-validate="email" value="jane@mahela.com" required>
 							<span class="form-field__error" data-i18n="validate_email_error">Enter a valid email address.</span>
 						</div>
 						<div class="form-field">
-							<label data-i18n="settings_phone"><span class="required-mark">*</span> Mobile Number</label>
+							<label data-i18n="settings_phone" for="field-phone"><span class="required-mark" aria-hidden="true">*</span> Mobile Number</label>
 							<input type="tel" id="field-phone" data-validate="phone" value="+98 912 000 0000" dir="ltr" required>
 							<span class="form-field__error" data-i18n="validate_phone_error">Enter a valid mobile number.</span>
 						</div>
 					</div>
 					<div class="form-field" style="margin-bottom:0;">
-						<label data-i18n="settings_gender">Gender</label>
+						<label data-i18n="settings_gender" for="field-gender">Gender</label>
 						<select id="field-gender">
 							<option value="female" data-i18n="gender_female">Female</option>
 							<option value="male" data-i18n="gender_male">Male</option>
@@ -237,16 +237,16 @@
 				<div id="password-alert"></div>
 				<form id="password-form" style="margin-top:18px;">
 					<div class="form-field">
-						<label data-i18n="settings_current_password">Current Password</label>
+						<label data-i18n="settings_current_password" for="field-current-password">Current Password</label>
 						<input type="password" id="field-current-password" placeholder="••••••••" required>
 					</div>
 					<div class="form-grid">
 						<div class="form-field">
-							<label data-i18n="settings_new_password">New Password</label>
+							<label data-i18n="settings_new_password" for="field-new-password">New Password</label>
 							<input type="password" id="field-new-password" placeholder="••••••••" required>
 						</div>
 						<div class="form-field">
-							<label data-i18n="settings_confirm_password">Confirm New Password</label>
+							<label data-i18n="settings_confirm_password" for="field-confirm-password">Confirm New Password</label>
 							<input type="password" id="field-confirm-password" placeholder="••••••••" required>
 						</div>
 					</div>

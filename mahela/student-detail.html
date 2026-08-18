@@ -411,20 +411,20 @@
 		</div>
 		<form onsubmit="event.preventDefault(); mahtelaToast('New assessment saved.'); document.getElementById('modal-new-assessment').classList.remove('is-open'); document.body.style.overflow='';">
 			<div class="form-field">
-				<label data-i18n="skills_listening">Listening</label>
-				<input type="range" min="0" max="100" value="78">
+				<label data-i18n="skills_listening" for="student-detail-skills-listening">Listening</label>
+				<input id="student-detail-skills-listening" type="range" min="0" max="100" value="78">
 			</div>
 			<div class="form-field">
-				<label data-i18n="skills_speaking">Speaking</label>
-				<input type="range" min="0" max="100" value="62">
+				<label data-i18n="skills_speaking" for="student-detail-skills-speaking">Speaking</label>
+				<input id="student-detail-skills-speaking" type="range" min="0" max="100" value="62">
 			</div>
 			<div class="form-field">
-				<label data-i18n="skills_reading">Reading</label>
-				<input type="range" min="0" max="100" value="85">
+				<label data-i18n="skills_reading" for="student-detail-skills-reading">Reading</label>
+				<input id="student-detail-skills-reading" type="range" min="0" max="100" value="85">
 			</div>
 			<div class="form-field">
-				<label data-i18n="skills_writing">Writing</label>
-				<input type="range" min="0" max="100" value="58">
+				<label data-i18n="skills_writing" for="student-detail-skills-writing">Writing</label>
+				<input id="student-detail-skills-writing" type="range" min="0" max="100" value="58">
 			</div>
 			<div class="form-actions">
 				<button type="button" class="btn btn--ghost" data-modal-close data-i18n="btn_cancel">Cancel</button>
@@ -443,10 +443,10 @@
 		</div>
 		<form onsubmit="event.preventDefault(); mahtelaToast('Session added to schedule.'); document.getElementById('modal-add-session').classList.remove('is-open'); document.body.style.overflow='';">
 			<div class="form-grid">
-				<div class="form-field"><label>Date</label><input type="date" required></div>
-				<div class="form-field"><label>Time</label><input type="time" required></div>
+				<div class="form-field"><label for="student-detail-date">Date</label><input id="student-detail-date" type="date" required></div>
+				<div class="form-field"><label for="student-detail-time">Time</label><input id="student-detail-time" type="time" required></div>
 			</div>
-			<div class="form-field"><label data-i18n="field_session_duration">Session Duration (minutes)</label><input type="number" value="60" min="15" step="15"></div>
+			<div class="form-field"><label data-i18n="field_session_duration" for="student-detail-field-session-duration">Session Duration (minutes)</label><input id="student-detail-field-session-duration" type="number" value="60" min="15" step="15"></div>
 			<div class="form-actions">
 				<button type="button" class="btn btn--ghost" data-modal-close data-i18n="btn_cancel">Cancel</button>
 				<button type="submit" class="btn btn--primary" data-i18n="btn_save">Save</button>
@@ -464,13 +464,13 @@
 		</div>
 		<form onsubmit="event.preventDefault(); mahtelaToast('Details updated.'); document.getElementById('modal-edit-student').classList.remove('is-open'); document.body.style.overflow='';">
 			<div class="form-grid">
-				<div class="form-field"><label data-i18n="field_level">Current Level</label>
+				<div class="form-field"><label data-i18n="field_level" for="edit-level-select">Current Level</label>
 					<select id="edit-level-select">
 						<option value="Beginner · A1">Beginner · A1</option><option value="Pre-Intermediate · A2">Pre-Intermediate · A2</option><option value="Intermediate · B1">Intermediate · B1</option>
 						<option value="Upper-Intermediate · B2">Upper-Intermediate · B2</option><option value="Advanced · C1">Advanced · C1</option><option value="Proficient · C2">Proficient · C2</option>
 					</select>
 				</div>
-				<div class="form-field"><label data-i18n="field_gender">Gender</label>
+				<div class="form-field"><label data-i18n="field_gender" for="edit-gender-select">Gender</label>
 					<select id="edit-gender-select">
 						<option value="female" data-i18n="gender_female">Female</option>
 						<option value="male" data-i18n="gender_male">Male</option>
@@ -478,8 +478,8 @@
 				</div>
 			</div>
 			<div class="form-grid">
-				<div class="form-field"><label data-i18n="field_session_duration">Session Duration (minutes)</label><input type="number" id="edit-duration-input" value="60"></div>
-				<div class="form-field"><label data-i18n="field_session_price">Price per Session (Toman)</label><input type="text" inputmode="numeric" class="currency-input" id="edit-price-input" value="250000" dir="ltr"></div>
+				<div class="form-field"><label data-i18n="field_session_duration" for="edit-duration-input">Session Duration (minutes)</label><input type="number" id="edit-duration-input" value="60"></div>
+				<div class="form-field"><label data-i18n="field_session_price" for="edit-price-input">Price per Session (Toman)</label><input type="text" inputmode="numeric" class="currency-input" id="edit-price-input" value="250000" dir="ltr"></div>
 			</div>
 			<div class="form-actions">
 				<button type="button" class="btn btn--ghost" data-modal-close data-i18n="btn_cancel">Cancel</button>

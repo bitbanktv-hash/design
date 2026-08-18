@@ -122,24 +122,24 @@
 		</div>
 		<form id="create-teacher-form">
 			<div class="form-field">
-				<label><span class="required-mark">*</span> <span data-i18n="settings_full_name">Full Name</span></label>
-				<input type="text" placeholder="e.g. Alex Turner" required>
+				<label for="admin-teachers-full-name"><span class="required-mark" aria-hidden="true">*</span> <span data-i18n="settings_full_name">Full Name</span></label>
+				<input id="admin-teachers-full-name" type="text" placeholder="e.g. Alex Turner" required>
 			</div>
 			<div class="form-grid">
 				<div class="form-field">
-					<label><span class="required-mark">*</span> <span data-i18n="settings_email">Email</span></label>
-					<input type="email" data-validate="email" placeholder="alex@mahela.com" required>
+					<label for="admin-teachers-email"><span class="required-mark" aria-hidden="true">*</span> <span data-i18n="settings_email">Email</span></label>
+					<input id="admin-teachers-email" type="email" data-validate="email" placeholder="alex@mahela.com" required>
 					<span class="form-field__error" data-i18n="validate_email_error">Enter a valid email address.</span>
 				</div>
 				<div class="form-field">
-					<label><span class="required-mark">*</span> <span data-i18n="settings_phone">Mobile Number</span></label>
-					<input type="tel" data-validate="phone" placeholder="+98 912 000 0000" dir="ltr" required>
+					<label for="admin-teachers-mobile-number"><span class="required-mark" aria-hidden="true">*</span> <span data-i18n="settings_phone">Mobile Number</span></label>
+					<input id="admin-teachers-mobile-number" type="tel" data-validate="phone" placeholder="+98 912 000 0000" dir="ltr" required>
 					<span class="form-field__error" data-i18n="validate_phone_error">Enter a valid mobile number.</span>
 				</div>
 			</div>
 			<div class="form-field">
-				<label data-i18n="field_temp_password">Temporary Password</label>
-				<input type="text" dir="ltr" value="Welcome2026!">
+				<label data-i18n="field_temp_password" for="admin-teachers-field-temp-password">Temporary Password</label>
+				<input id="admin-teachers-field-temp-password" type="text" dir="ltr" value="Welcome2026!">
 				<span style="font-size:11.5px; color:var(--ink-faint); margin-top:4px; display:block;" data-i18n="field_temp_password_hint">They'll be asked to change this on first login.</span>
 			</div>
 			<div class="form-actions">
@@ -198,7 +198,7 @@
 		<p style="font-size:13px; color:var(--ink-soft); margin-top:-10px; margin-bottom:18px;" id="reset-password-teacher-name">—</p>
 		<form id="reset-password-form">
 			<div class="form-field" style="margin-bottom:0;">
-				<label data-i18n="field_new_password_admin">New Password</label>
+				<label data-i18n="field_new_password_admin" for="reset-password-value">New Password</label>
 				<input type="text" dir="ltr" id="reset-password-value" required>
 			</div>
 			<div class="form-actions">
@@ -259,9 +259,9 @@
 				'<td>' + t.students + '</td>' +
 				'<td>' + statusBadge( t.status ) + '</td>' +
 				'<td><div class="data-table__actions">' +
-					'<button type="button" class="data-table__icon-btn" data-action="permissions" data-id="' + t.id + '" title="' + window.mahtelaI18n.dict.action_permissions[ lang ] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87 2 2 0 1 1-2.83 2.83 1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 9 19.35a1.7 1.7 0 0 0-1.87.34 2 2 0 1 1-2.83-2.83A1.7 1.7 0 0 0 4.65 15a1.7 1.7 0 0 0-1.56-1.04H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.65 9a1.7 1.7 0 0 0-.34-1.87 2 2 0 1 1 2.83-2.83A1.7 1.7 0 0 0 9 4.65a1.7 1.7 0 0 0 1.04-1.56V3a2 2 0 0 1 4 0v.09A1.7 1.7 0 0 0 15 4.65a1.7 1.7 0 0 0 1.87-.34 2 2 0 1 1 2.83 2.83A1.7 1.7 0 0 0 19.35 9a1.7 1.7 0 0 0 1.56 1.04H21a2 2 0 0 1 0 4h-.09A1.7 1.7 0 0 0 19.4 15Z"/></svg></button>' +
-					'<button type="button" class="data-table__icon-btn" data-action="reset-password" data-id="' + t.id + '" title="' + window.mahtelaI18n.dict.action_reset_password[ lang ] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></button>' +
-					'<button type="button" class="data-table__icon-btn is-danger" data-action="toggle-suspend" data-id="' + t.id + '" title="' + suspendLabel + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 8l8 8"/></svg></button>' +
+					'<button type="button" class="data-table__icon-btn" data-action="permissions" data-id="' + t.id + '" aria-label="' + window.mahtelaI18n.dict.action_permissions[ lang ] + '" title="' + window.mahtelaI18n.dict.action_permissions[ lang ] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87 2 2 0 1 1-2.83 2.83 1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 9 19.35a1.7 1.7 0 0 0-1.87.34 2 2 0 1 1-2.83-2.83A1.7 1.7 0 0 0 4.65 15a1.7 1.7 0 0 0-1.56-1.04H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.65 9a1.7 1.7 0 0 0-.34-1.87 2 2 0 1 1 2.83-2.83A1.7 1.7 0 0 0 9 4.65a1.7 1.7 0 0 0 1.04-1.56V3a2 2 0 0 1 4 0v.09A1.7 1.7 0 0 0 15 4.65a1.7 1.7 0 0 0 1.87-.34 2 2 0 1 1 2.83 2.83A1.7 1.7 0 0 0 19.35 9a1.7 1.7 0 0 0 1.56 1.04H21a2 2 0 0 1 0 4h-.09A1.7 1.7 0 0 0 19.4 15Z"/></svg></button>' +
+					'<button type="button" class="data-table__icon-btn" data-action="reset-password" data-id="' + t.id + '" aria-label="' + window.mahtelaI18n.dict.action_reset_password[ lang ] + '" title="' + window.mahtelaI18n.dict.action_reset_password[ lang ] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></button>' +
+					'<button type="button" class="data-table__icon-btn is-danger" data-action="toggle-suspend" data-id="' + t.id + '" aria-label="' + suspendLabel + '" title="' + suspendLabel + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 8l8 8"/></svg></button>' +
 				'</div></td>';
 			tbody.appendChild( tr );
 		} );
