@@ -1,0 +1,134 @@
+MahELA Prototype — Changelog
+==============================
+
+v1.5.0 — Current
+------------------
+- Added a full Admin Panel (3 new pages) with its own login tab:
+    - admin-dashboard.html: system-wide KPIs (total teachers, total
+      students, sessions this month, revenue this month) and quick
+      links.
+    - admin-teachers.html: every teacher account, with a "+ Create
+      Teacher" flow, a per-teacher Permissions panel (toggle switches
+      for Manage Students / Schedule / Finance / Skill Assessments /
+      Messages -- this is the "reduce a teacher's access" feature),
+      a password-reset action, and Suspend/Reactivate.
+    - admin-students.html: every student across every teacher --  the
+      one view a regular teacher never gets, since teachers only ever
+      see their own roster.
+  A teacher's Active/Restricted status badge now derives automatically
+  from whichever permissions are actually turned on for them.
+- Login page now has a third "Admin" tab alongside Teacher/Student.
+- Added a CAPTCHA-after-failed-attempts flow to all three login tabs:
+  3 simulated failed attempts trigger a simple math challenge that
+  must be solved before the next attempt can proceed (traced the exact
+  state machine in Node to confirm the logic before shipping it --
+  wrong answers correctly regenerate the challenge and block
+  progress; a correct answer lets the next submit through). Real bot
+  protection still needs a server-side CAPTCHA service and backend
+  attempt-tracking; this is the client-side UX layer only.
+- Added forgot-password.html: enter your email, get a (mocked, since
+  no backend can send real email yet) confirmation that a reset link
+  was sent -- using security-conscious wording that doesn't reveal
+  whether the email exists in the system.
+- Every account-creation and profile form (Add Student, Create
+  Teacher, Settings) now requires a valid email AND a valid mobile
+  number, with a shared client-side validation layer
+  (window.mahtelaValidate) that shows inline errors on blur.
+- Settings page now has a third Admin variant (settings.html?role=admin)
+  and a mobile number field alongside email, consistent with the new
+  validation requirement.
+
+v1.4.0
+--------
+- Found and fixed the real bug behind the invisible-but-clickable boxes
+  (confirmed from your DevTools screenshot -- the DOM content was
+  genuinely all there, "Elena Kim" and all, it just never became
+  visible). The cause: the fade-in animation CSS required the
+  .reveal-group element ITSELF to carry the .is-ready class
+  (.is-ready.reveal-group .reveal-item, no space = same element), but
+  the JS only ever added .is-ready to <body>. Every .reveal-group
+  section on the dashboard (stats row, student cards) was stuck at
+  opacity:0 forever as a result -- present, clickable, invisible.
+  Fixed to a plain descendant selector so it matches correctly.
+- Removed signup entirely, matching the real account model: an admin
+  creates teacher accounts, and teachers create student accounts --
+  there's no public self-registration for anyone. The login page's
+  teacher tab now points to a short note instead of a signup link.
+- Added a real Settings/Profile page (the sidebar link went nowhere
+  before): profile photo upload with live preview, editable name/email,
+  a gender selector, and a separate password-change form with mismatch
+  validation. Works for both teacher and student accounts
+  (?role=teacher / ?role=student) from the same file.
+
+v1.3.0
+--------
+- Fixed the real cause of "Gregorian dates still there in Persian mode":
+  I had made both dates show with Persian digits, but the Gregorian one
+  was still fundamentally a Gregorian-calendar date (just spelled out in
+  Persian) -- which reads as foreign to a Persian UI. Persian mode now
+  shows ONLY the Shamsi date (and its separator), matching how an
+  Iranian audience actually expects a Persian-language interface to
+  behave. English mode still shows both calendars side by side.
+- Centered the clock/date text in the widget, in both languages.
+- Every amount now has 3-digit grouping, including the price input
+  fields in "Add Student" and "Edit Details" (previously plain number
+  inputs, which browsers never format) -- they now live-format with
+  comma separators as you type, the same technique used in the earlier
+  rahn/ejare calculator project.
+- Fixed the real bug behind "clicking Students shows nothing, but the
+  links under Add Student go to a default student": every student card
+  linked to the exact same static page, which only ever displayed
+  Elena's hardcoded data no matter who you clicked. Student cards now
+  carry a ?student=<key> link, and student-detail.html reads it to
+  render the correct name, avatar, gender, level, rate, and skills for
+  whichever student was actually clicked (falls back to Elena if the
+  key is missing or invalid). The "Edit Details" modal now also
+  pre-fills with that same student's real data instead of always
+  showing Elena's.
+- Removed the redundant "Students" sidebar item, which pointed to the
+  exact same page as "Dashboard" and so appeared to do nothing when
+  clicked.
+
+v1.2.0
+--------
+- Fixed: switching to Persian now fully localizes the clock widget --
+  both the Gregorian and Jalali dates convert to Persian digits and
+  Persian month names, not just the Jalali one.
+- Fixed: chat bubble direction in the Messages tab now correctly
+  mirrors under RTL. This turned out to be a genuinely ambiguous corner
+  of CSS (flex-direction:row-reverse interacting with direction:rtl),
+  so it's rebuilt on a more robust foundation: bubble side comes from
+  margin-inline auto-positioning (unambiguously direction-aware) and
+  the avatar's position comes from literal DOM order for outgoing
+  messages, rather than relying on row-reverse.
+- Added a real settlement checklist to the Finance tab: every
+  unsettled session now has its own checkbox, plus a "Select All"
+  toggle, so a teacher can settle e.g. 5 out of 10 classes instead of
+  only ever settling everything at once. The selected count and total
+  update live as boxes are checked, in whichever language/currency
+  format is active.
+- Fixed a small pre-existing inconsistency: Elena's own chat avatar
+  (in her own panel) was hardcoded teal even though she's set as
+  female (pink); now follows the same gender-accent variable as the
+  rest of her profile.
+
+v1.1.0
+--------
+- Fixed clock/date widget blob-shape rendering bug; changed date
+  separator to "|"; added the clock widget to student-detail.html
+  (previously missing there).
+- Renamed brand to "MahELA" / "مه‌ای‌ال‌ای" with a bilingual tagline
+  under the logo on every page.
+- Added a gender field and gender-driven accent color system (pink for
+  female students, teal for male students) applied to avatars and the
+  skill radar chart.
+- Converted all amounts from USD to Toman with proper 3-digit
+  grouping and automatic Persian-numeral conversion on language
+  switch.
+
+v1.0.0
+--------
+- Initial static prototype: landing, login/signup, teacher dashboard,
+  student detail (5 tabs), student's own panel (4 tabs). Live clock +
+  Jalali date, animated radar chart, dark/light theme, EN/FA language
+  switch, mobile sidebar, modals, mock two-way messaging.

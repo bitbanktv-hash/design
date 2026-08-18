@@ -1,0 +1,114 @@
+/* ==========================================================================
+   Page-load reveal (staggered via --rl-delay custom property)
+   ========================================================================== */
+
+.reveal-on-load, .reveal-group .reveal-item {
+	opacity: 0;
+	transform: translateY(18px);
+	transition: opacity .6s cubic-bezier(.16,.84,.44,1), transform .6s cubic-bezier(.16,.84,.44,1);
+	transition-delay: var(--rl-delay, 0ms);
+}
+.is-ready .reveal-on-load,
+.is-ready .reveal-group .reveal-item {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+/* ==========================================================================
+   Tab panel cross-fade
+   ========================================================================== */
+
+.tab-panel {
+	display: none;
+	animation: mtFadeUp .45s cubic-bezier(.16,.84,.44,1);
+}
+.tab-panel.is-active { display: block; }
+@keyframes mtFadeUp {
+	from { opacity: 0; transform: translateY(10px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   Modal
+   ========================================================================== */
+
+.modal-overlay {
+	position: fixed; inset: 0;
+	background: rgba(20,4,79,0.45);
+	backdrop-filter: blur(3px);
+	display: flex; align-items: center; justify-content: center;
+	padding: 20px;
+	opacity: 0; visibility: hidden;
+	transition: opacity .25s ease;
+	z-index: 500;
+}
+.modal-overlay.is-open { opacity: 1; visibility: visible; }
+.modal-box {
+	transform: scale(.94) translateY(10px);
+	transition: transform .3s cubic-bezier(.16,.84,.44,1);
+}
+.modal-overlay.is-open .modal-box { transform: scale(1) translateY(0); }
+
+/* ==========================================================================
+   Sidebar (mobile slide-in)
+   ========================================================================== */
+
+@media (max-width: 960px) {
+	.sidebar {
+		transform: translateX(-100%);
+		transition: transform .3s cubic-bezier(.16,.84,.44,1);
+	}
+	html[dir="rtl"] .sidebar { transform: translateX(100%); }
+	.sidebar.is-open { transform: translateX(0); }
+}
+
+/* ==========================================================================
+   Message bubble entrance
+   ========================================================================== */
+
+.message-bubble {
+	animation: mtBubbleIn .35s cubic-bezier(.16,.84,.44,1);
+}
+@keyframes mtBubbleIn {
+	from { opacity: 0; transform: translateY(8px) scale(.98); }
+	to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ==========================================================================
+   Toast notification
+   ========================================================================== */
+
+.toast {
+	position: fixed;
+	bottom: 26px;
+	inset-inline-end: 26px;
+	transform: translateY(16px);
+	opacity: 0;
+	visibility: hidden;
+	transition: all .3s cubic-bezier(.16,.84,.44,1);
+	z-index: 600;
+}
+.toast.is-visible { transform: translateY(0); opacity: 1; visibility: visible; }
+
+/* ==========================================================================
+   Ambient landing background pulse (subtle — respects reduced motion via
+   base.css's global prefers-reduced-motion rule)
+   ========================================================================== */
+
+@keyframes mtAmbientPulse {
+	0%, 100% { opacity: .5; transform: scale(1) rotate(0deg); }
+	50% { opacity: .65; transform: scale(1.03) rotate(1.5deg); }
+}
+.radar-bg--ambient svg { animation: mtAmbientPulse 10s ease-in-out infinite; }
+
+/* ==========================================================================
+   Skeleton / progress bar fill (used for skill bars in list view)
+   ========================================================================== */
+
+.skill-bar__fill {
+	transform: scaleX(0);
+	transform-origin: left;
+	transition: transform 1s cubic-bezier(.16,.84,.44,1);
+}
+html[dir="rtl"] .skill-bar__fill { transform-origin: right; }
+.is-ready .skill-bar__fill { transform: scaleX(1); }

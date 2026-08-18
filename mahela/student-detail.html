@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Elena Kim — MahELA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/animations.css">
+<style>
+	.student-header { display: flex; align-items: center; gap: 18px; margin-bottom: 28px; flex-wrap: wrap; }
+	.student-header__avatar {
+		width: 64px; height: 64px; border-radius: 50%;
+		display: flex; align-items: center; justify-content: center;
+		font-family: var(--font-display); font-weight: 700; font-size: 22px;
+		background: var(--student-accent, var(--c-pink)); color: #fff; flex-shrink: 0;
+	}
+	.student-header__name { font-size: 24px; margin-bottom: 4px; }
+	.info-card-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 30px; }
+	.info-card { padding: 18px; text-align: center; }
+	.info-card__label { font-size: 11.5px; color: var(--ink-soft); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em; }
+	.info-card__value { font-family: var(--font-mono); font-weight: 700; font-size: 18px; }
+	.radar-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+	.radar-wrap__chart { max-width: 340px; margin-inline: auto; }
+	.history-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed var(--border); font-size: 13px; }
+	.history-item:last-child { border-bottom: 0; }
+	.history-item__pills { display: flex; gap: 6px; }
+	.history-pill { font-family: var(--font-mono); font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px; background: var(--surface-soft); }
+	@media (max-width: 900px) { .radar-wrap, .info-card-grid { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+	<div class="sidebar-backdrop" data-sidebar-toggle></div>
+
+	<aside class="sidebar">
+		<div class="sidebar__brand">
+			<span class="sidebar__logo">M</span>
+			<div class="sidebar__brand-text">
+				<span class="sidebar__brand-name" data-i18n="brand_name">MahELA</span>
+				<span class="sidebar__brand-tagline" data-i18n="brand_tagline">Mahta English Learning Academy</span>
+			</div>
+		</div>
+		<nav class="sidebar__nav">
+			<a href="teacher-dashboard.html" class="sidebar__link">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+				<span data-i18n="nav_dashboard">Dashboard</span>
+			</a>
+			<a href="#" class="sidebar__link">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
+				<span data-i18n="nav_schedule">Schedule</span>
+			</a>
+			<a href="#" class="sidebar__link">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+				<span data-i18n="nav_messages">Messages</span>
+				<span class="badge badge--brand" style="margin-inline-start:auto;">3</span>
+			</a>
+			<a href="settings.html?role=teacher" class="sidebar__link">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 9 19.35a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.65 15a1.7 1.7 0 0 0-1.56-1.04H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.65 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.65a1.7 1.7 0 0 0 1.04-1.56V3a2 2 0 0 1 4 0v.09A1.7 1.7 0 0 0 15 4.65a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.35 9a1.7 1.7 0 0 0 1.56 1.04H21a2 2 0 0 1 0 4h-.09A1.7 1.7 0 0 0 19.4 15Z"/></svg>
+				<span data-i18n="nav_settings">Settings</span>
+			</a>
+		</nav>
+		<div class="sidebar__footer">
+			<div class="sidebar__user">
+				<span class="sidebar__avatar" style="background: var(--c-pink); color:#fff;">JD</span>
+				<div class="sidebar__user-info">
+					<span class="sidebar__user-name">Jane Doe</span>
+					<span class="sidebar__user-role">English Teacher</span>
+				</div>
+			</div>
+			<a href="login.html" class="sidebar__link">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+				<span data-i18n="nav_logout">Log Out</span>
+			</a>
+			<div class="sidebar__version">MahELA v1.5.0</div>
+		</div>
+	</aside>
+
+	<div class="main-content">
+		<header class="topbar-app">
+			<div class="topbar-app__left">
+				<button type="button" class="toggle-btn sidebar-toggle" data-sidebar-toggle aria-label="Menu">
+					<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+				</button>
+				<div class="clock-widget hide-mobile" data-clock-widget>
+					<span class="clock-widget__icon">
+						<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+					</span>
+					<div class="clock-widget__dates">
+						<span class="clock-widget__time" data-clock-time>--:--:--</span>
+						<span class="clock-widget__date"><span data-clock-gregorian>—</span><span data-clock-sep> | </span><span data-clock-jalali>—</span></span>
+					</div>
+				</div>
+				<a href="teacher-dashboard.html" class="btn btn--soft btn--small hide-mobile">
+					<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+					<span data-i18n="nav_back_dashboard">Back to Dashboard</span>
+				</a>
+			</div>
+			<div class="utility-toggles">
+				<button type="button" class="toggle-btn lang-toggle" data-lang-btn>FA</button>
+				<button type="button" class="toggle-btn" data-theme-btn aria-label="Toggle theme">
+					<svg data-icon-moon viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+					<svg data-icon-sun viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+				</button>
+			</div>
+		</header>
+
+		<div class="page-body" id="student-page-body">
+			<div class="student-header reveal-on-load" style="--rl-delay:0ms">
+				<span class="student-header__avatar" id="student-avatar">EK</span>
+				<div>
+					<h1 class="student-header__name" id="student-name">Elena Kim</h1>
+					<span class="badge badge--accent" id="student-level-badge">Upper-Intermediate · B2</span>
+				</div>
+			</div>
+
+			<nav class="tabs-nav" data-tabs="student">
+				<button type="button" class="tabs-nav__btn is-active" data-tab-btn="student" data-tab-target="overview">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+					<span data-i18n="tab_overview">Overview</span>
+				</button>
+				<button type="button" class="tabs-nav__btn" data-tab-btn="student" data-tab-target="skills">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 3 7v6c0 5 4 8.5 9 9 5-.5 9-4 9-9V7z"/></svg>
+					<span data-i18n="tab_skills">Skills</span>
+				</button>
+				<button type="button" class="tabs-nav__btn" data-tab-btn="student" data-tab-target="schedule">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
+					<span data-i18n="tab_schedule">Schedule</span>
+				</button>
+				<button type="button" class="tabs-nav__btn" data-tab-btn="student" data-tab-target="finance">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h4a1.8 1.8 0 0 1 0 3.6h-3a1.8 1.8 0 0 0 0 3.6h4.5"/></svg>
+					<span data-i18n="tab_finance">Finance</span>
+				</button>
+				<button type="button" class="tabs-nav__btn" data-tab-btn="student" data-tab-target="messages">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+					<span data-i18n="tab_messages">Messages</span>
+				</button>
+			</nav>
+
+			<!-- OVERVIEW -->
+			<div class="tab-panel is-active" data-tab-panel="student" data-tab-id="overview">
+				<div class="info-card-grid">
+					<div class="card info-card">
+						<div class="info-card__label" data-i18n="overview_level">Current Level</div>
+						<div class="info-card__value" id="student-level-value">B2</div>
+					</div>
+					<div class="card info-card">
+						<div class="info-card__label" data-i18n="overview_rate">Rate</div>
+						<div class="info-card__value"><span data-currency="250000" id="student-rate-value">—</span> <span style="font-size:11px; font-weight:500; color:var(--ink-soft);" data-i18n="overview_per_session">/ session</span></div>
+					</div>
+					<div class="card info-card">
+						<div class="info-card__label" data-i18n="overview_duration">Duration</div>
+						<div class="info-card__value"><span id="student-duration-value">60</span> <span style="font-size:11px; font-weight:500; color:var(--ink-soft);" data-i18n="overview_minutes">min</span></div>
+					</div>
+					<div class="card info-card">
+						<div class="info-card__label" data-i18n="overview_started">Student since</div>
+						<div class="info-card__value" style="font-size:14px;" id="student-since-value">Jan 15, 2026</div>
+					</div>
+				</div>
+
+				<button type="button" class="btn btn--ghost" data-modal-open="modal-edit-student" data-i18n="overview_edit">Edit Details</button>
+			</div>
+
+			<!-- SKILLS -->
+			<div class="tab-panel" data-tab-panel="student" data-tab-id="skills">
+				<div class="page-head page-head--row">
+					<div>
+						<h2 style="font-size:18px; margin-bottom:4px;" data-i18n="skills_title">Skill Mastery</h2>
+						<p class="page-head__sub" data-i18n="skills_sub">Rate each skill from 0 to 100 — update it any time you see progress.</p>
+					</div>
+					<button type="button" class="btn btn--primary btn--small" data-modal-open="modal-new-assessment" data-i18n="skills_new_assessment">+ New Assessment</button>
+				</div>
+
+				<div class="card" style="padding:32px; margin-bottom:24px;">
+					<div class="radar-wrap">
+						<div class="radar-wrap__chart" id="skills-radar"></div>
+						<div>
+							<div class="skill-bar">
+								<div class="skill-bar__head"><span data-i18n="skills_listening">Listening</span><span id="skill-val-listening">78</span></div>
+								<div class="skill-bar__track"><div class="skill-bar__fill" id="skill-fill-listening" style="width:78%; background:var(--c-pink);"></div></div>
+							</div>
+							<div class="skill-bar">
+								<div class="skill-bar__head"><span data-i18n="skills_speaking">Speaking</span><span id="skill-val-speaking">62</span></div>
+								<div class="skill-bar__track"><div class="skill-bar__fill" id="skill-fill-speaking" style="width:62%; background:var(--c-orange);"></div></div>
+							</div>
+							<div class="skill-bar">
+								<div class="skill-bar__head"><span data-i18n="skills_reading">Reading</span><span id="skill-val-reading">85</span></div>
+								<div class="skill-bar__track"><div class="skill-bar__fill" id="skill-fill-reading" style="width:85%; background:var(--c-teal);"></div></div>
+							</div>
+							<div class="skill-bar" style="margin-bottom:0;">
+								<div class="skill-bar__head"><span data-i18n="skills_writing">Writing</span><span id="skill-val-writing">58</span></div>
+								<div class="skill-bar__track"><div class="skill-bar__fill" id="skill-fill-writing" style="width:58%; background:var(--c-green);"></div></div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="card" style="padding:24px;">
+					<h3 style="font-size:15px; margin-bottom:14px;" data-i18n="skills_history">Assessment History</h3>
+					<div class="history-item">
+						<span>Aug 12, 2026</span>
+						<div class="history-item__pills">
+							<span class="history-pill" style="color:var(--c-pink);">L 78</span>
+							<span class="history-pill" style="color:var(--c-orange);">S 62</span>
+							<span class="history-pill" style="color:var(--c-teal);">R 85</span>
+							<span class="history-pill" style="color:var(--c-green);">W 58</span>
+						</div>
+					</div>
+					<div class="history-item">
+						<span>Jul 15, 2026</span>
+						<div class="history-item__pills">
+							<span class="history-pill">L 70</span><span class="history-pill">S 55</span><span class="history-pill">R 80</span><span class="history-pill">W 50</span>
+						</div>
+					</div>
+					<div class="history-item">
+						<span>Jun 10, 2026</span>
+						<div class="history-item__pills">
+							<span class="history-pill">L 60</span><span class="history-pill">S 45</span><span class="history-pill">R 72</span><span class="history-pill">W 40</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- SCHEDULE -->
+			<div class="tab-panel" data-tab-panel="student" data-tab-id="schedule">
+				<div class="page-head page-head--row">
+					<div>
+						<h2 style="font-size:18px; margin-bottom:4px;" data-i18n="schedule_title">Class Schedule</h2>
+						<p class="page-head__sub" data-i18n="schedule_sub">Every session, past and upcoming.</p>
+					</div>
+					<button type="button" class="btn btn--primary btn--small" data-modal-open="modal-add-session" data-i18n="schedule_add">+ Add Session</button>
+				</div>
+
+				<h3 style="font-size:13.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); margin-bottom:12px;" data-i18n="schedule_upcoming">Upcoming</h3>
+				<div class="session-list" style="margin-bottom:30px;">
+					<div class="session-row">
+						<div class="session-row__date"><span class="session-row__date-day">19</span><span class="session-row__date-month">Aug</span></div>
+						<div class="session-row__info">
+							<div class="session-row__time">17:00 – 18:00</div>
+							<div class="session-row__sub">Wednesday · 60 min · <span data-currency="250000">—</span></div>
+						</div>
+						<div class="session-row__actions">
+							<span class="badge badge--accent" data-i18n="schedule_scheduled">Scheduled</span>
+							<button type="button" class="btn btn--soft btn--small" onclick="markHeld(this)" data-i18n="schedule_mark_held">Mark as Held</button>
+						</div>
+					</div>
+					<div class="session-row">
+						<div class="session-row__date"><span class="session-row__date-day">26</span><span class="session-row__date-month">Aug</span></div>
+						<div class="session-row__info">
+							<div class="session-row__time">17:00 – 18:00</div>
+							<div class="session-row__sub">Wednesday · 60 min · <span data-currency="250000">—</span></div>
+						</div>
+						<div class="session-row__actions">
+							<span class="badge badge--accent" data-i18n="schedule_scheduled">Scheduled</span>
+							<button type="button" class="btn btn--soft btn--small" onclick="markHeld(this)" data-i18n="schedule_mark_held">Mark as Held</button>
+						</div>
+					</div>
+				</div>
+
+				<h3 style="font-size:13.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); margin-bottom:12px;" data-i18n="schedule_past">Past Sessions</h3>
+				<div class="session-list">
+					<div class="session-row">
+						<div class="session-row__date"><span class="session-row__date-day">12</span><span class="session-row__date-month">Aug</span></div>
+						<div class="session-row__info"><div class="session-row__time">17:00 – 18:00</div><div class="session-row__sub">Wednesday · 60 min · <span data-currency="250000">—</span></div></div>
+						<div class="session-row__actions"><span class="badge badge--success" data-i18n="schedule_held">Held</span></div>
+					</div>
+					<div class="session-row">
+						<div class="session-row__date"><span class="session-row__date-day">5</span><span class="session-row__date-month">Aug</span></div>
+						<div class="session-row__info"><div class="session-row__time">17:00 – 18:00</div><div class="session-row__sub">Wednesday · 60 min · <span data-currency="250000">—</span></div></div>
+						<div class="session-row__actions"><span class="badge badge--success" data-i18n="schedule_held">Held</span></div>
+					</div>
+					<div class="session-row">
+						<div class="session-row__date"><span class="session-row__date-day">29</span><span class="session-row__date-month">Jul</span></div>
+						<div class="session-row__info"><div class="session-row__time">17:00 – 18:00</div><div class="session-row__sub">Wednesday · 60 min · <span data-currency="250000">—</span></div></div>
+						<div class="session-row__actions"><span class="badge" style="background:rgba(192,69,63,0.12); color:#C0453F;" data-i18n="schedule_missed">Missed</span></div>
+					</div>
+					<div class="session-row">
+						<div class="session-row__date"><span class="session-row__date-day">22</span><span class="session-row__date-month">Jul</span></div>
+						<div class="session-row__info"><div class="session-row__time">17:00 – 18:00</div><div class="session-row__sub">Wednesday · 60 min · <span data-currency="250000">—</span></div></div>
+						<div class="session-row__actions"><span class="badge badge--success" data-i18n="schedule_held">Held</span></div>
+					</div>
+				</div>
+			</div>
+
+			<!-- FINANCE -->
+			<div class="tab-panel" data-tab-panel="student" data-tab-id="finance">
+				<div class="page-head">
+					<h2 style="font-size:18px; margin-bottom:4px;" data-i18n="finance_title">Finance &amp; Settlement</h2>
+					<p class="page-head__sub" data-i18n="finance_sub">Track sessions and settle up whenever you're ready.</p>
+				</div>
+
+				<div class="finance-hero">
+					<div class="card finance-hero__card">
+						<div class="finance-hero__value">Aug 1</div>
+						<div class="finance-hero__label" data-i18n="finance_settled_until">Settled until</div>
+					</div>
+					<div class="card finance-hero__card">
+						<div class="finance-hero__value">4</div>
+						<div class="finance-hero__label" data-i18n="finance_sessions_since">Sessions since settlement</div>
+					</div>
+					<div class="card finance-hero__card finance-hero__card--highlight">
+						<div class="finance-hero__value" data-currency="1000000">—</div>
+						<div class="finance-hero__label" data-i18n="finance_amount_due">Amount due</div>
+					</div>
+				</div>
+
+				<div style="display:flex; gap:12px; margin-bottom:28px; flex-wrap:wrap;">
+					<button type="button" class="btn btn--accent" onclick="mahtelaToast('Settlement request sent to Elena.')" data-i18n="finance_request_settlement">Request Settlement</button>
+				</div>
+
+				<div class="card" style="padding:24px; margin-bottom:20px;">
+					<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+						<h3 style="font-size:15px; margin:0;" data-i18n="finance_unsettled_title">Unsettled Sessions</h3>
+						<label style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; cursor:pointer;">
+							<input type="checkbox" id="settle-select-all" checked style="width:auto;">
+							<span data-i18n="finance_select_all">Select All</span>
+						</label>
+					</div>
+
+					<div class="session-list" id="unsettled-session-list">
+						<label class="session-row settle-row">
+							<input type="checkbox" class="settle-checkbox" data-amount="250000" checked style="width:auto; margin-inline-end:6px;">
+							<span class="session-row__date"><span class="session-row__date-day">22</span><span class="session-row__date-month">Jul</span></span>
+							<span class="session-row__info"><span class="session-row__time">17:00 – 18:00</span><span class="session-row__sub">Wednesday · 60 min</span></span>
+							<span class="session-row__actions"><span data-currency="250000">—</span></span>
+						</label>
+						<label class="session-row settle-row">
+							<input type="checkbox" class="settle-checkbox" data-amount="250000" checked style="width:auto; margin-inline-end:6px;">
+							<span class="session-row__date"><span class="session-row__date-day">29</span><span class="session-row__date-month">Jul</span></span>
+							<span class="session-row__info"><span class="session-row__time">17:00 – 18:00</span><span class="session-row__sub">Wednesday · 60 min</span></span>
+							<span class="session-row__actions"><span data-currency="250000">—</span></span>
+						</label>
+						<label class="session-row settle-row">
+							<input type="checkbox" class="settle-checkbox" data-amount="250000" checked style="width:auto; margin-inline-end:6px;">
+							<span class="session-row__date"><span class="session-row__date-day">5</span><span class="session-row__date-month">Aug</span></span>
+							<span class="session-row__info"><span class="session-row__time">17:00 – 18:00</span><span class="session-row__sub">Wednesday · 60 min</span></span>
+							<span class="session-row__actions"><span data-currency="250000">—</span></span>
+						</label>
+						<label class="session-row settle-row">
+							<input type="checkbox" class="settle-checkbox" data-amount="250000" checked style="width:auto; margin-inline-end:6px;">
+							<span class="session-row__date"><span class="session-row__date-day">12</span><span class="session-row__date-month">Aug</span></span>
+							<span class="session-row__info"><span class="session-row__time">17:00 – 18:00</span><span class="session-row__sub">Wednesday · 60 min</span></span>
+							<span class="session-row__actions"><span data-currency="250000">—</span></span>
+						</label>
+					</div>
+
+					<div style="display:flex; align-items:center; justify-content:space-between; margin-top:20px; padding-top:16px; border-top:1px dashed var(--border); flex-wrap:wrap; gap:12px;">
+						<span style="font-size:13.5px; font-weight:700;">
+							<span data-i18n="finance_selected_label">Selected</span>:
+							<span id="settle-selected-count">4</span> <span data-i18n="finance_sessions_word">sessions</span> ·
+							<span id="settle-selected-total" style="font-family:var(--font-mono);">—</span>
+						</span>
+						<button type="button" class="btn btn--primary" id="settle-selected-btn" data-i18n="finance_settle_selected">Settle Selected</button>
+					</div>
+				</div>
+
+				<div class="card" style="padding:24px;">
+					<h3 style="font-size:15px; margin-bottom:6px;" data-i18n="finance_history">Settlement History</h3>
+					<div class="settlement-row"><span>Jul 1, 2026 → Aug 1, 2026</span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1000000">—</span> · 4 sessions</span></div>
+					<div class="settlement-row"><span>Jun 1, 2026 → Jul 1, 2026</span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1250000">—</span> · 5 sessions</span></div>
+					<div class="settlement-row"><span>May 1, 2026 → Jun 1, 2026</span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1000000">—</span> · 4 sessions</span></div>
+				</div>
+			</div>
+
+			<!-- MESSAGES -->
+			<div class="tab-panel" data-tab-panel="student" data-tab-id="messages">
+				<div class="card chat-panel" style="padding:24px;">
+					<div class="chat-panel__thread" id="chat-thread">
+						<div class="message-bubble message-bubble--in">
+							<span class="message-bubble__avatar">EK</span>
+							<div class="message-bubble__content">
+								<div class="message-bubble__text">Hi! Just wanted to check — are we still on for Wednesday at 5?</div>
+								<span class="message-bubble__time">Yesterday, 14:02</span>
+							</div>
+						</div>
+						<div class="message-bubble message-bubble--out">
+							<div class="message-bubble__content">
+								<div class="message-bubble__text">Yes, all set! I'll send the reading passage beforehand.</div>
+								<span class="message-bubble__time">Yesterday, 14:10</span>
+							</div>
+							<span class="message-bubble__avatar" style="background:var(--c-pink); color:#fff;">JD</span>
+						</div>
+						<div class="message-bubble message-bubble--in">
+							<span class="message-bubble__avatar">EK</span>
+							<div class="message-bubble__content">
+								<div class="message-bubble__text">Perfect, thank you!</div>
+								<span class="message-bubble__time">Yesterday, 14:11</span>
+							</div>
+						</div>
+					</div>
+					<form class="chat-panel__input" onsubmit="sendMessage(event)">
+						<input type="text" id="chat-input" data-i18n-ph="messages_placeholder" placeholder="Type a message…" autocomplete="off">
+						<button type="submit" class="btn btn--primary btn--small" data-i18n="messages_send">Send</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- New assessment modal -->
+<div class="modal-overlay" id="modal-new-assessment">
+	<div class="modal-box">
+		<div class="modal-box__head">
+			<h2 class="modal-box__title" data-i18n="skills_new_assessment">+ New Assessment</h2>
+			<button type="button" class="modal-box__close" data-modal-close aria-label="Close">&times;</button>
+		</div>
+		<form onsubmit="event.preventDefault(); mahtelaToast('New assessment saved.'); document.getElementById('modal-new-assessment').classList.remove('is-open'); document.body.style.overflow='';">
+			<div class="form-field">
+				<label data-i18n="skills_listening">Listening</label>
+				<input type="range" min="0" max="100" value="78">
+			</div>
+			<div class="form-field">
+				<label data-i18n="skills_speaking">Speaking</label>
+				<input type="range" min="0" max="100" value="62">
+			</div>
+			<div class="form-field">
+				<label data-i18n="skills_reading">Reading</label>
+				<input type="range" min="0" max="100" value="85">
+			</div>
+			<div class="form-field">
+				<label data-i18n="skills_writing">Writing</label>
+				<input type="range" min="0" max="100" value="58">
+			</div>
+			<div class="form-actions">
+				<button type="button" class="btn btn--ghost" data-modal-close data-i18n="btn_cancel">Cancel</button>
+				<button type="submit" class="btn btn--primary" data-i18n="btn_save">Save</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- Add session modal -->
+<div class="modal-overlay" id="modal-add-session">
+	<div class="modal-box">
+		<div class="modal-box__head">
+			<h2 class="modal-box__title" data-i18n="schedule_add">+ Add Session</h2>
+			<button type="button" class="modal-box__close" data-modal-close aria-label="Close">&times;</button>
+		</div>
+		<form onsubmit="event.preventDefault(); mahtelaToast('Session added to schedule.'); document.getElementById('modal-add-session').classList.remove('is-open'); document.body.style.overflow='';">
+			<div class="form-grid">
+				<div class="form-field"><label>Date</label><input type="date" required></div>
+				<div class="form-field"><label>Time</label><input type="time" required></div>
+			</div>
+			<div class="form-field"><label data-i18n="field_session_duration">Session Duration (minutes)</label><input type="number" value="60" min="15" step="15"></div>
+			<div class="form-actions">
+				<button type="button" class="btn btn--ghost" data-modal-close data-i18n="btn_cancel">Cancel</button>
+				<button type="submit" class="btn btn--primary" data-i18n="btn_save">Save</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- Edit student modal -->
+<div class="modal-overlay" id="modal-edit-student">
+	<div class="modal-box">
+		<div class="modal-box__head">
+			<h2 class="modal-box__title" data-i18n="overview_edit">Edit Details</h2>
+			<button type="button" class="modal-box__close" data-modal-close aria-label="Close">&times;</button>
+		</div>
+		<form onsubmit="event.preventDefault(); mahtelaToast('Details updated.'); document.getElementById('modal-edit-student').classList.remove('is-open'); document.body.style.overflow='';">
+			<div class="form-grid">
+				<div class="form-field"><label data-i18n="field_level">Current Level</label>
+					<select id="edit-level-select">
+						<option value="Beginner · A1">Beginner · A1</option><option value="Pre-Intermediate · A2">Pre-Intermediate · A2</option><option value="Intermediate · B1">Intermediate · B1</option>
+						<option value="Upper-Intermediate · B2">Upper-Intermediate · B2</option><option value="Advanced · C1">Advanced · C1</option><option value="Proficient · C2">Proficient · C2</option>
+					</select>
+				</div>
+				<div class="form-field"><label data-i18n="field_gender">Gender</label>
+					<select id="edit-gender-select">
+						<option value="female" data-i18n="gender_female">Female</option>
+						<option value="male" data-i18n="gender_male">Male</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-grid">
+				<div class="form-field"><label data-i18n="field_session_duration">Session Duration (minutes)</label><input type="number" id="edit-duration-input" value="60"></div>
+				<div class="form-field"><label data-i18n="field_session_price">Price per Session (Toman)</label><input type="text" inputmode="numeric" class="currency-input" id="edit-price-input" value="250000" dir="ltr"></div>
+			</div>
+			<div class="form-actions">
+				<button type="button" class="btn btn--ghost" data-modal-close data-i18n="btn_cancel">Cancel</button>
+				<button type="submit" class="btn btn--primary" data-i18n="btn_save">Save</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/theme.js"></script>
+<script src="assets/js/clock.js"></script>
+<script src="assets/js/radar-chart.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+	/**
+	 * Sample "database" for this static prototype. In the real WordPress
+	 * build, this becomes a lookup by student post ID instead of a URL
+	 * query key -- but the rendering logic below (fill in name/avatar/
+	 * level/skills from whichever record is selected) carries over as-is.
+	 */
+	var STUDENTS = {
+		elena:  { name: 'Elena Kim',    initials: 'EK', gender: 'female', levelValue: 'B2', levelLabel: 'Upper-Intermediate · B2', levelBadge: 'badge--accent',  rate: 250000, duration: 60, since: 'Jan 15, 2026', skills: { listening: 78, speaking: 62, reading: 85, writing: 58 } },
+		daniel: { name: 'Daniel Cruz',  initials: 'DC', gender: 'male',   levelValue: 'A1', levelLabel: 'Beginner · A1',            levelBadge: 'badge--neutral', rate: 200000, duration: 45, since: 'Mar 3, 2026',  skills: { listening: 35, speaking: 28, reading: 40, writing: 22 } },
+		sara:   { name: 'Sara Ahmadi',  initials: 'SA', gender: 'female', levelValue: 'C1', levelLabel: 'Advanced · C1',            levelBadge: 'badge--success', rate: 300000, duration: 60, since: 'Nov 10, 2025', skills: { listening: 90, speaking: 85, reading: 92, writing: 80 } },
+		marco:  { name: 'Marco Rossi',  initials: 'MR', gender: 'male',   levelValue: 'B1', levelLabel: 'Intermediate · B1',        levelBadge: 'badge--warning', rate: 250000, duration: 60, since: 'Feb 20, 2026', skills: { listening: 60, speaking: 55, reading: 65, writing: 50 } },
+		yuki:   { name: 'Yuki Tanaka',  initials: 'YT', gender: 'female', levelValue: 'A2', levelLabel: 'Pre-Intermediate · A2',    levelBadge: 'badge--neutral', rate: 220000, duration: 45, since: 'Apr 5, 2026',  skills: { listening: 45, speaking: 38, reading: 50, writing: 32 } }
+	};
+
+	function currentStudentKey() {
+		var params = new URLSearchParams( window.location.search );
+		var key = params.get( 'student' );
+		return ( key && STUDENTS[ key ] ) ? key : 'elena';
+	}
+
+	function renderStudent() {
+		var s = STUDENTS[ currentStudentKey() ];
+
+		document.title = s.name + ' — MahELA';
+		document.getElementById( 'student-avatar' ).textContent = s.initials;
+		document.getElementById( 'student-name' ).textContent = s.name;
+
+		var levelBadge = document.getElementById( 'student-level-badge' );
+		levelBadge.textContent = s.levelLabel;
+		levelBadge.className = 'badge ' + s.levelBadge;
+
+		document.getElementById( 'student-level-value' ).textContent = s.levelValue;
+		document.getElementById( 'student-duration-value' ).textContent = s.duration;
+		document.getElementById( 'student-since-value' ).textContent = s.since;
+
+		var rateEl = document.getElementById( 'student-rate-value' );
+		rateEl.setAttribute( 'data-currency', s.rate );
+		rateEl.textContent = window.mahtelaI18n.formatToman( s.rate, window.mahtelaI18n.currentLang() );
+
+		document.getElementById( 'student-page-body' ).setAttribute( 'data-gender', s.gender );
+
+		[ 'listening', 'speaking', 'reading', 'writing' ].forEach( function ( key ) {
+			document.getElementById( 'skill-val-' + key ).textContent = s.skills[ key ];
+			document.getElementById( 'skill-fill-' + key ).style.width = s.skills[ key ] + '%';
+		} );
+
+		document.getElementById( 'edit-level-select' ).value = s.levelLabel;
+		document.getElementById( 'edit-gender-select' ).value = s.gender;
+		document.getElementById( 'edit-duration-input' ).value = s.duration;
+		document.getElementById( 'edit-price-input' ).value = new Intl.NumberFormat( 'en-US' ).format( s.rate );
+
+		MahtelaRadar.render( document.getElementById( 'skills-radar' ), {
+			labels: [ 'Listening', 'Speaking', 'Reading', 'Writing' ],
+			values: [ s.skills.listening, s.skills.speaking, s.skills.reading, s.skills.writing ],
+			color: 'var(--student-accent)'
+		} );
+	}
+
+	renderStudent();
+	document.addEventListener( 'mahtela:langchange', function () {
+		var s = STUDENTS[ currentStudentKey() ];
+		document.getElementById( 'student-rate-value' ).textContent = window.mahtelaI18n.formatToman( s.rate, window.mahtelaI18n.currentLang() );
+	} );
+
+	function markHeld( btn ) {
+		var row = btn.closest( '.session-row' );
+		var actions = row.querySelector( '.session-row__actions' );
+		actions.innerHTML = '<span class="badge badge--success">Held</span>';
+		mahtelaToast( 'Session marked as held.' );
+	}
+
+	/* Settlement checklist: pick any mix of unsettled sessions, or all of
+	   them at once, and see the running total update live before settling. */
+	function updateSettleSummary() {
+		var checkboxes = document.querySelectorAll( '.settle-checkbox' );
+		var checked = Array.prototype.filter.call( checkboxes, function ( cb ) { return cb.checked; } );
+		var total = checked.reduce( function ( sum, cb ) { return sum + parseFloat( cb.getAttribute( 'data-amount' ) ); }, 0 );
+		var lang = window.mahtelaI18n.currentLang();
+
+		var countEl = document.getElementById( 'settle-selected-count' );
+		var totalEl = document.getElementById( 'settle-selected-total' );
+		var selectAll = document.getElementById( 'settle-select-all' );
+		var settleBtn = document.getElementById( 'settle-selected-btn' );
+		if ( ! countEl ) { return; }
+
+		countEl.textContent = checked.length;
+		totalEl.textContent = window.mahtelaI18n.formatToman( total, lang );
+		selectAll.checked = checkboxes.length > 0 && checked.length === checkboxes.length;
+		selectAll.indeterminate = checked.length > 0 && checked.length < checkboxes.length;
+		settleBtn.disabled = checked.length === 0;
+	}
+
+	document.querySelectorAll( '.settle-checkbox' ).forEach( function ( cb ) {
+		cb.addEventListener( 'change', updateSettleSummary );
+	} );
+
+	var settleSelectAllEl = document.getElementById( 'settle-select-all' );
+	if ( settleSelectAllEl ) {
+		settleSelectAllEl.addEventListener( 'change', function ( e ) {
+			var isChecked = e.target.checked;
+			document.querySelectorAll( '.settle-checkbox' ).forEach( function ( cb ) { cb.checked = isChecked; } );
+			updateSettleSummary();
+		} );
+	}
+
+	var settleBtnEl = document.getElementById( 'settle-selected-btn' );
+	if ( settleBtnEl ) {
+		settleBtnEl.addEventListener( 'click', function () {
+			var checked = document.querySelectorAll( '.settle-checkbox:checked' );
+			var count = checked.length;
+			checked.forEach( function ( cb ) { cb.closest( '.settle-row' ).remove(); } );
+			mahtelaToast( count + ' session(s) marked as settled.' );
+			updateSettleSummary();
+		} );
+	}
+
+	document.addEventListener( 'mahtela:langchange', updateSettleSummary );
+	updateSettleSummary();
+
+	function sendMessage( e ) {
+		e.preventDefault();
+		var input = document.getElementById( 'chat-input' );
+		var text = input.value.trim();
+		if ( ! text ) { return; }
+
+		var thread = document.getElementById( 'chat-thread' );
+		var bubble = document.createElement( 'div' );
+		bubble.className = 'message-bubble message-bubble--out';
+		bubble.innerHTML = '<div class="message-bubble__content"><div class="message-bubble__text"></div><span class="message-bubble__time">Just now</span></div>' +
+			'<span class="message-bubble__avatar" style="background:var(--c-pink); color:#fff;">JD</span>';
+		bubble.querySelector( '.message-bubble__text' ).textContent = text;
+		thread.appendChild( bubble );
+		thread.scrollTop = thread.scrollHeight;
+		input.value = '';
+	}
+</script>
+</body>
+</html>
