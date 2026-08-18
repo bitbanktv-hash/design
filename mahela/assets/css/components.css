@@ -477,6 +477,15 @@ html[dir="rtl"] .switch input:checked + .switch__track::before { transform: tran
 .form-field.has-error .form-field__error { display: block; }
 .required-mark { color: var(--brand); }
 
+.form-notice {
+	display: flex; align-items: flex-start; gap: 9px;
+	padding: 11px 14px; border-radius: var(--radius-sm);
+	font-size: 12.5px; line-height: 1.5;
+}
+.form-notice--error { background: #FBEAE9; color: #A23A34; }
+[data-theme="dark"] .form-notice--error { background: rgba(192,69,63,0.16); color: #E5928C; }
+.form-notice--success { background: rgba(152,197,78,0.16); color: var(--success-strong); }
+
 /* ==========================================================================
    Responsive
    ========================================================================== */
@@ -492,4 +501,86 @@ html[dir="rtl"] .switch input:checked + .switch__track::before { transform: tran
 	.student-grid { grid-template-columns: 1fr; }
 	.topbar-app { padding: 14px 18px; }
 	.session-row { flex-wrap: wrap; }
+}
+
+/* ==========================================================================
+   Weekly schedule grid (teacher-schedule.html)
+   ========================================================================== */
+
+.schedule-nav {
+	display: flex; align-items: center; justify-content: space-between;
+	margin-bottom: 20px; gap: 12px; flex-wrap: wrap;
+}
+.schedule-nav__range { font-weight: 700; font-size: 15px; font-family: var(--font-mono); }
+.schedule-nav__buttons { display: flex; gap: 8px; align-items: center; }
+
+.schedule-grid-wrap {
+	overflow-x: auto;
+	border: 1px solid var(--border);
+	border-radius: var(--radius-lg);
+	background: var(--surface);
+}
+.schedule-grid {
+	display: grid;
+	grid-template-columns: 60px repeat(7, minmax(118px, 1fr));
+	min-width: 900px;
+}
+
+.schedule-grid__corner {
+	background: var(--surface-soft);
+	border-bottom: 1.5px solid var(--border);
+	border-inline-end: 1px solid var(--border);
+}
+.schedule-grid__day-header {
+	background: var(--surface-soft);
+	border-bottom: 1.5px solid var(--border);
+	border-inline-end: 1px solid var(--border);
+	padding: 10px 6px;
+	text-align: center;
+}
+.schedule-grid__day-header.is-today { background: var(--student-accent-soft, var(--surface-soft)); }
+.schedule-grid__day-weekday { font-size: 10.5px; font-weight: 700; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .03em; }
+.schedule-grid__day-number { font-family: var(--font-mono); font-size: 15px; font-weight: 700; margin-top: 2px; }
+
+.schedule-grid__time-label {
+	border-inline-end: 1px solid var(--border);
+	border-bottom: 1px solid var(--border);
+	font-size: 10px; color: var(--ink-faint); font-family: var(--font-mono);
+	padding: 3px 6px;
+	text-align: end;
+	white-space: nowrap;
+}
+
+.schedule-grid__cell {
+	border-bottom: 1px solid var(--border);
+	border-inline-end: 1px solid var(--border);
+	min-height: 32px;
+	transition: background-color .12s ease;
+	position: relative;
+}
+.schedule-grid__cell--hour-start { border-top: 1.5px solid var(--border); margin-top: -1px; }
+.schedule-grid__cell--empty { cursor: pointer; }
+.schedule-grid__cell--empty:hover { background: var(--surface-soft); }
+.schedule-grid__cell--empty:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.schedule-block {
+	margin: 1px 3px;
+	padding: 4px 8px;
+	border-radius: 8px;
+	background: var(--student-accent-soft, var(--surface-soft));
+	border-inline-start: 3px solid var(--student-accent, var(--brand));
+	font-size: 11px; line-height: 1.4;
+	cursor: pointer;
+	overflow: hidden;
+	height: calc(100% - 2px);
+	transition: filter .12s ease;
+}
+.schedule-block:hover { filter: brightness(0.97); }
+[data-theme="dark"] .schedule-block:hover { filter: brightness(1.15); }
+.schedule-block__name { font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.schedule-block__time { color: var(--ink-soft); font-family: var(--font-mono); font-size: 9.5px; }
+
+@media (max-width: 780px) {
+	.schedule-grid { grid-template-columns: 48px repeat(7, minmax(92px, 1fr)); }
+	.schedule-grid__day-number { font-size: 13px; }
 }

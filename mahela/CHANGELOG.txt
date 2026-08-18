@@ -1,8 +1,36 @@
 MahELA Prototype — Changelog
 ==============================
 
-v1.7.0 — Current
+v1.8.0 — Current
 ------------------
+- Built the real Schedule page (the sidebar link went nowhere before):
+  a weekly timetable grid, Saturday to Friday, half-hour slots from
+  08:00 to 20:00. Click any open slot to book a student into it --
+  pick from a dropdown, choose a duration (30 min to 2 hours), and
+  save; the session then renders as a colored block spanning its
+  actual duration (a 90-minute booking visibly spans three half-hour
+  rows). Clicking an existing session shows its details with a Remove
+  option. Booking a slot that overlaps an existing session is blocked
+  with an inline error instead of silently double-booking. Previous/
+  Next/Today navigation moves between weeks. Sessions persist in
+  localStorage, seeded once with the same bookings already shown on
+  the dashboard's "Next class" cards so both pages agree on load.
+  Verified the grid math, overlap detection, and week-start
+  calculation independently in Node before shipping.
+- Independently re-verified the Jalali date format fixes from the
+  previous fix commit against the exact requested examples --
+  formatFullDate('2026-08-19','fa','jalali') -> '۱۴۰۵/مرداد/۲۸' and
+  formatScheduleDate(...) -> 'چهارشنبه، ۲۸ مرداد · ساعت: ۱۷:۰۰' --
+  both simulated end-to-end against the real dashboard DOM structure,
+  not just the formatter in isolation.
+- Fixed a real, pre-existing bug found while building the new page:
+  .form-notice / .form-notice--error was already used in settings.html
+  (the password-mismatch warning) but was never actually defined in
+  the stylesheet, so it rendered unstyled. Added it properly, which
+  also fixed the new schedule page's overlap-conflict warning.
+
+v1.7.0
+--------
 - Admin > Teachers: added a "View Teacher's Students" action (people
   icon on each teacher row) that opens a modal listing that teacher's
   students, with the same View Profile and Reset Password actions
