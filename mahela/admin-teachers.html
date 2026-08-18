@@ -54,7 +54,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahELA v1.6.0</div>
+			<div class="sidebar__version">MahELA v1.7.0</div>
 		</div>
 	</aside>
 
@@ -209,6 +209,30 @@
 	</div>
 </div>
 
+<!-- Teacher's Students modal -->
+<div class="modal-overlay" id="modal-teacher-students">
+	<div class="modal-box" style="max-width:640px;">
+		<div class="modal-box__head">
+			<h2 class="modal-box__title" data-i18n="modal_teacher_students_title">Teacher's Students</h2>
+			<button type="button" class="modal-box__close" data-modal-close aria-label="Close">&times;</button>
+		</div>
+		<p style="font-size:13px; color:var(--ink-soft); margin-top:-10px; margin-bottom:18px;" id="teacher-students-teacher-name">—</p>
+		<div class="data-table-wrap">
+			<table class="data-table">
+				<thead>
+					<tr>
+						<th data-i18n="col_name">Name</th>
+						<th data-i18n="col_level">Level</th>
+						<th style="text-align:end;" data-i18n="col_actions">Actions</th>
+					</tr>
+				</thead>
+				<tbody id="teacher-students-tbody"></tbody>
+			</table>
+		</div>
+		<p id="teacher-students-empty" style="display:none; text-align:center; color:var(--ink-faint); padding:20px 0;" data-i18n="admin_teacher_no_students">This teacher has no student records in this prototype yet.</p>
+	</div>
+</div>
+
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/theme.js"></script>
 <script src="assets/js/clock.js"></script>
@@ -221,6 +245,14 @@
 		{ id: 'sam',   name: 'Sam Lee',      email: 'sam@mahela.com',   phone: '+98 912 333 4444', students: 6, status: 'active',     color: 'c-green',  permissions: { manage_students: true, manage_schedule: true, manage_finance: true, manage_skills: true, send_messages: true } },
 		{ id: 'priya', name: 'Priya Patel',  email: 'priya@mahela.com', phone: '+98 912 444 5555', students: 4, status: 'active',     color: 'brand-strong', permissions: { manage_students: true, manage_schedule: true, manage_finance: true, manage_skills: true, send_messages: true } },
 		{ id: 'omar',  name: 'Omar Hassan',  email: 'omar@mahela.com',  phone: '+98 912 555 6666', students: 1, status: 'suspended',  color: 'c-teal',   permissions: { manage_students: false, manage_schedule: false, manage_finance: false, manage_skills: false, send_messages: false } }
+	];
+
+	var TEACHER_STUDENTS = [
+		{ key: 'elena',  teacherId: 'jane', name: 'Elena Kim',   email: 'elena@example.com',  level: 'B2' },
+		{ key: 'daniel', teacherId: 'jane', name: 'Daniel Cruz', email: 'daniel@example.com', level: 'A1' },
+		{ key: 'sara',   teacherId: 'alex', name: 'Sara Ahmadi', email: 'sara@example.com',   level: 'C1' },
+		{ key: 'marco',  teacherId: 'alex', name: 'Marco Rossi', email: 'marco@example.com',  level: 'B1' },
+		{ key: 'yuki',   teacherId: 'sam',  name: 'Yuki Tanaka', email: 'yuki@example.com',   level: 'A2' }
 	];
 
 	function initials( name ) {
@@ -259,6 +291,7 @@
 				'<td>' + t.students + '</td>' +
 				'<td>' + statusBadge( t.status ) + '</td>' +
 				'<td><div class="data-table__actions">' +
+					'<button type="button" class="data-table__icon-btn" data-action="view-students" data-id="' + t.id + '" aria-label="' + window.mahtelaI18n.dict.action_view_students[ lang ] + '" title="' + window.mahtelaI18n.dict.action_view_students[ lang ] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></button>' +
 					'<button type="button" class="data-table__icon-btn" data-action="permissions" data-id="' + t.id + '" aria-label="' + window.mahtelaI18n.dict.action_permissions[ lang ] + '" title="' + window.mahtelaI18n.dict.action_permissions[ lang ] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87 2 2 0 1 1-2.83 2.83 1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 9 19.35a1.7 1.7 0 0 0-1.87.34 2 2 0 1 1-2.83-2.83A1.7 1.7 0 0 0 4.65 15a1.7 1.7 0 0 0-1.56-1.04H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.65 9a1.7 1.7 0 0 0-.34-1.87 2 2 0 1 1 2.83-2.83A1.7 1.7 0 0 0 9 4.65a1.7 1.7 0 0 0 1.04-1.56V3a2 2 0 0 1 4 0v.09A1.7 1.7 0 0 0 15 4.65a1.7 1.7 0 0 0 1.87-.34 2 2 0 1 1 2.83 2.83A1.7 1.7 0 0 0 19.35 9a1.7 1.7 0 0 0 1.56 1.04H21a2 2 0 0 1 0 4h-.09A1.7 1.7 0 0 0 19.4 15Z"/></svg></button>' +
 					'<button type="button" class="data-table__icon-btn" data-action="reset-password" data-id="' + t.id + '" aria-label="' + window.mahtelaI18n.dict.action_reset_password[ lang ] + '" title="' + window.mahtelaI18n.dict.action_reset_password[ lang ] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></button>' +
 					'<button type="button" class="data-table__icon-btn is-danger" data-action="toggle-suspend" data-id="' + t.id + '" aria-label="' + suspendLabel + '" title="' + suspendLabel + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 8l8 8"/></svg></button>' +
@@ -273,6 +306,48 @@
 
 	var activePermissionsTeacherId = null;
 
+	// Tracks which entity #modal-reset-password is currently open for, so
+	// one shared modal/form can reset either a teacher's or a (through the
+	// Teacher's Students modal) a student's password with the right title
+	// and confirmation toast.
+	var resetPasswordContext = null;
+
+	function findStudent( key ) {
+		return TEACHER_STUDENTS.filter( function ( s ) { return s.key === key; } )[ 0 ];
+	}
+
+	function studentsForTeacher( teacherId ) {
+		return TEACHER_STUDENTS.filter( function ( s ) { return s.teacherId === teacherId; } );
+	}
+
+	function renderTeacherStudents( teacherId ) {
+		var lang = window.mahtelaI18n.currentLang();
+		var tbody = document.getElementById( 'teacher-students-tbody' );
+		var list = studentsForTeacher( teacherId );
+		tbody.innerHTML = '';
+
+		list.forEach( function ( s ) {
+			var tr = document.createElement( 'tr' );
+			tr.innerHTML =
+				'<td><div class="data-table__user"><span class="data-table__name">' + s.name + '</span></div></td>' +
+				'<td><span class="badge badge--accent">' + s.level + '</span></td>' +
+				'<td><div class="data-table__actions">' +
+					'<a href="student-detail.html?student=' + s.key + '" class="data-table__icon-btn" aria-label="' + window.mahtelaI18n.dict.action_view_profile[ lang ] + '" title="' + window.mahtelaI18n.dict.action_view_profile[ lang ] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg></a>' +
+					'<button type="button" class="data-table__icon-btn" data-action="reset-student-password" data-key="' + s.key + '" aria-label="' + window.mahtelaI18n.dict.action_reset_password[ lang ] + '" title="' + window.mahtelaI18n.dict.action_reset_password[ lang ] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></button>' +
+				'</div></td>';
+			tbody.appendChild( tr );
+		} );
+
+		document.getElementById( 'teacher-students-empty' ).style.display = list.length ? 'none' : 'block';
+	}
+
+	function openResetPassword( trigger, kind, name, email ) {
+		resetPasswordContext = { kind: kind, name: name, email: email };
+		document.getElementById( 'reset-password-teacher-name' ).textContent = name + ' — ' + email;
+		document.getElementById( 'reset-password-value' ).value = '';
+		window.mahtelaModal.open( document.getElementById( 'modal-reset-password' ), trigger );
+	}
+
 	document.getElementById( 'teachers-tbody' ).addEventListener( 'click', function ( e ) {
 		var btn = e.target.closest( 'button[data-action]' );
 		if ( ! btn ) { return; }
@@ -280,21 +355,23 @@
 		var teacher = findTeacher( id );
 		var action = btn.getAttribute( 'data-action' );
 
+		if ( action === 'view-students' ) {
+			document.getElementById( 'teacher-students-teacher-name' ).textContent = teacher.name + ' — ' + teacher.email;
+			renderTeacherStudents( id );
+			window.mahtelaModal.open( document.getElementById( 'modal-teacher-students' ), btn );
+		}
+
 		if ( action === 'permissions' ) {
 			activePermissionsTeacherId = id;
 			document.getElementById( 'permissions-teacher-name' ).textContent = teacher.name + ' — ' + teacher.email;
 			Object.keys( teacher.permissions ).forEach( function ( key ) {
 				document.getElementById( 'perm-' + key ).checked = teacher.permissions[ key ];
 			} );
-			document.getElementById( 'modal-permissions' ).classList.add( 'is-open' );
-			document.body.style.overflow = 'hidden';
+			window.mahtelaModal.open( document.getElementById( 'modal-permissions' ), btn );
 		}
 
 		if ( action === 'reset-password' ) {
-			document.getElementById( 'reset-password-teacher-name' ).textContent = teacher.name + ' — ' + teacher.email;
-			document.getElementById( 'reset-password-value' ).value = '';
-			document.getElementById( 'modal-reset-password' ).classList.add( 'is-open' );
-			document.body.style.overflow = 'hidden';
+			openResetPassword( btn, 'teacher', teacher.name, teacher.email );
 		}
 
 		if ( action === 'toggle-suspend' ) {
@@ -302,6 +379,14 @@
 			renderTeachers();
 			mahtelaToast( teacher.name + ( teacher.status === 'suspended' ? ' suspended.' : ' reactivated.' ) );
 		}
+	} );
+
+	document.getElementById( 'teacher-students-tbody' ).addEventListener( 'click', function ( e ) {
+		var btn = e.target.closest( 'button[data-action="reset-student-password"]' );
+		if ( ! btn ) { return; }
+		var student = findStudent( btn.getAttribute( 'data-key' ) );
+		if ( ! student ) { return; }
+		openResetPassword( btn, 'student', student.name, student.email );
 	} );
 
 	document.getElementById( 'save-permissions-btn' ).addEventListener( 'click', function () {
@@ -315,23 +400,22 @@
 			teacher.status = allOn ? 'active' : 'restricted';
 		}
 		renderTeachers();
-		document.getElementById( 'modal-permissions' ).classList.remove( 'is-open' );
-		document.body.style.overflow = '';
+		window.mahtelaModal.close( document.getElementById( 'modal-permissions' ) );
 		mahtelaToast( 'Permissions updated for ' + teacher.name + '.' );
 	} );
 
 	document.getElementById( 'reset-password-form' ).addEventListener( 'submit', function ( e ) {
 		e.preventDefault();
-		document.getElementById( 'modal-reset-password' ).classList.remove( 'is-open' );
-		document.body.style.overflow = '';
-		mahtelaToast( 'Password reset and emailed to the teacher.' );
+		window.mahtelaModal.close( document.getElementById( 'modal-reset-password' ) );
+		var isStudent = resetPasswordContext && resetPasswordContext.kind === 'student';
+		mahtelaToast( 'Password reset and emailed to the ' + ( isStudent ? 'student' : 'teacher' ) + '.' );
+		resetPasswordContext = null;
 	} );
 
 	document.getElementById( 'create-teacher-form' ).addEventListener( 'submit', function ( e ) {
 		e.preventDefault();
 		if ( ! window.mahtelaValidate.validateForm( e.target ) ) { return; }
-		document.getElementById( 'modal-create-teacher' ).classList.remove( 'is-open' );
-		document.body.style.overflow = '';
+		window.mahtelaModal.close( document.getElementById( 'modal-create-teacher' ) );
 		mahtelaToast( 'Teacher account created.' );
 	} );
 

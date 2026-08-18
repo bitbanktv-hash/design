@@ -16,7 +16,7 @@
 		width: 64px; height: 64px; border-radius: 50%;
 		display: flex; align-items: center; justify-content: center;
 		font-family: var(--font-display); font-weight: 700; font-size: 22px;
-		background: var(--student-accent, var(--c-pink)); color: #fff; flex-shrink: 0;
+		background: var(--student-accent, var(--c-pink)); color: var(--c-ink); flex-shrink: 0;
 	}
 	.student-header__name { font-size: 24px; margin-bottom: 4px; }
 	.radar-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
@@ -27,7 +27,7 @@
 		padding: 14px 18px; margin-bottom: 24px;
 		background: var(--surface-soft); border-radius: var(--radius-md);
 	}
-	.teacher-strip__avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--c-pink); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+	.teacher-strip__avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--c-pink); color: var(--c-ink); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -60,7 +60,7 @@
 		</nav>
 		<div class="sidebar__footer">
 			<div class="sidebar__user">
-				<span class="sidebar__avatar" style="background: var(--c-teal); color:#fff;">EK</span>
+				<span class="sidebar__avatar" style="background: var(--c-teal); color:var(--c-ink);">EK</span>
 				<div class="sidebar__user-info">
 					<span class="sidebar__user-name">Elena Kim</span>
 					<span class="sidebar__user-role" data-i18n="auth_role_student">Student</span>
@@ -70,7 +70,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahELA v1.6.0</div>
+			<div class="sidebar__version">MahELA v1.7.0</div>
 		</div>
 	</aside>
 
@@ -210,8 +210,8 @@
 				</div>
 				<div class="card" style="padding:24px;">
 					<h3 style="font-size:15px; margin-bottom:6px;" data-i18n="finance_history">Settlement History</h3>
-					<div class="settlement-row"><span>Jul 1, 2026 → Aug 1, 2026</span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1000000">—</span> · 4 sessions</span></div>
-					<div class="settlement-row"><span>Jun 1, 2026 → Jul 1, 2026</span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1250000">—</span> · 5 sessions</span></div>
+					<div class="settlement-row"><span><span data-date="2026-07-01" data-date-style="full"></span> → <span data-date="2026-08-01" data-date-style="full"></span></span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1000000">—</span> · 4 sessions</span></div>
+					<div class="settlement-row"><span><span data-date="2026-06-01" data-date-style="full"></span> → <span data-date="2026-07-01" data-date-style="full"></span></span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1250000">—</span> · 5 sessions</span></div>
 				</div>
 			</div>
 
@@ -220,7 +220,7 @@
 				<div class="card chat-panel" style="padding:24px;">
 					<div class="chat-panel__thread" id="chat-thread">
 						<div class="message-bubble message-bubble--in">
-							<span class="message-bubble__avatar" style="background:var(--c-pink); color:#fff;">JD</span>
+							<span class="message-bubble__avatar" style="background:var(--c-pink); color:var(--c-ink);">JD</span>
 							<div class="message-bubble__content">
 								<div class="message-bubble__text">Yes, all set! I'll send the reading passage beforehand.</div>
 								<span class="message-bubble__time">Yesterday, 14:10</span>
@@ -231,7 +231,7 @@
 								<div class="message-bubble__text">Perfect, thank you!</div>
 								<span class="message-bubble__time">Yesterday, 14:11</span>
 							</div>
-							<span class="message-bubble__avatar" style="background:var(--student-accent); color:#fff;">EK</span>
+							<span class="message-bubble__avatar" style="background:var(--student-accent); color:var(--c-ink);">EK</span>
 						</div>
 					</div>
 					<form class="chat-panel__input" onsubmit="sendMessage(event)">
@@ -265,7 +265,7 @@
 		var bubble = document.createElement( 'div' );
 		bubble.className = 'message-bubble message-bubble--out';
 		bubble.innerHTML = '<div class="message-bubble__content"><div class="message-bubble__text"></div><span class="message-bubble__time">Just now</span></div>' +
-			'<span class="message-bubble__avatar" style="background:var(--student-accent); color:#fff;">EK</span>';
+			'<span class="message-bubble__avatar" style="background:var(--student-accent); color:var(--c-ink);">EK</span>';
 		bubble.querySelector( '.message-bubble__text' ).textContent = text;
 		thread.appendChild( bubble );
 		thread.scrollTop = thread.scrollHeight;

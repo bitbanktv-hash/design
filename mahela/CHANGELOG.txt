@@ -1,7 +1,74 @@
 MahELA Prototype — Changelog
 ==============================
 
-v1.6.0 — Current
+v1.7.0 — Current
+------------------
+- Admin > Teachers: added a "View Teacher's Students" action (people
+  icon on each teacher row) that opens a modal listing that teacher's
+  students, with the same View Profile and Reset Password actions
+  available inline -- so an admin can manage any teacher's roster
+  without leaving the Teachers page. Reset Password is now shared
+  between the teacher- and student-reset flows, with the right title
+  and confirmation toast for whichever one you're resetting.
+- Fixed the clock/date widget rendering as a broken, stacked layout
+  on every authenticated page except the landing page: .hide-mobile
+  carried a base "display: initial" rule that -- at equal CSS
+  specificity, later in the stylesheet -- silently overrode
+  .clock-widget's (and .btn's) own "display: flex/inline-flex" above
+  780px. Removed the pointless base rule; hiding below 780px is the
+  only job this utility ever needed, and that part was already scoped
+  to a media query. The clock widget (and the "Back to Dashboard"
+  button that shared the same class) now render identically
+  everywhere.
+- Calendar: schedule dates ("Next class", session rows, "Student
+  since", settlement periods, skill-assessment history) now actually
+  switch to Shamsi when you switch the UI to Persian -- previously
+  only the clock widget's own date did this; everything else was
+  static text. Also added a Calendar section to Settings so anyone
+  can choose Gregorian or Jalali independent of their language
+  (e.g. Persian UI with Gregorian dates, or English UI with Jalali),
+  saved and changeable any time. Every date on screen re-renders
+  immediately when either the language or the calendar preference
+  changes.
+- Teacher panel > Messages: the sidebar link went nowhere before.
+  Added messages.html, a real inbox with a conversation list (one per
+  student, showing the last message and time) and a full message
+  thread on the right, deep-linkable via ?student=<key>. Composing a
+  message now has a small formatting toolbar (bold, italic) and an
+  emoji picker, shared with student-detail.html's per-student
+  Messages tab so both surfaces work the same way.
+- Fixed several more spots that were still using white text on the
+  mid-tone brand colors, missed in the v1.6.0 contrast pass because
+  they were inline styles rather than the shared stylesheet: sidebar
+  and message-bubble avatars, the profile header avatar, and the
+  teacher-strip avatar on the student panel.
+- Fixed a dark-mode-only contrast regression introduced in the
+  v1.6.0 fix itself: several rules switched avatar/button/bubble text
+  from white to var(--ink) to fix light-mode contrast, but --ink
+  flips to near-white in dark mode ([data-theme="dark"] --ink:
+  #F3F0FB) while the backgrounds they sit on (--brand, --c-pink,
+  --c-teal, --student-accent) don't change -- so those same elements
+  went right back to a ~2.5:1 failure, just now only in dark mode.
+  Switched all of them to the theme-stable --c-ink instead (same fix
+  already used for the toast background in v1.6.0).
+- Fixed the emoji picker rendering open by default on page load: its
+  class set "display: grid" unconditionally, which -- as an author
+  stylesheet rule -- overrides the browser's own "[hidden] {
+  display: none }" UA rule. Added an explicit
+  ".chat-composer__emoji-popover[hidden] { display: none; }" rule.
+- Fixed modal Escape/focus behavior for two modals open at once (e.g.
+  Reset Password opened from inside the Teacher's Students modal):
+  the v1.5.0 keyboard handling picked the "topmost" modal by DOM
+  order, not open order, so Escape could close the wrong one and
+  focus could return to the wrong trigger. Modals now track an
+  explicit open-order stack.
+- Added data-i18n-aria (translates aria-label + title together) and
+  extended data-i18n-ph to also update a contenteditable composer's
+  CSS-based placeholder, not just the native placeholder attribute --
+  both needed for the new Messages toolbar/composer, both reusable
+  for future icon buttons and rich-text fields.
+
+v1.6.0
 ------------------
 - WCAG AA contrast fixes across every button, active nav link, chat
   bubble, avatar, and the finance highlight card: white text/icons on

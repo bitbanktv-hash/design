@@ -48,6 +48,13 @@
 		settings_email: { en: 'Email', fa: 'ایمیل' },
 		settings_gender: { en: 'Gender', fa: 'جنسیت' },
 		settings_save_details: { en: 'Save Details', fa: 'ذخیره‌ی اطلاعات' },
+		settings_calendar_title: { en: 'Calendar', fa: 'تقویم' },
+		settings_calendar_sub: { en: 'Choose which calendar dates are shown in, independent of your language.', fa: 'مشخص کن تاریخ‌ها با کدوم تقویم نشون داده بشن، جدا از زبونی که استفاده می‌کنی.' },
+		settings_calendar_type: { en: 'Calendar type', fa: 'نوع تقویم' },
+		calendar_gregorian: { en: 'Gregorian', fa: 'میلادی' },
+		calendar_jalali: { en: 'Jalali (Shamsi)', fa: 'شمسی (جلالی)' },
+		settings_save_calendar: { en: 'Save Calendar', fa: 'ذخیره‌ی تقویم' },
+		settings_calendar_saved: { en: 'Calendar preference saved.', fa: 'تنظیم تقویم ذخیره شد.' },
 		settings_password_title: { en: 'Change Password', fa: 'تغییر رمز عبور' },
 		settings_current_password: { en: 'Current Password', fa: 'رمز عبور فعلی' },
 		settings_new_password: { en: 'New Password', fa: 'رمز عبور جدید' },
@@ -112,6 +119,11 @@
 		admin_teachers_sub: { en: 'Every teacher account on the platform.', fa: 'همه‌ی اکانت‌های معلم توی پلتفرم.' },
 		admin_add_teacher: { en: '+ Create Teacher', fa: '+ ساخت معلم جدید' },
 		col_students_count: { en: 'Students', fa: 'شاگردان' },
+		action_view_students: { en: "View Teacher's Students", fa: 'مشاهده‌ی شاگردهای معلم' },
+		modal_teacher_students_title: { en: "Teacher's Students", fa: 'شاگردهای معلم' },
+		admin_teacher_no_students: { en: 'This teacher has no student records in this prototype yet.', fa: 'این معلم هنوز رکورد شاگردی توی این نمونه‌ی اولیه نداره.' },
+		admin_reset_password_for_student: { en: 'Reset Password — Student', fa: 'بازنشانی رمز — شاگرد' },
+		admin_reset_password_for_teacher: { en: 'Reset Password — Teacher', fa: 'بازنشانی رمز — معلم' },
 		modal_create_teacher_title: { en: 'Create a Teacher Account', fa: 'ساخت اکانت معلم' },
 		field_temp_password: { en: 'Temporary Password', fa: 'رمز عبور موقت' },
 		field_temp_password_hint: { en: "They'll be asked to change this on first login.", fa: 'اولین بار که وارد شن، ازشون خواسته می‌شه عوضش کنن.' },
@@ -223,8 +235,15 @@
 
 		// Messages
 		messages_title: { en: 'Messages', fa: 'پیام‌ها' },
+		messages_sub: { en: 'Every conversation with your students, in one place.', fa: 'همه‌ی گفتگوهات با شاگردها، یه‌جا.' },
 		messages_placeholder: { en: 'Type a message…', fa: 'پیامت رو بنویس…' },
 		messages_send: { en: 'Send', fa: 'ارسال' },
+		messages_select_hint: { en: 'Select a conversation to start messaging.', fa: 'یه گفتگو رو انتخاب کن تا پیام‌رسانی رو شروع کنی.' },
+		messages_search_ph: { en: 'Search conversations…', fa: 'جست‌وجوی گفتگوها…' },
+		messages_bold: { en: 'Bold', fa: 'ضخیم' },
+		messages_italic: { en: 'Italic', fa: 'مورب' },
+		messages_emoji: { en: 'Insert emoji', fa: 'افزودن ایموجی' },
+		messages_no_results: { en: 'No conversations match your search.', fa: 'گفتگویی با این جست‌وجو پیدا نشد.' },
 
 		// Student panel (own view)
 		student_panel_title: { en: 'My Panel', fa: 'پنل من' },
@@ -276,7 +295,21 @@
 		document.querySelectorAll( '[data-i18n-ph]' ).forEach( function ( el ) {
 			var key = el.getAttribute( 'data-i18n-ph' );
 			if ( DICT[ key ] && DICT[ key ][ lang ] ) {
+				// The native placeholder attribute only renders on
+				// input/textarea; contenteditable composers (chat-composer__input)
+				// fake a placeholder via CSS reading data-placeholder instead --
+				// keep both in sync from the same key either way.
 				el.setAttribute( 'placeholder', DICT[ key ][ lang ] );
+				if ( el.hasAttribute( 'data-placeholder' ) ) {
+					el.setAttribute( 'data-placeholder', DICT[ key ][ lang ] );
+				}
+			}
+		} );
+		document.querySelectorAll( '[data-i18n-aria]' ).forEach( function ( el ) {
+			var key = el.getAttribute( 'data-i18n-aria' );
+			if ( DICT[ key ] && DICT[ key ][ lang ] ) {
+				el.setAttribute( 'aria-label', DICT[ key ][ lang ] );
+				el.setAttribute( 'title', DICT[ key ][ lang ] );
 			}
 		} );
 

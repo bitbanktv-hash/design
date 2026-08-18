@@ -1,8 +1,12 @@
 /**
- * Live clock + Gregorian/Jalali date. The Jalali conversion is the
- * well-established public algorithm (as used by jalaali-js), verified here
- * against three known reference points: Nowruz 1403 (2024-03-20), Nowruz
- * 1404 (2025-03-21), and the 1979 Iranian Revolution date (1357-11-22).
+ * Live clock + Gregorian/Jalali date, plus a small calendar-aware date
+ * formatter (window.mahtelaCalendar) used everywhere else in the app that
+ * displays a date (session lists, "next class" cards, etc.) so every date
+ * on screen -- not just this clock widget -- honors the same calendar
+ * choice. The Jalali conversion is the well-established public algorithm
+ * (as used by jalaali-js), verified here against three known reference
+ * points: Nowruz 1403 (2024-03-20), Nowruz 1404 (2025-03-21), and the 1979
+ * Iranian Revolution date (1357-11-22).
  */
 ( function () {
 	'use strict';
@@ -87,7 +91,16 @@
 	var JALALI_MONTHS_FA = [ 'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند' ];
 	var JALALI_MONTHS_EN = [ 'Farvardin', 'Ordibehesht', 'Khordad', 'Tir', 'Mordad', 'Shahrivar', 'Mehr', 'Aban', 'Azar', 'Dey', 'Bahman', 'Esfand' ];
 	var GREG_MONTHS_EN = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
+	// Standard Persian transliterations for the Gregorian months (as used
+	// in Persian news/formal writing) -- distinct from the Jalali month
+	// names above, for when a Persian-language user has chosen the
+	// Gregorian calendar rather than Jalali.
+	var GREG_MONTHS_FA = [ 'ژانویه', 'فوریه', 'مارس', 'آوریل', 'مه', 'ژوئن', 'ژوئیه', 'اوت', 'سپتامبر', 'اکتبر', 'نوامبر', 'دسامبر' ];
+	var WEEKDAYS_EN_ABBR = [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ];
+	var WEEKDAYS_EN_FULL = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ];
+	var WEEKDAYS_FA = [ 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه', 'شنبه' ];
 	var FA_DIGITS = { '0': '۰', '1': '۱', '2': '۲', '3': '۳', '4': '۴', '5': '۵', '6': '۶', '7': '۷', '8': '۸', '9': '۹' };
+	var CALENDAR_STORAGE_KEY = 'mahtela-calendar';
 
 	function toFaDigits( str ) {
 		return String( str ).replace( /[0-9]/g, function ( d ) { return FA_DIGITS[ d ]; } );
@@ -95,24 +108,53 @@
 
 	function pad( n ) { return n < 10 ? '0' + n : '' + n; }
 
+	/**
+	 * Calendar preference is independent of UI language: a Persian-language
+	 * user can still prefer the Gregorian calendar, and an English-language
+	 * user can prefer Jalali. Unset (no explicit choice made yet) falls
+	 * back to the natural pairing -- Jalali for fa, Gregorian for en --
+	 * which is also what makes every schedule date on the site correctly
+	 * switch to Shamsi the moment someone switches the UI to Persian,
+	 * without forcing that choice permanently.
+	 */
+	function getCalendarPref() {
+		var v = localStorage.getItem( CALENDAR_STORAGE_KEY );
+		return ( v === 'jalali' || v === 'gregorian' ) ? v : null;
+	}
+
+	function resolveCalendar( lang ) {
+		return getCalendarPref() || ( lang === 'fa' ? 'jalali' : 'gregorian' );
+	}
+
+	function setCalendarPref( value ) {
+		if ( value !== 'jalali' && value !== 'gregorian' ) { return; }
+		localStorage.setItem( CALENDAR_STORAGE_KEY, value );
+		updateClock();
+		applyScheduleDates();
+		document.dispatchEvent( new CustomEvent( 'mahtela:calendarchange', { detail: { calendar: value } } ) );
+	}
+
 	function updateClock() {
 		var els = document.querySelectorAll( '[data-clock-widget]' );
 		if ( ! els.length ) { return; }
 
 		var now = new Date();
 		var lang = document.documentElement.lang === 'fa' ? 'fa' : 'en';
+		var calendar = resolveCalendar( lang );
 
 		var timeStr = pad( now.getHours() ) + ':' + pad( now.getMinutes() ) + ':' + pad( now.getSeconds() );
-		var j = gregorianToJalali( now.getFullYear(), now.getMonth() + 1, now.getDate() );
+		if ( lang === 'fa' ) { timeStr = toFaDigits( timeStr ); }
 
-		var gregStr, jalStr;
-
-		if ( lang === 'fa' ) {
-			timeStr = toFaDigits( timeStr );
-			jalStr = JALALI_MONTHS_FA[ j.jm - 1 ] + ' ' + toFaDigits( j.jd ) + '، ' + toFaDigits( j.jy );
+		var dateStr;
+		if ( calendar === 'jalali' ) {
+			var j = gregorianToJalali( now.getFullYear(), now.getMonth() + 1, now.getDate() );
+			dateStr = lang === 'fa'
+				? JALALI_MONTHS_FA[ j.jm - 1 ] + ' ' + toFaDigits( j.jd ) + '، ' + toFaDigits( j.jy )
+				: JALALI_MONTHS_EN[ j.jm - 1 ] + ' ' + j.jd + ', ' + j.jy;
 		} else {
-			gregStr = GREG_MONTHS_EN[ now.getMonth() ] + ' ' + now.getDate() + ', ' + now.getFullYear();
-			jalStr = JALALI_MONTHS_EN[ j.jm - 1 ] + ' ' + j.jd + ', ' + j.jy;
+			dateStr = lang === 'fa'
+				? GREG_MONTHS_FA[ now.getMonth() ] + ' ' + toFaDigits( now.getDate() ) + '، ' + toFaDigits( now.getFullYear() )
+				: GREG_MONTHS_EN[ now.getMonth() ] + ' ' + now.getDate() + ', ' + now.getFullYear();
 		}
 
 		els.forEach( function ( widget ) {
@@ -121,28 +163,118 @@
 			var jalEl = widget.querySelector( '[data-clock-jalali]' );
 			var sepEl = widget.querySelector( '[data-clock-sep]' );
 			if ( timeEl ) { timeEl.textContent = timeStr; }
-			if ( jalEl ) { jalEl.textContent = jalStr; }
 
-			// Persian UI convention: only the Shamsi date is shown, never a
-			// "Persian-translated Gregorian date" -- that reads as foreign
-			// to Iranian users even with Persian digits/words. English mode
-			// keeps both calendars side by side.
-			if ( gregEl ) {
-				if ( lang === 'fa' ) {
-					gregEl.style.display = 'none';
-				} else {
-					gregEl.style.display = '';
-					gregEl.textContent = gregStr;
-				}
+			// Only one calendar shows at a time now -- which slot carries
+			// the date depends on the user's choice, not their language.
+			// Showing both was fine when language implied the calendar;
+			// now that they're independent, showing the one *not* chosen
+			// would contradict the setting.
+			var primaryEl = calendar === 'jalali' ? jalEl : gregEl;
+			var hiddenEl = calendar === 'jalali' ? gregEl : jalEl;
+			if ( primaryEl ) { primaryEl.textContent = dateStr; primaryEl.style.display = ''; }
+			if ( hiddenEl ) { hiddenEl.style.display = 'none'; }
+			if ( sepEl ) { sepEl.style.display = 'none'; }
+		} );
+	}
+
+	/**
+	 * Renders every calendar-aware date on the page from a machine-readable
+	 * ISO date, so schedule/session dates react to language AND calendar
+	 * changes exactly like the clock widget already did -- this is the
+	 * piece that was missing before (dates were static text baked into the
+	 * HTML and never re-rendered).
+	 *
+	 * Usage: put data-date="YYYY-MM-DD" (optionally + data-time="HH:MM") on
+	 * a container. If it has descendants tagged data-date-part="day" /
+	 * "month" / "weekday", only those get filled (for compact calendar-card
+	 * layouts); otherwise the container's own text becomes the full
+	 * "Weekday, Month Day · HH:MM" string.
+	 */
+	function dateParts( iso ) {
+		var bits = iso.split( '-' );
+		return { y: parseInt( bits[ 0 ], 10 ), m: parseInt( bits[ 1 ], 10 ), d: parseInt( bits[ 2 ], 10 ) };
+	}
+
+	function formatDatePieces( iso, lang ) {
+		var p = dateParts( iso );
+		// Local-midnight construction (not Date.parse on the ISO string)
+		// avoids the classic UTC-parse/local-render off-by-one-day bug.
+		var weekdayIdx = new Date( p.y, p.m - 1, p.d ).getDay();
+		var calendar = resolveCalendar( lang );
+
+		if ( calendar === 'jalali' ) {
+			var j = gregorianToJalali( p.y, p.m, p.d );
+			return {
+				day: lang === 'fa' ? toFaDigits( j.jd ) : String( j.jd ),
+				month: lang === 'fa' ? JALALI_MONTHS_FA[ j.jm - 1 ] : JALALI_MONTHS_EN[ j.jm - 1 ].slice( 0, 3 ),
+				year: lang === 'fa' ? toFaDigits( j.jy ) : String( j.jy ),
+				weekday: lang === 'fa' ? WEEKDAYS_FA[ weekdayIdx ] : WEEKDAYS_EN_ABBR[ weekdayIdx ],
+				weekdayFull: lang === 'fa' ? WEEKDAYS_FA[ weekdayIdx ] : WEEKDAYS_EN_FULL[ weekdayIdx ]
+			};
+		}
+		return {
+			day: lang === 'fa' ? toFaDigits( p.d ) : String( p.d ),
+			month: lang === 'fa' ? GREG_MONTHS_FA[ p.m - 1 ].slice( 0, 3 ) : GREG_MONTHS_EN[ p.m - 1 ].slice( 0, 3 ),
+			year: lang === 'fa' ? toFaDigits( p.y ) : String( p.y ),
+			weekday: lang === 'fa' ? WEEKDAYS_FA[ weekdayIdx ] : WEEKDAYS_EN_ABBR[ weekdayIdx ],
+			weekdayFull: lang === 'fa' ? WEEKDAYS_FA[ weekdayIdx ] : WEEKDAYS_EN_FULL[ weekdayIdx ]
+		};
+	}
+
+	function formatScheduleDate( iso, timeStr, lang ) {
+		var parts = formatDatePieces( iso, lang );
+		var out = parts.weekday + ( lang === 'fa' ? '، ' : ', ' ) + parts.month + ' ' + parts.day;
+		if ( timeStr ) { out += ' · ' + ( lang === 'fa' ? toFaDigits( timeStr ) : timeStr ); }
+		return out;
+	}
+
+	// "Month Day, Year" -- no weekday. Used for things like "Student since"
+	// or a settlement period's start/end date, as opposed to
+	// formatScheduleDate's "Weekday, Month Day [· time]" for session rows.
+	function formatFullDate( iso, lang ) {
+		var parts = formatDatePieces( iso, lang );
+		return lang === 'fa'
+			? parts.month + ' ' + parts.day + '، ' + parts.year
+			: parts.month + ' ' + parts.day + ', ' + parts.year;
+	}
+
+	function applyScheduleDates() {
+		var lang = document.documentElement.lang === 'fa' ? 'fa' : 'en';
+		document.querySelectorAll( '[data-date]' ).forEach( function ( container ) {
+			var iso = container.getAttribute( 'data-date' );
+			if ( ! iso ) { return; }
+			var parts = formatDatePieces( iso, lang );
+			var partEls = container.querySelectorAll( '[data-date-part]' );
+
+			if ( partEls.length ) {
+				partEls.forEach( function ( el ) {
+					var which = el.getAttribute( 'data-date-part' );
+					if ( which === 'day' ) { el.textContent = parts.day; }
+					else if ( which === 'month' ) { el.textContent = parts.month; }
+					else if ( which === 'weekday' ) { el.textContent = parts.weekdayFull; }
+				} );
+			} else if ( container.getAttribute( 'data-date-style' ) === 'full' ) {
+				container.textContent = formatFullDate( iso, lang );
+			} else {
+				container.textContent = formatScheduleDate( iso, container.getAttribute( 'data-time' ), lang );
 			}
-			if ( sepEl ) { sepEl.style.display = lang === 'fa' ? 'none' : ''; }
 		} );
 	}
 
 	window.mahtelaClock = { update: updateClock, gregorianToJalali: gregorianToJalali };
+	window.mahtelaCalendar = {
+		getPreference: getCalendarPref,
+		resolve: resolveCalendar,
+		setPreference: setCalendarPref,
+		formatScheduleDate: formatScheduleDate,
+		formatFullDate: formatFullDate,
+		applyScheduleDates: applyScheduleDates
+	};
 
 	document.addEventListener( 'DOMContentLoaded', function () {
 		updateClock();
+		applyScheduleDates();
 		setInterval( updateClock, 1000 );
 	} );
+	document.addEventListener( 'mahtela:langchange', applyScheduleDates );
 }() );

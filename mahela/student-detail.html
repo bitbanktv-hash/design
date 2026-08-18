@@ -16,7 +16,7 @@
 		width: 64px; height: 64px; border-radius: 50%;
 		display: flex; align-items: center; justify-content: center;
 		font-family: var(--font-display); font-weight: 700; font-size: 22px;
-		background: var(--student-accent, var(--c-pink)); color: #fff; flex-shrink: 0;
+		background: var(--student-accent, var(--c-pink)); color: var(--c-ink); flex-shrink: 0;
 	}
 	.student-header__name { font-size: 24px; margin-bottom: 4px; }
 	.info-card-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 30px; }
@@ -54,7 +54,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
 				<span data-i18n="nav_schedule">Schedule</span>
 			</a>
-			<a href="#" class="sidebar__link">
+			<a href="messages.html" class="sidebar__link">
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
 				<span data-i18n="nav_messages">Messages</span>
 				<span class="badge badge--brand" style="margin-inline-start:auto;">3</span>
@@ -66,7 +66,7 @@
 		</nav>
 		<div class="sidebar__footer">
 			<div class="sidebar__user">
-				<span class="sidebar__avatar" style="background: var(--c-pink); color:#fff;">JD</span>
+				<span class="sidebar__avatar" style="background: var(--c-pink); color:var(--c-ink);">JD</span>
 				<div class="sidebar__user-info">
 					<span class="sidebar__user-name">Jane Doe</span>
 					<span class="sidebar__user-role">English Teacher</span>
@@ -76,7 +76,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahELA v1.6.0</div>
+			<div class="sidebar__version">MahELA v1.7.0</div>
 		</div>
 	</aside>
 
@@ -202,7 +202,7 @@
 				<div class="card" style="padding:24px;">
 					<h3 style="font-size:15px; margin-bottom:14px;" data-i18n="skills_history">Assessment History</h3>
 					<div class="history-item">
-						<span>Aug 12, 2026</span>
+						<span data-date="2026-08-12" data-date-style="full"></span>
 						<div class="history-item__pills">
 							<span class="history-pill" style="color:var(--c-pink);">L 78</span>
 							<span class="history-pill" style="color:var(--c-orange);">S 62</span>
@@ -211,13 +211,13 @@
 						</div>
 					</div>
 					<div class="history-item">
-						<span>Jul 15, 2026</span>
+						<span data-date="2026-07-15" data-date-style="full"></span>
 						<div class="history-item__pills">
 							<span class="history-pill">L 70</span><span class="history-pill">S 55</span><span class="history-pill">R 80</span><span class="history-pill">W 50</span>
 						</div>
 					</div>
 					<div class="history-item">
-						<span>Jun 10, 2026</span>
+						<span data-date="2026-06-10" data-date-style="full"></span>
 						<div class="history-item__pills">
 							<span class="history-pill">L 60</span><span class="history-pill">S 45</span><span class="history-pill">R 72</span><span class="history-pill">W 40</span>
 						</div>
@@ -237,22 +237,22 @@
 
 				<h3 style="font-size:13.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); margin-bottom:12px;" data-i18n="schedule_upcoming">Upcoming</h3>
 				<div class="session-list" style="margin-bottom:30px;">
-					<div class="session-row">
-						<div class="session-row__date"><span class="session-row__date-day">19</span><span class="session-row__date-month">Aug</span></div>
+					<div class="session-row" data-date="2026-08-19">
+						<div class="session-row__date"><span class="session-row__date-day" data-date-part="day">19</span><span class="session-row__date-month" data-date-part="month">Aug</span></div>
 						<div class="session-row__info">
 							<div class="session-row__time">17:00 – 18:00</div>
-							<div class="session-row__sub">Wednesday · 60 min · <span data-currency="250000">—</span></div>
+							<div class="session-row__sub"><span data-date-part="weekday">Wednesday</span> · 60 min · <span data-currency="250000">—</span></div>
 						</div>
 						<div class="session-row__actions">
 							<span class="badge badge--accent" data-i18n="schedule_scheduled">Scheduled</span>
 							<button type="button" class="btn btn--soft btn--small" onclick="markHeld(this)" data-i18n="schedule_mark_held">Mark as Held</button>
 						</div>
 					</div>
-					<div class="session-row">
-						<div class="session-row__date"><span class="session-row__date-day">26</span><span class="session-row__date-month">Aug</span></div>
+					<div class="session-row" data-date="2026-08-26">
+						<div class="session-row__date"><span class="session-row__date-day" data-date-part="day">26</span><span class="session-row__date-month" data-date-part="month">Aug</span></div>
 						<div class="session-row__info">
 							<div class="session-row__time">17:00 – 18:00</div>
-							<div class="session-row__sub">Wednesday · 60 min · <span data-currency="250000">—</span></div>
+							<div class="session-row__sub"><span data-date-part="weekday">Wednesday</span> · 60 min · <span data-currency="250000">—</span></div>
 						</div>
 						<div class="session-row__actions">
 							<span class="badge badge--accent" data-i18n="schedule_scheduled">Scheduled</span>
@@ -263,24 +263,24 @@
 
 				<h3 style="font-size:13.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); margin-bottom:12px;" data-i18n="schedule_past">Past Sessions</h3>
 				<div class="session-list">
-					<div class="session-row">
-						<div class="session-row__date"><span class="session-row__date-day">12</span><span class="session-row__date-month">Aug</span></div>
-						<div class="session-row__info"><div class="session-row__time">17:00 – 18:00</div><div class="session-row__sub">Wednesday · 60 min · <span data-currency="250000">—</span></div></div>
+					<div class="session-row" data-date="2026-08-12">
+						<div class="session-row__date"><span class="session-row__date-day" data-date-part="day">12</span><span class="session-row__date-month" data-date-part="month">Aug</span></div>
+						<div class="session-row__info"><div class="session-row__time">17:00 – 18:00</div><div class="session-row__sub"><span data-date-part="weekday">Wednesday</span> · 60 min · <span data-currency="250000">—</span></div></div>
 						<div class="session-row__actions"><span class="badge badge--success" data-i18n="schedule_held">Held</span></div>
 					</div>
-					<div class="session-row">
-						<div class="session-row__date"><span class="session-row__date-day">5</span><span class="session-row__date-month">Aug</span></div>
-						<div class="session-row__info"><div class="session-row__time">17:00 – 18:00</div><div class="session-row__sub">Wednesday · 60 min · <span data-currency="250000">—</span></div></div>
+					<div class="session-row" data-date="2026-08-05">
+						<div class="session-row__date"><span class="session-row__date-day" data-date-part="day">5</span><span class="session-row__date-month" data-date-part="month">Aug</span></div>
+						<div class="session-row__info"><div class="session-row__time">17:00 – 18:00</div><div class="session-row__sub"><span data-date-part="weekday">Wednesday</span> · 60 min · <span data-currency="250000">—</span></div></div>
 						<div class="session-row__actions"><span class="badge badge--success" data-i18n="schedule_held">Held</span></div>
 					</div>
-					<div class="session-row">
-						<div class="session-row__date"><span class="session-row__date-day">29</span><span class="session-row__date-month">Jul</span></div>
-						<div class="session-row__info"><div class="session-row__time">17:00 – 18:00</div><div class="session-row__sub">Wednesday · 60 min · <span data-currency="250000">—</span></div></div>
+					<div class="session-row" data-date="2026-07-29">
+						<div class="session-row__date"><span class="session-row__date-day" data-date-part="day">29</span><span class="session-row__date-month" data-date-part="month">Jul</span></div>
+						<div class="session-row__info"><div class="session-row__time">17:00 – 18:00</div><div class="session-row__sub"><span data-date-part="weekday">Wednesday</span> · 60 min · <span data-currency="250000">—</span></div></div>
 						<div class="session-row__actions"><span class="badge" style="background:rgba(192,69,63,0.12); color:#C0453F;" data-i18n="schedule_missed">Missed</span></div>
 					</div>
-					<div class="session-row">
-						<div class="session-row__date"><span class="session-row__date-day">22</span><span class="session-row__date-month">Jul</span></div>
-						<div class="session-row__info"><div class="session-row__time">17:00 – 18:00</div><div class="session-row__sub">Wednesday · 60 min · <span data-currency="250000">—</span></div></div>
+					<div class="session-row" data-date="2026-07-22">
+						<div class="session-row__date"><span class="session-row__date-day" data-date-part="day">22</span><span class="session-row__date-month" data-date-part="month">Jul</span></div>
+						<div class="session-row__info"><div class="session-row__time">17:00 – 18:00</div><div class="session-row__sub"><span data-date-part="weekday">Wednesday</span> · 60 min · <span data-currency="250000">—</span></div></div>
 						<div class="session-row__actions"><span class="badge badge--success" data-i18n="schedule_held">Held</span></div>
 					</div>
 				</div>
@@ -322,28 +322,28 @@
 					</div>
 
 					<div class="session-list" id="unsettled-session-list">
-						<label class="session-row settle-row">
+						<label class="session-row settle-row" data-date="2026-07-22">
 							<input type="checkbox" class="settle-checkbox" data-amount="250000" checked style="width:auto; margin-inline-end:6px;">
-							<span class="session-row__date"><span class="session-row__date-day">22</span><span class="session-row__date-month">Jul</span></span>
-							<span class="session-row__info"><span class="session-row__time">17:00 – 18:00</span><span class="session-row__sub">Wednesday · 60 min</span></span>
+							<span class="session-row__date"><span class="session-row__date-day" data-date-part="day">22</span><span class="session-row__date-month" data-date-part="month">Jul</span></span>
+							<span class="session-row__info"><span class="session-row__time">17:00 – 18:00</span><span class="session-row__sub"><span data-date-part="weekday">Wednesday</span> · 60 min</span></span>
 							<span class="session-row__actions"><span data-currency="250000">—</span></span>
 						</label>
-						<label class="session-row settle-row">
+						<label class="session-row settle-row" data-date="2026-07-29">
 							<input type="checkbox" class="settle-checkbox" data-amount="250000" checked style="width:auto; margin-inline-end:6px;">
-							<span class="session-row__date"><span class="session-row__date-day">29</span><span class="session-row__date-month">Jul</span></span>
-							<span class="session-row__info"><span class="session-row__time">17:00 – 18:00</span><span class="session-row__sub">Wednesday · 60 min</span></span>
+							<span class="session-row__date"><span class="session-row__date-day" data-date-part="day">29</span><span class="session-row__date-month" data-date-part="month">Jul</span></span>
+							<span class="session-row__info"><span class="session-row__time">17:00 – 18:00</span><span class="session-row__sub"><span data-date-part="weekday">Wednesday</span> · 60 min</span></span>
 							<span class="session-row__actions"><span data-currency="250000">—</span></span>
 						</label>
-						<label class="session-row settle-row">
+						<label class="session-row settle-row" data-date="2026-08-05">
 							<input type="checkbox" class="settle-checkbox" data-amount="250000" checked style="width:auto; margin-inline-end:6px;">
-							<span class="session-row__date"><span class="session-row__date-day">5</span><span class="session-row__date-month">Aug</span></span>
-							<span class="session-row__info"><span class="session-row__time">17:00 – 18:00</span><span class="session-row__sub">Wednesday · 60 min</span></span>
+							<span class="session-row__date"><span class="session-row__date-day" data-date-part="day">5</span><span class="session-row__date-month" data-date-part="month">Aug</span></span>
+							<span class="session-row__info"><span class="session-row__time">17:00 – 18:00</span><span class="session-row__sub"><span data-date-part="weekday">Wednesday</span> · 60 min</span></span>
 							<span class="session-row__actions"><span data-currency="250000">—</span></span>
 						</label>
-						<label class="session-row settle-row">
+						<label class="session-row settle-row" data-date="2026-08-12">
 							<input type="checkbox" class="settle-checkbox" data-amount="250000" checked style="width:auto; margin-inline-end:6px;">
-							<span class="session-row__date"><span class="session-row__date-day">12</span><span class="session-row__date-month">Aug</span></span>
-							<span class="session-row__info"><span class="session-row__time">17:00 – 18:00</span><span class="session-row__sub">Wednesday · 60 min</span></span>
+							<span class="session-row__date"><span class="session-row__date-day" data-date-part="day">12</span><span class="session-row__date-month" data-date-part="month">Aug</span></span>
+							<span class="session-row__info"><span class="session-row__time">17:00 – 18:00</span><span class="session-row__sub"><span data-date-part="weekday">Wednesday</span> · 60 min</span></span>
 							<span class="session-row__actions"><span data-currency="250000">—</span></span>
 						</label>
 					</div>
@@ -360,9 +360,9 @@
 
 				<div class="card" style="padding:24px;">
 					<h3 style="font-size:15px; margin-bottom:6px;" data-i18n="finance_history">Settlement History</h3>
-					<div class="settlement-row"><span>Jul 1, 2026 → Aug 1, 2026</span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1000000">—</span> · 4 sessions</span></div>
-					<div class="settlement-row"><span>Jun 1, 2026 → Jul 1, 2026</span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1250000">—</span> · 5 sessions</span></div>
-					<div class="settlement-row"><span>May 1, 2026 → Jun 1, 2026</span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1000000">—</span> · 4 sessions</span></div>
+					<div class="settlement-row"><span><span data-date="2026-07-01" data-date-style="full"></span> → <span data-date="2026-08-01" data-date-style="full"></span></span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1000000">—</span> · 4 sessions</span></div>
+					<div class="settlement-row"><span><span data-date="2026-06-01" data-date-style="full"></span> → <span data-date="2026-07-01" data-date-style="full"></span></span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1250000">—</span> · 5 sessions</span></div>
+					<div class="settlement-row"><span><span data-date="2026-05-01" data-date-style="full"></span> → <span data-date="2026-06-01" data-date-style="full"></span></span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1000000">—</span> · 4 sessions</span></div>
 				</div>
 			</div>
 
@@ -382,7 +382,7 @@
 								<div class="message-bubble__text">Yes, all set! I'll send the reading passage beforehand.</div>
 								<span class="message-bubble__time">Yesterday, 14:10</span>
 							</div>
-							<span class="message-bubble__avatar" style="background:var(--c-pink); color:#fff;">JD</span>
+							<span class="message-bubble__avatar" style="background:var(--c-pink); color:var(--c-ink);">JD</span>
 						</div>
 						<div class="message-bubble message-bubble--in">
 							<span class="message-bubble__avatar">EK</span>
@@ -392,10 +392,18 @@
 							</div>
 						</div>
 					</div>
-					<form class="chat-panel__input" onsubmit="sendMessage(event)">
-						<input type="text" id="chat-input" data-i18n-ph="messages_placeholder" placeholder="Type a message…" autocomplete="off">
-						<button type="submit" class="btn btn--primary btn--small" data-i18n="messages_send">Send</button>
-					</form>
+					<div class="chat-composer">
+						<div class="chat-composer__toolbar">
+							<button type="button" class="chat-composer__tool" data-cmd="bold" data-i18n-aria="messages_bold" aria-label="Bold" title="Bold"><b>B</b></button>
+							<button type="button" class="chat-composer__tool" data-cmd="italic" data-i18n-aria="messages_italic" aria-label="Italic" title="Italic"><i>I</i></button>
+							<button type="button" class="chat-composer__tool" data-emoji-toggle aria-haspopup="true" aria-expanded="false" data-i18n-aria="messages_emoji" aria-label="Insert emoji" title="Insert emoji">🙂</button>
+							<div class="chat-composer__emoji-popover" hidden></div>
+						</div>
+						<div class="chat-composer__body">
+							<div class="chat-composer__input" contenteditable="true" role="textbox" aria-multiline="true" data-i18n-ph="messages_placeholder" data-placeholder="Type a message…"></div>
+							<button type="button" class="btn btn--primary btn--small chat-composer__send" data-i18n="messages_send">Send</button>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -494,6 +502,7 @@
 <script src="assets/js/clock.js"></script>
 <script src="assets/js/radar-chart.js"></script>
 <script src="assets/js/app.js"></script>
+<script src="assets/js/chat.js"></script>
 <script>
 	/**
 	 * Sample "database" for this static prototype. In the real WordPress
@@ -502,11 +511,11 @@
 	 * level/skills from whichever record is selected) carries over as-is.
 	 */
 	var STUDENTS = {
-		elena:  { name: 'Elena Kim',    initials: 'EK', gender: 'female', levelValue: 'B2', levelLabel: 'Upper-Intermediate · B2', levelBadge: 'badge--accent',  rate: 250000, duration: 60, since: 'Jan 15, 2026', skills: { listening: 78, speaking: 62, reading: 85, writing: 58 } },
-		daniel: { name: 'Daniel Cruz',  initials: 'DC', gender: 'male',   levelValue: 'A1', levelLabel: 'Beginner · A1',            levelBadge: 'badge--neutral', rate: 200000, duration: 45, since: 'Mar 3, 2026',  skills: { listening: 35, speaking: 28, reading: 40, writing: 22 } },
-		sara:   { name: 'Sara Ahmadi',  initials: 'SA', gender: 'female', levelValue: 'C1', levelLabel: 'Advanced · C1',            levelBadge: 'badge--success', rate: 300000, duration: 60, since: 'Nov 10, 2025', skills: { listening: 90, speaking: 85, reading: 92, writing: 80 } },
-		marco:  { name: 'Marco Rossi',  initials: 'MR', gender: 'male',   levelValue: 'B1', levelLabel: 'Intermediate · B1',        levelBadge: 'badge--warning', rate: 250000, duration: 60, since: 'Feb 20, 2026', skills: { listening: 60, speaking: 55, reading: 65, writing: 50 } },
-		yuki:   { name: 'Yuki Tanaka',  initials: 'YT', gender: 'female', levelValue: 'A2', levelLabel: 'Pre-Intermediate · A2',    levelBadge: 'badge--neutral', rate: 220000, duration: 45, since: 'Apr 5, 2026',  skills: { listening: 45, speaking: 38, reading: 50, writing: 32 } }
+		elena:  { name: 'Elena Kim',    initials: 'EK', gender: 'female', levelValue: 'B2', levelLabel: 'Upper-Intermediate · B2', levelBadge: 'badge--accent',  rate: 250000, duration: 60, since: '2026-01-15', skills: { listening: 78, speaking: 62, reading: 85, writing: 58 } },
+		daniel: { name: 'Daniel Cruz',  initials: 'DC', gender: 'male',   levelValue: 'A1', levelLabel: 'Beginner · A1',            levelBadge: 'badge--neutral', rate: 200000, duration: 45, since: '2026-03-03',  skills: { listening: 35, speaking: 28, reading: 40, writing: 22 } },
+		sara:   { name: 'Sara Ahmadi',  initials: 'SA', gender: 'female', levelValue: 'C1', levelLabel: 'Advanced · C1',            levelBadge: 'badge--success', rate: 300000, duration: 60, since: '2025-11-10', skills: { listening: 90, speaking: 85, reading: 92, writing: 80 } },
+		marco:  { name: 'Marco Rossi',  initials: 'MR', gender: 'male',   levelValue: 'B1', levelLabel: 'Intermediate · B1',        levelBadge: 'badge--warning', rate: 250000, duration: 60, since: '2026-02-20', skills: { listening: 60, speaking: 55, reading: 65, writing: 50 } },
+		yuki:   { name: 'Yuki Tanaka',  initials: 'YT', gender: 'female', levelValue: 'A2', levelLabel: 'Pre-Intermediate · A2',    levelBadge: 'badge--neutral', rate: 220000, duration: 45, since: '2026-04-05',  skills: { listening: 45, speaking: 38, reading: 50, writing: 32 } }
 	};
 
 	function currentStudentKey() {
@@ -528,7 +537,7 @@
 
 		document.getElementById( 'student-level-value' ).textContent = s.levelValue;
 		document.getElementById( 'student-duration-value' ).textContent = s.duration;
-		document.getElementById( 'student-since-value' ).textContent = s.since;
+		document.getElementById( 'student-since-value' ).textContent = window.mahtelaCalendar.formatFullDate( s.since, window.mahtelaI18n.currentLang() );
 
 		var rateEl = document.getElementById( 'student-rate-value' );
 		rateEl.setAttribute( 'data-currency', s.rate );
@@ -557,6 +566,11 @@
 	document.addEventListener( 'mahtela:langchange', function () {
 		var s = STUDENTS[ currentStudentKey() ];
 		document.getElementById( 'student-rate-value' ).textContent = window.mahtelaI18n.formatToman( s.rate, window.mahtelaI18n.currentLang() );
+		document.getElementById( 'student-since-value' ).textContent = window.mahtelaCalendar.formatFullDate( s.since, window.mahtelaI18n.currentLang() );
+	} );
+	document.addEventListener( 'mahtela:calendarchange', function () {
+		var s = STUDENTS[ currentStudentKey() ];
+		document.getElementById( 'student-since-value' ).textContent = window.mahtelaCalendar.formatFullDate( s.since, window.mahtelaI18n.currentLang() );
 	} );
 
 	function markHeld( btn ) {
@@ -614,22 +628,17 @@
 	document.addEventListener( 'mahtela:langchange', updateSettleSummary );
 	updateSettleSummary();
 
-	function sendMessage( e ) {
-		e.preventDefault();
-		var input = document.getElementById( 'chat-input' );
-		var text = input.value.trim();
-		if ( ! text ) { return; }
-
+	document.querySelector( '.chat-composer' ).addEventListener( 'chat-composer:send', function ( e ) {
 		var thread = document.getElementById( 'chat-thread' );
 		var bubble = document.createElement( 'div' );
 		bubble.className = 'message-bubble message-bubble--out';
-		bubble.innerHTML = '<div class="message-bubble__content"><div class="message-bubble__text"></div><span class="message-bubble__time">Just now</span></div>' +
-			'<span class="message-bubble__avatar" style="background:var(--c-pink); color:#fff;">JD</span>';
-		bubble.querySelector( '.message-bubble__text' ).textContent = text;
+		bubble.innerHTML = '<div class="message-bubble__content"><div class="message-bubble__text"></div><span class="message-bubble__time">' +
+			( window.mahtelaI18n.currentLang() === 'fa' ? 'اکنون' : 'Just now' ) + '</span></div>' +
+			'<span class="message-bubble__avatar" style="background:var(--c-pink); color:var(--c-ink);">JD</span>';
+		bubble.querySelector( '.message-bubble__text' ).innerHTML = e.detail.html;
 		thread.appendChild( bubble );
 		thread.scrollTop = thread.scrollHeight;
-		input.value = '';
-	}
+	} );
 </script>
 </body>
 </html>

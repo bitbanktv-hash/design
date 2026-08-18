@@ -28,7 +28,12 @@
 	}
 
 	function initModals() {
-		var lastTrigger = null;
+		// An explicit open-order stack, not DOM order: two modals can be
+		// open at once (e.g. Reset Password launched from inside the
+		// Teacher's Students modal), and the one opened *most recently* is
+		// the one Escape/Tab-trap must target -- which isn't necessarily
+		// the one that comes later in the HTML source.
+		var openStack = [];
 
 		function getFocusable( container ) {
 			return Array.prototype.slice.call(
@@ -39,7 +44,7 @@
 		}
 
 		function openModal( modal, trigger ) {
-			lastTrigger = trigger || document.activeElement;
+			openStack.push( { modal: modal, trigger: trigger || document.activeElement } );
 			modal.classList.add( 'is-open' );
 			document.body.style.overflow = 'hidden';
 
@@ -48,10 +53,15 @@
 		}
 
 		function closeModal( modal ) {
+			var idx = -1;
+			for ( var i = openStack.length - 1; i >= 0; i-- ) {
+				if ( openStack[ i ].modal === modal ) { idx = i; break; }
+			}
+			var entry = idx !== -1 ? openStack.splice( idx, 1 )[ 0 ] : null;
+
 			modal.classList.remove( 'is-open' );
-			document.body.style.overflow = '';
-			if ( lastTrigger && document.contains( lastTrigger ) ) { lastTrigger.focus(); }
-			lastTrigger = null;
+			if ( ! openStack.length ) { document.body.style.overflow = ''; }
+			if ( entry && entry.trigger && document.contains( entry.trigger ) ) { entry.trigger.focus(); }
 		}
 
 		// One-time ARIA setup: every .modal-box gets dialog semantics, tied
@@ -91,9 +101,8 @@
 		// Escape closes the topmost open modal; Tab is trapped inside it
 		// while open, per the WAI-ARIA dialog (modal) pattern.
 		document.addEventListener( 'keydown', function ( e ) {
-			var openModals = Array.prototype.slice.call( document.querySelectorAll( '.modal-overlay.is-open' ) );
-			if ( ! openModals.length ) { return; }
-			var top = openModals[ openModals.length - 1 ];
+			if ( ! openStack.length ) { return; }
+			var top = openStack[ openStack.length - 1 ].modal;
 
 			if ( e.key === 'Escape' ) {
 				closeModal( top );
@@ -112,6 +121,11 @@
 				}
 			}
 		} );
+
+		// Exposed so page-specific inline scripts open/close modals through
+		// the same path (ARIA setup already ran above at init) instead of
+		// hand-rolling classList.add('is-open') and losing focus management.
+		window.mahtelaModal = { open: openModal, close: closeModal };
 	}
 
 	function initTabs() {
