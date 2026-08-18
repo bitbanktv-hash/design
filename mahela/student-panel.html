@@ -70,7 +70,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahELA v1.9.0</div>
+			<div class="sidebar__version">MahELA v1.9.1</div>
 		</div>
 	</aside>
 
@@ -117,13 +117,13 @@
 			</div>
 
 			<nav class="tabs-nav" data-tabs="panel">
-				<button type="button" class="tabs-nav__btn is-active" data-tab-btn="panel" data-tab-target="skills">
-					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 3 7v6c0 5 4 8.5 9 9 5-.5 9-4 9-9V7z"/></svg>
-					<span data-i18n="student_my_skills">My Skills</span>
-				</button>
-				<button type="button" class="tabs-nav__btn" data-tab-btn="panel" data-tab-target="schedule">
+				<button type="button" class="tabs-nav__btn is-active" data-tab-btn="panel" data-tab-target="schedule">
 					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
 					<span data-i18n="student_my_schedule">My Schedule</span>
+				</button>
+				<button type="button" class="tabs-nav__btn" data-tab-btn="panel" data-tab-target="skills">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 3 7v6c0 5 4 8.5 9 9 5-.5 9-4 9-9V7z"/></svg>
+					<span data-i18n="student_my_skills">My Skills</span>
 				</button>
 				<button type="button" class="tabs-nav__btn" data-tab-btn="panel" data-tab-target="balance">
 					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h4a1.8 1.8 0 0 1 0 3.6h-3a1.8 1.8 0 0 0 0 3.6h4.5"/></svg>
@@ -136,7 +136,15 @@
 			</nav>
 
 			<!-- SKILLS -->
-			<div class="tab-panel is-active" data-tab-panel="panel" data-tab-id="skills">
+			<!-- SCHEDULE -->
+			<div class="tab-panel is-active" data-tab-panel="panel" data-tab-id="schedule">
+				<h3 style="font-size:13.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); margin-bottom:12px;" data-i18n="schedule_upcoming">Upcoming</h3>
+				<div class="session-list" id="panel-schedule-upcoming" style="margin-bottom:30px;"></div>
+				<h3 style="font-size:13.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); margin-bottom:12px;" data-i18n="schedule_past">Past Sessions</h3>
+				<div class="session-list" id="panel-schedule-past"></div>
+			</div>
+
+			<div class="tab-panel" data-tab-panel="panel" data-tab-id="skills">
 				<div class="card" style="padding:32px;">
 					<div class="radar-wrap">
 						<div class="radar-wrap__chart" id="my-skills-radar"></div>
@@ -162,14 +170,6 @@
 				</div>
 			</div>
 
-			<!-- SCHEDULE -->
-			<div class="tab-panel" data-tab-panel="panel" data-tab-id="schedule">
-				<h3 style="font-size:13.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); margin-bottom:12px;" data-i18n="schedule_upcoming">Upcoming</h3>
-				<div class="session-list" id="panel-schedule-upcoming" style="margin-bottom:30px;"></div>
-				<h3 style="font-size:13.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); margin-bottom:12px;" data-i18n="schedule_past">Past Sessions</h3>
-				<div class="session-list" id="panel-schedule-past"></div>
-			</div>
-
 			<!-- BALANCE -->
 			<div class="tab-panel" data-tab-panel="panel" data-tab-id="balance">
 				<div class="finance-hero">
@@ -188,8 +188,8 @@
 				</div>
 				<div class="card" style="padding:24px;">
 					<h3 style="font-size:15px; margin-bottom:6px;" data-i18n="finance_history">Settlement History</h3>
-					<div class="settlement-row"><span><span data-date="2026-07-01" data-date-style="full"></span> → <span data-date="2026-08-01" data-date-style="full"></span></span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1000000">—</span> · 4 sessions</span></div>
-					<div class="settlement-row"><span><span data-date="2026-06-01" data-date-style="full"></span> → <span data-date="2026-07-01" data-date-style="full"></span></span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1250000">—</span> · 5 sessions</span></div>
+					<div class="settlement-row"><span><span data-date="2026-07-01" data-date-style="dual"></span> → <span data-date="2026-08-01" data-date-style="dual"></span></span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1000000">—</span> · 4 sessions</span></div>
+					<div class="settlement-row"><span><span data-date="2026-06-01" data-date-style="dual"></span> → <span data-date="2026-07-01" data-date-style="dual"></span></span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1250000">—</span> · 5 sessions</span></div>
 				</div>
 			</div>
 

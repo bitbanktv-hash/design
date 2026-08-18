@@ -1,8 +1,26 @@
 MahELA Prototype — Changelog
 ==============================
 
-v1.9.0 — Current
+v1.9.1 — Current
 ------------------
+- Student's own panel: swapped "My Schedule" and "My Skills" tab order
+  (Schedule now first/active) -- moved both the nav buttons and the
+  actual panel content blocks, not just which one starts active, so
+  keyboard/tab order matches the visual order too.
+- Balance/Finance sections (student-detail.html's Finance tab and
+  student-panel.html's Balance tab) now show both the Gregorian and
+  Shamsi dates together, separated by "|", for every settlement-
+  history date -- matching how the header clock widget already does
+  it, and independent of the calendar-type preference (which still
+  governs schedule/session dates elsewhere, just not these). Added a
+  new formatDualDate() to the shared calendar module rather than
+  hardcoding this in two places; verified it routes correctly through
+  the same dispatcher every other date on the page already uses, and
+  confirmed the Assessment History dates (a different section) were
+  correctly left showing a single calendar.
+
+v1.9.0
+--------
 - Class type (In-Person / Online): selectable whenever a session is
   booked or edited (teacher-schedule.html's Book/Manage Session
   modals, student-detail.html's Add/Manage Session modals), shown as

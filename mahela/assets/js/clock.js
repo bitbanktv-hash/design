@@ -247,6 +247,15 @@
 			: parts.month + ' ' + parts.day + ', ' + parts.year;
 	}
 
+	/**
+	 * Both calendars together, separated by "|" -- same convention as the
+	 * header clock widget, used in the Balance/Finance sections where the
+	 * calendar-type preference shouldn't hide either one.
+	 */
+	function formatDualDate( iso, lang ) {
+		return formatFullDate( iso, lang, 'gregorian' ) + ' | ' + formatFullDate( iso, lang, 'jalali' );
+	}
+
 	function applyScheduleDates() {
 		var lang = document.documentElement.lang === 'fa' ? 'fa' : 'en';
 		var calendar = resolveCalendar( lang );
@@ -265,6 +274,8 @@
 				} );
 			} else if ( container.getAttribute( 'data-date-style' ) === 'full' ) {
 				container.textContent = formatFullDate( iso, lang, calendar );
+			} else if ( container.getAttribute( 'data-date-style' ) === 'dual' ) {
+				container.textContent = formatDualDate( iso, lang );
 			} else {
 				container.textContent = formatScheduleDate( iso, container.getAttribute( 'data-time' ), lang, calendar );
 			}
@@ -278,6 +289,7 @@
 		setPreference: setCalendarPref,
 		formatScheduleDate: formatScheduleDate,
 		formatFullDate: formatFullDate,
+		formatDualDate: formatDualDate,
 		applyScheduleDates: applyScheduleDates
 	};
 
