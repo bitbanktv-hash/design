@@ -140,22 +140,19 @@
 
 		var now = new Date();
 		var lang = document.documentElement.lang === 'fa' ? 'fa' : 'en';
-		var calendar = resolveCalendar( lang );
 
 		var timeStr = pad( now.getHours() ) + ':' + pad( now.getMinutes() ) + ':' + pad( now.getSeconds() );
 		if ( lang === 'fa' ) { timeStr = toFaDigits( timeStr ); }
 
-		var dateStr;
-		if ( calendar === 'jalali' ) {
-			var j = gregorianToJalali( now.getFullYear(), now.getMonth() + 1, now.getDate() );
-			dateStr = lang === 'fa'
-				? JALALI_MONTHS_FA[ j.jm - 1 ] + ' ' + toFaDigits( j.jd ) + '، ' + toFaDigits( j.jy )
-				: JALALI_MONTHS_EN[ j.jm - 1 ] + ' ' + j.jd + ', ' + j.jy;
-		} else {
-			dateStr = lang === 'fa'
-				? GREG_MONTHS_FA[ now.getMonth() ] + ' ' + toFaDigits( now.getDate() ) + '، ' + toFaDigits( now.getFullYear() )
-				: GREG_MONTHS_EN[ now.getMonth() ] + ' ' + now.getDate() + ', ' + now.getFullYear();
-		}
+		var iso = now.getFullYear() + '-' + pad( now.getMonth() + 1 ) + '-' + pad( now.getDate() );
+
+		// The clock widget always shows BOTH calendars side by side,
+		// separated by "|", on every page, regardless of language or the
+		// Settings calendar preference -- that preference still governs
+		// schedule/session dates elsewhere, just not this always-both
+		// header display.
+		var gregStr = formatFullDate( iso, lang, 'gregorian' );
+		var jalStr = formatFullDate( iso, lang, 'jalali' );
 
 		els.forEach( function ( widget ) {
 			var timeEl = widget.querySelector( '[data-clock-time]' );
@@ -163,17 +160,9 @@
 			var jalEl = widget.querySelector( '[data-clock-jalali]' );
 			var sepEl = widget.querySelector( '[data-clock-sep]' );
 			if ( timeEl ) { timeEl.textContent = timeStr; }
-
-			// Only one calendar shows at a time now -- which slot carries
-			// the date depends on the user's choice, not their language.
-			// Showing both was fine when language implied the calendar;
-			// now that they're independent, showing the one *not* chosen
-			// would contradict the setting.
-			var primaryEl = calendar === 'jalali' ? jalEl : gregEl;
-			var hiddenEl = calendar === 'jalali' ? gregEl : jalEl;
-			if ( primaryEl ) { primaryEl.textContent = dateStr; primaryEl.style.display = ''; }
-			if ( hiddenEl ) { hiddenEl.style.display = 'none'; }
-			if ( sepEl ) { sepEl.style.display = 'none'; }
+			if ( gregEl ) { gregEl.textContent = gregStr; gregEl.style.display = ''; }
+			if ( jalEl ) { jalEl.textContent = jalStr; jalEl.style.display = ''; }
+			if ( sepEl ) { sepEl.style.display = ''; }
 		} );
 	}
 
@@ -195,12 +184,11 @@
 		return { y: parseInt( bits[ 0 ], 10 ), m: parseInt( bits[ 1 ], 10 ), d: parseInt( bits[ 2 ], 10 ) };
 	}
 
-	function formatDatePieces( iso, lang ) {
+	function formatDatePieces( iso, lang, calendar ) {
 		var p = dateParts( iso );
 		// Local-midnight construction (not Date.parse on the ISO string)
 		// avoids the classic UTC-parse/local-render off-by-one-day bug.
 		var weekdayIdx = new Date( p.y, p.m - 1, p.d ).getDay();
-		var calendar = resolveCalendar( lang );
 
 		if ( calendar === 'jalali' ) {
 			var j = gregorianToJalali( p.y, p.m, p.d );
@@ -221,18 +209,39 @@
 		};
 	}
 
-	function formatScheduleDate( iso, timeStr, lang ) {
-		var parts = formatDatePieces( iso, lang );
-		var out = parts.weekday + ( lang === 'fa' ? '، ' : ', ' ) + parts.month + ' ' + parts.day;
-		if ( timeStr ) { out += ' · ' + ( lang === 'fa' ? toFaDigits( timeStr ) : timeStr ); }
+	/**
+	 * "Weekday, Day Month [· time]" for session rows / "next class" cards.
+	 * Persian phrasing puts the day-of-month before the month name ("۲۸
+	 * مرداد", not "مرداد ۲۸") and labels the time with "ساعت:" -- English
+	 * keeps its own natural "Month Day" order with no time label.
+	 */
+	function formatScheduleDate( iso, timeStr, lang, calendarOverride ) {
+		var calendar = calendarOverride || resolveCalendar( lang );
+		var parts = formatDatePieces( iso, lang, calendar );
+		var out;
+		if ( lang === 'fa' ) {
+			out = parts.weekday + '، ' + parts.day + ' ' + parts.month;
+		} else {
+			out = parts.weekday + ', ' + parts.month + ' ' + parts.day;
+		}
+		if ( timeStr ) {
+			out += ' · ' + ( lang === 'fa' ? 'ساعت: ' + toFaDigits( timeStr ) : timeStr );
+		}
 		return out;
 	}
 
-	// "Month Day, Year" -- no weekday. Used for things like "Student since"
-	// or a settlement period's start/end date, as opposed to
-	// formatScheduleDate's "Weekday, Month Day [· time]" for session rows.
-	function formatFullDate( iso, lang ) {
-		var parts = formatDatePieces( iso, lang );
+	/**
+	 * Standalone full date -- "Student since", a settlement period's start/
+	 * end date, etc (no weekday, no time). Jalali uses Year/Month/Day order
+	 * throughout the app (e.g. "۱۴۰۵/مرداد/۲۷"); Gregorian keeps the
+	 * conventional "Month Day, Year".
+	 */
+	function formatFullDate( iso, lang, calendarOverride ) {
+		var calendar = calendarOverride || resolveCalendar( lang );
+		var parts = formatDatePieces( iso, lang, calendar );
+		if ( calendar === 'jalali' ) {
+			return parts.year + '/' + parts.month + '/' + parts.day;
+		}
 		return lang === 'fa'
 			? parts.month + ' ' + parts.day + '، ' + parts.year
 			: parts.month + ' ' + parts.day + ', ' + parts.year;
@@ -240,10 +249,11 @@
 
 	function applyScheduleDates() {
 		var lang = document.documentElement.lang === 'fa' ? 'fa' : 'en';
+		var calendar = resolveCalendar( lang );
 		document.querySelectorAll( '[data-date]' ).forEach( function ( container ) {
 			var iso = container.getAttribute( 'data-date' );
 			if ( ! iso ) { return; }
-			var parts = formatDatePieces( iso, lang );
+			var parts = formatDatePieces( iso, lang, calendar );
 			var partEls = container.querySelectorAll( '[data-date-part]' );
 
 			if ( partEls.length ) {
@@ -254,9 +264,9 @@
 					else if ( which === 'weekday' ) { el.textContent = parts.weekdayFull; }
 				} );
 			} else if ( container.getAttribute( 'data-date-style' ) === 'full' ) {
-				container.textContent = formatFullDate( iso, lang );
+				container.textContent = formatFullDate( iso, lang, calendar );
 			} else {
-				container.textContent = formatScheduleDate( iso, container.getAttribute( 'data-time' ), lang );
+				container.textContent = formatScheduleDate( iso, container.getAttribute( 'data-time' ), lang, calendar );
 			}
 		} );
 	}
