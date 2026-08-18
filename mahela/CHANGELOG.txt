@@ -1,7 +1,51 @@
 MahELA Prototype — Changelog
 ==============================
 
-v1.5.0 — Current
+v1.6.0 — Current
+------------------
+- WCAG AA contrast fixes across every button, active nav link, chat
+  bubble, avatar, and the finance highlight card: white text/icons on
+  the mid-tone brand colors (pink, teal, orange, green) failed
+  contrast (1.9-3.3:1); switched all of them to the existing --ink
+  token, which clears 5.5-9.5:1 against every one of those colors
+  with no new colors introduced. Also fixed the toast component,
+  which used the theme-flipping --ink token for its background and
+  went invisible (near-white on near-white) in dark mode specifically
+  -- it now uses the theme-stable --c-ink. Darkened/lightened
+  --ink-faint (both themes) from 2.8-3.9:1 to 4.6-5.2:1.
+- Accessibility: every form field's <label> is now programmatically
+  associated with its input via id/for (was 0 of 49 app-wide -- every
+  field previously had no accessible name at all). All 8 modals
+  across 5 pages now get role="dialog", aria-modal, aria-labelledby,
+  focus-on-open, Escape-to-close, a Tab focus trap, and focus-restore
+  on close automatically from shared app.js wiring. All 3 tab groups
+  (login role tabs, student-detail, student-panel) now implement the
+  full WAI-ARIA Tabs pattern with Left/Right/Home/End keyboard
+  navigation, mirrored correctly for RTL. Toast notifications are now
+  announced via role="status" aria-live="polite". Icon-only table
+  actions (view profile, reset password, permissions, suspend) gained
+  aria-label alongside their existing title. Decorative required-
+  field asterisks are now aria-hidden.
+- RTL: the "Back to Dashboard" / "Back to login" arrow icons pointed
+  the wrong direction in Persian (fixed with a new, reusable
+  .icon-flip-rtl class); the account Settings page's gender dropdown
+  used the same "دختر/پسر" (girl/boy) labels as student records --
+  split out adult-appropriate "زن/مرد" (woman/man) labels for
+  settings.html specifically. Audited the rest of the RTL experience
+  (logical CSS properties, table/sidebar mirroring, icon
+  repositioning, tab/checkbox order) and found it was already
+  correctly built -- no further changes needed there.
+- Added design-system/MASTER.md: the design-token reference, contrast
+  rule, component patterns (buttons/forms/modals/tabs/toasts), i18n
+  conventions, and an accessibility checklist for building any new
+  screen consistently with what's already shipped.
+- Added docs/wordpress-migration.md: roles/capabilities, CPT + meta
+  schema (teacher_id as the row-level security boundary), a REST
+  route table for every currently-mocked form action, concrete
+  CAPTCHA/password-reset implementation notes, and a phased rollout
+  order for the eventual WordPress build.
+
+v1.5.0
 ------------------
 - Added a full Admin Panel (3 new pages) with its own login tab:
     - admin-dashboard.html: system-wide KPIs (total teachers, total
