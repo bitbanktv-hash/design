@@ -27,7 +27,7 @@
 	--border: #EAE3F2;
 	--ink: var(--c-ink);
 	--ink-soft: #5C5480;
-	--ink-faint: #9B93B8;
+	--ink-faint: #766B9E;
 
 	--font-display: 'Baloo 2', 'Vazirmatn', sans-serif;
 	--font-body: 'Plus Jakarta Sans', 'Vazirmatn', sans-serif;
@@ -55,7 +55,7 @@
 	--border: #322A66;
 	--ink: #F3F0FB;
 	--ink-soft: #B7ADD9;
-	--ink-faint: #7A72A3;
+	--ink-faint: #8880AC;
 	--shadow-sm: 0 2px 12px -4px rgba(0, 0, 0, 0.35);
 	--shadow-md: 0 16px 36px -16px rgba(0, 0, 0, 0.5);
 	--shadow-lg: 0 28px 64px -20px rgba(0, 0, 0, 0.6);
@@ -167,9 +167,9 @@ p { margin: 0 0 1em; color: var(--ink-soft); }
 	white-space: nowrap;
 	transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease, color .18s ease, border-color .18s ease;
 }
-.btn--primary { background: var(--brand); color: #fff; box-shadow: var(--shadow-glow); }
+.btn--primary { background: var(--brand); color: var(--ink); box-shadow: var(--shadow-glow); }
 .btn--primary:hover { transform: translateY(-2px); background: var(--brand-strong); }
-.btn--accent { background: var(--accent); color: #fff; box-shadow: 0 10px 24px -10px rgba(0,160,181,0.55); }
+.btn--accent { background: var(--accent); color: var(--ink); box-shadow: 0 10px 24px -10px rgba(0,160,181,0.55); }
 .btn--accent:hover { transform: translateY(-2px); background: var(--accent-strong); }
 .btn--ghost { background: var(--surface); color: var(--ink); border: 1.5px solid var(--border); }
 .btn--ghost:hover { border-color: var(--brand); color: var(--brand); transform: translateY(-2px); }
@@ -219,7 +219,7 @@ html[dir="rtl"] .clock-widget { padding: 10px 12px 10px 18px; }
 	width: 34px; height: 34px; border-radius: 50%;
 	background: linear-gradient(135deg, var(--c-teal), var(--c-pink));
 	display: flex; align-items: center; justify-content: center;
-	color: #fff; flex-shrink: 0;
+	color: var(--ink); flex-shrink: 0;
 }
 .clock-widget__time {
 	font-family: var(--font-mono);
