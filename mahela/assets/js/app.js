@@ -330,6 +330,27 @@
 		showFieldError: showFieldError
 	};
 
+	/**
+	 * A field marked data-clear-on-focus starts with its current saved
+	 * value visible (so the user can see what's already there), but the
+	 * moment they click in to edit it, the value clears out so they can
+	 * just start typing fresh -- no manually selecting and deleting the
+	 * old text first. If they click away without typing anything, the
+	 * original value is restored so nothing is accidentally lost.
+	 */
+	function initClearOnFocus() {
+		document.querySelectorAll( '[data-clear-on-focus]' ).forEach( function ( input ) {
+			var originalValue = input.value;
+			input.addEventListener( 'focus', function () {
+				originalValue = input.value;
+				input.value = '';
+			} );
+			input.addEventListener( 'blur', function () {
+				if ( input.value.trim() === '' ) { input.value = originalValue; }
+			} );
+		} );
+	}
+
 	function initToast() {
 		window.mahtelaToast = function ( message, iconSvg ) {
 			var existing = document.getElementById( 'mt-toast' );
@@ -354,6 +375,49 @@
 		};
 	}
 
+	/**
+	 * Segmented control (radiogroup of pill buttons) -- e.g. the session
+	 * Status selector (Scheduled / Held / Cancelled). WAI-ARIA radiogroup
+	 * pattern: roving tabindex, arrow keys move + select, click selects.
+	 * Dispatches "seg-change" on the group element with detail.value set
+	 * from the selected button's data-status attribute.
+	 */
+	function initSegControls() {
+		document.querySelectorAll( '.seg-control[role="radiogroup"]' ).forEach( function ( group ) {
+			var buttons = Array.prototype.slice.call( group.querySelectorAll( '.seg-control__btn[role="radio"]' ) );
+			if ( ! buttons.length ) { return; }
+
+			function selectButton( btn, dispatch ) {
+				buttons.forEach( function ( b ) {
+					var checked = b === btn;
+					b.setAttribute( 'aria-checked', checked ? 'true' : 'false' );
+					b.tabIndex = checked ? 0 : -1;
+				} );
+				if ( dispatch ) {
+					group.dispatchEvent( new CustomEvent( 'seg-change', { bubbles: true, detail: { value: btn.getAttribute( 'data-status' ) } } ) );
+				}
+			}
+
+			buttons.forEach( function ( btn, idx ) {
+				btn.type = 'button';
+				if ( ! btn.hasAttribute( 'aria-checked' ) ) { btn.setAttribute( 'aria-checked', 'false' ); }
+				btn.tabIndex = ( btn.getAttribute( 'aria-checked' ) === 'true' || idx === 0 ) ? 0 : -1;
+				btn.addEventListener( 'click', function () { selectButton( btn, true ); } );
+				btn.addEventListener( 'keydown', function ( e ) {
+					var i = buttons.indexOf( btn );
+					var next = null;
+					var isRtl = document.documentElement.dir === 'rtl';
+					if ( e.key === 'ArrowDown' || ( isRtl ? e.key === 'ArrowLeft' : e.key === 'ArrowRight' ) ) {
+						next = buttons[ ( i + 1 ) % buttons.length ];
+					} else if ( e.key === 'ArrowUp' || ( isRtl ? e.key === 'ArrowRight' : e.key === 'ArrowLeft' ) ) {
+						next = buttons[ ( i - 1 + buttons.length ) % buttons.length ];
+					}
+					if ( next ) { e.preventDefault(); next.focus(); selectButton( next, true ); }
+				} );
+			} );
+		} );
+	}
+
 	document.addEventListener( 'DOMContentLoaded', function () {
 		initSidebar();
 		initModals();
@@ -362,5 +426,7 @@
 		initToast();
 		initCurrencyInputs();
 		initFieldValidation();
+		initSegControls();
+		initClearOnFocus();
 	} );
 }() );

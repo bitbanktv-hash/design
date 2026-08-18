@@ -9,8 +9,8 @@
  * Student shape:
  *   { key, name, initials, gender: 'female'|'male', level (e.g. 'B2'),
  *     rate (Toman/session), duration (minutes), since: 'YYYY-MM-DD',
- *     skills: { listening, speaking, reading, writing }, email, phone,
- *     teacherId }
+ *     skills: { listening, speaking, reading, writing } -- each an IELTS
+ *     band score 0-9 in 0.5 increments, email, phone, teacherId }
  *
  * Teacher shape:
  *   { id, name, email, phone, status: 'active'|'restricted'|'suspended',
@@ -38,11 +38,11 @@
 	};
 
 	var DEFAULT_STUDENTS = {
-		elena:  { key: 'elena',  name: 'Elena Kim',   initials: 'EK', gender: 'female', level: 'B2', rate: 250000, duration: 60, since: '2026-01-15', skills: { listening: 78, speaking: 62, reading: 85, writing: 58 }, email: 'elena@example.com',  phone: '+98 912 111 1111', teacherId: 'jane' },
-		daniel: { key: 'daniel', name: 'Daniel Cruz', initials: 'DC', gender: 'male',   level: 'A1', rate: 200000, duration: 45, since: '2026-03-03', skills: { listening: 35, speaking: 28, reading: 40, writing: 22 }, email: 'daniel@example.com', phone: '+98 912 222 2222', teacherId: 'jane' },
-		sara:   { key: 'sara',   name: 'Sara Ahmadi', initials: 'SA', gender: 'female', level: 'C1', rate: 300000, duration: 60, since: '2025-11-10', skills: { listening: 90, speaking: 85, reading: 92, writing: 80 }, email: 'sara@example.com',   phone: '+98 912 333 3333', teacherId: 'alex' },
-		marco:  { key: 'marco',  name: 'Marco Rossi', initials: 'MR', gender: 'male',   level: 'B1', rate: 250000, duration: 60, since: '2026-02-20', skills: { listening: 60, speaking: 55, reading: 65, writing: 50 }, email: 'marco@example.com',  phone: '+98 912 444 4444', teacherId: 'alex' },
-		yuki:   { key: 'yuki',   name: 'Yuki Tanaka', initials: 'YT', gender: 'female', level: 'A2', rate: 220000, duration: 45, since: '2026-04-05', skills: { listening: 45, speaking: 38, reading: 50, writing: 32 }, email: 'yuki@example.com',   phone: '+98 912 555 5555', teacherId: 'sam' }
+		elena:  { key: 'elena',  name: 'Elena Kim',   initials: 'EK', gender: 'female', level: 'B2', rate: 250000, duration: 60, since: '2026-01-15', skills: { listening: 6.5, speaking: 6.0, reading: 7.0, writing: 6.0 }, email: 'elena@example.com',  phone: '+98 912 111 1111', teacherId: 'jane' },
+		daniel: { key: 'daniel', name: 'Daniel Cruz', initials: 'DC', gender: 'male',   level: 'A1', rate: 200000, duration: 45, since: '2026-03-03', skills: { listening: 3.0, speaking: 2.5, reading: 3.5, writing: 2.5 }, email: 'daniel@example.com', phone: '+98 912 222 2222', teacherId: 'jane' },
+		sara:   { key: 'sara',   name: 'Sara Ahmadi', initials: 'SA', gender: 'female', level: 'C1', rate: 300000, duration: 60, since: '2025-11-10', skills: { listening: 7.5, speaking: 7.0, reading: 8.0, writing: 7.0 }, email: 'sara@example.com',   phone: '+98 912 333 3333', teacherId: 'alex' },
+		marco:  { key: 'marco',  name: 'Marco Rossi', initials: 'MR', gender: 'male',   level: 'B1', rate: 250000, duration: 60, since: '2026-02-20', skills: { listening: 5.0, speaking: 4.5, reading: 5.5, writing: 4.5 }, email: 'marco@example.com',  phone: '+98 912 444 4444', teacherId: 'alex' },
+		yuki:   { key: 'yuki',   name: 'Yuki Tanaka', initials: 'YT', gender: 'female', level: 'A2', rate: 220000, duration: 45, since: '2026-04-05', skills: { listening: 4.0, speaking: 3.5, reading: 4.5, writing: 3.5 }, email: 'yuki@example.com',   phone: '+98 912 555 5555', teacherId: 'sam' }
 	};
 
 	var DEFAULT_TEACHERS = {

@@ -2,7 +2,8 @@
  * MahtELA radar (spider) chart. Pure SVG, no charting library.
  * Usage: MahtelaRadar.render(containerEl, {
  *   labels: ['Listening','Speaking','Reading','Writing'],
- *   values: [80, 65, 90, 55],   // 0-100
+ *   values: [7, 6.5, 8, 6],      // 0-max
+ *   max: 9,                      // optional, defaults to 100
  *   color: '#F478B0'
  * });
  */
@@ -29,6 +30,7 @@
 		var labels = options.labels || [];
 		var values = options.values || [];
 		var color = options.color || 'var(--brand)';
+		var max = options.max || 100;
 		var n = labels.length;
 		if ( n < 3 ) { return; }
 
@@ -84,7 +86,7 @@
 		// `points` attribute directly, which browsers handle inconsistently).
 		var dataPts = [];
 		for ( var j = 0; j < n; j++ ) {
-			var r = Math.max( 0, Math.min( 100, values[ j ] || 0 ) ) / 100 * MAX_R;
+			var r = Math.max( 0, Math.min( max, values[ j ] || 0 ) ) / max * MAX_R;
 			dataPts.push( polarPoint( j * angleStep, r ) );
 		}
 

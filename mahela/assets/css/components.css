@@ -171,6 +171,7 @@ html[dir="rtl"] .search-input svg { inset-inline-start: auto; inset-inline-end: 
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .form-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
 .form-field label { font-size: 12.5px; font-weight: 700; color: var(--ink-soft); }
+.skill-slider-value { font-family: var(--font-mono); color: var(--brand-strong); font-weight: 700; }
 .form-field input, .form-field select, .form-field textarea {
 	width: 100%; padding: 12px 15px;
 	border: 1.5px solid var(--border); border-radius: var(--radius-sm);
@@ -542,6 +543,7 @@ html[dir="rtl"] .switch input:checked + .switch__track::before { transform: tran
 .schedule-grid__day-header.is-today { background: var(--student-accent-soft, var(--surface-soft)); }
 .schedule-grid__day-weekday { font-size: 10.5px; font-weight: 700; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .03em; }
 .schedule-grid__day-number { font-family: var(--font-mono); font-size: 15px; font-weight: 700; margin-top: 2px; }
+.schedule-grid__day-month { display: block; font-size: 10px; font-weight: 600; color: var(--ink-soft); margin-top: 1px; }
 
 .schedule-grid__time-label {
 	border-inline-end: 1px solid var(--border);
@@ -623,6 +625,29 @@ html[dir="rtl"] .switch input:checked + .switch__track::before { transform: tran
 	transition: all .15s ease;
 }
 .charge-toggle__btn[aria-pressed="true"] { border-color: var(--brand); background: rgba(244,120,176,0.1); color: var(--brand-strong); }
+
+.seg-control {
+	display: flex;
+	border: 1.5px solid var(--border);
+	border-radius: var(--radius-md);
+	overflow: hidden;
+}
+.seg-control__btn {
+	flex: 1;
+	padding: 9px 10px;
+	font-size: 12.5px;
+	font-weight: 700;
+	text-align: center;
+	color: var(--ink-soft);
+	background: var(--surface);
+	border-inline-start: 1.5px solid var(--border);
+	transition: background-color .15s ease, color .15s ease;
+	cursor: pointer;
+}
+.seg-control__btn:first-child { border-inline-start: none; }
+.seg-control__btn:hover:not([aria-checked="true"]) { background: var(--surface-soft); }
+.seg-control__btn[aria-checked="true"] { background: var(--brand); color: var(--ink); }
+.seg-control__btn:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; position: relative; z-index: 1; }
 
 /* ==========================================================================
    Settlement request box (Finance tab)

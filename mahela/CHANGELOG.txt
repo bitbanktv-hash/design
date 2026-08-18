@@ -1,8 +1,45 @@
 MahELA Prototype — Changelog
 ==============================
 
-v1.10.0 — Current
+v1.11.0 — Current
 ------------------
+- Fixed a real, load-bearing bug found via screenshots: the session
+  Status buttons (Scheduled/Held/Cancelled) in the Manage Session
+  modal didn't work at all -- clicking did nothing, and they rendered
+  as plain unstyled text instead of buttons. The seg-control component
+  they relied on had never actually been built (a mistaken assumption
+  on my part that it already existed); built it properly from scratch
+  -- real CSS, click handling, and full keyboard (arrow-key) navigation
+  matching the accessibility pattern used everywhere else in the app.
+  Verified with a real DOM simulation (jsdom), not just data-logic
+  tests, including the full "select Cancelled -> choose who cancelled
+  -> apply a fee -> save" flow end to end.
+- Settings > Personal Info: fields with an existing value now clear
+  the moment you click in to edit (data-clear-on-focus, a new reusable
+  attribute), so you don't have to manually select-and-delete the old
+  text first. If you click away without typing anything, the original
+  value is restored so nothing is accidentally lost.
+- Class duration is now typed manually as "H:MM" (e.g. "1:15") instead
+  of chosen from a fixed dropdown, in both the teacher's Book Session
+  modal and the student profile's Add Session modal. Invalid formats
+  are rejected with an inline error rather than silently defaulting.
+- Rebuilt the weekly schedule grid's render to build entirely off-DOM
+  in a DocumentFragment and swap it into the live grid in one atomic
+  operation, instead of ~200 sequential live DOM writes per render --
+  addresses the reported "date row jumps" when switching weeks. Each
+  day's header now shows the full date (day + month), not just a bare
+  day number, which was ambiguous whenever a week crossed a month
+  boundary.
+- Assessment scoring is now IELTS band scores (0-9 in half-point
+  steps) instead of an arbitrary 0-100 scale, with the exact score
+  visible live next to each slider while adjusting. The radar chart
+  now takes a configurable max (was hardcoded to 100) so it scales
+  correctly; skill bars and displayed values were updated to match.
+  Verified end-to-end: a score entered by the teacher shows up
+  correctly, at the right chart position, on the student's own panel.
+
+v1.10.0
+--------
 - Built a shared student + teacher roster (assets/js/roster-data.js),
   localStorage-backed, so the student/teacher identity data that used
   to be hardcoded separately in 7 different pages (teacher-dashboard,

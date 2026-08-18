@@ -54,7 +54,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahELA v1.10.0</div>
+			<div class="sidebar__version">MahELA v1.11.0</div>
 		</div>
 	</aside>
 
@@ -129,12 +129,9 @@
 			<div class="form-grid">
 				<div class="form-field" style="margin-bottom:0;">
 					<label for="book-session-duration" data-i18n="field_duration">Duration</label>
-					<select id="book-session-duration">
-						<option value="30" data-i18n="duration_30">30 minutes</option>
-						<option value="60" selected data-i18n="duration_60">1 hour</option>
-						<option value="90" data-i18n="duration_90">1.5 hours</option>
-						<option value="120" data-i18n="duration_120">2 hours</option>
-					</select>
+					<input type="text" id="book-session-duration" dir="ltr" placeholder="1:00" data-i18n-ph="duration_ph" value="1:00">
+					<span style="font-size:11px; color:var(--ink-faint); margin-top:4px; display:block;" data-i18n="duration_format_hint">Format: hours:minutes, e.g. 1:15</span>
+					<span id="book-session-duration-error" class="form-field__error" data-i18n="duration_invalid_error">Enter a valid duration like 1:15.</span>
 				</div>
 				<div class="form-field" style="margin-bottom:0;">
 					<label for="book-session-classtype" data-i18n="class_type">Class Type</label>
@@ -287,14 +284,21 @@
 		var lang = window.mahtelaI18n.currentLang();
 		var cal = window.mahtelaCalendar.resolve( lang );
 		var grid = document.getElementById( 'schedule-grid' );
-		grid.innerHTML = '';
+
+		// Everything is built into this detached fragment first -- none of
+		// it touches the live DOM (so none of it can trigger a reflow or
+		// be visibly painted) until the single grid.replaceChildren() at
+		// the very end. Previously each cell was appended to the live grid
+		// one at a time (~200 individual DOM writes per render), which is
+		// what caused the visible "jump" when switching weeks.
+		var fragment = document.createDocumentFragment();
 
 		var dates = weekDates();
 		var todayISO = toISO( new Date() );
 
 		var corner = document.createElement( 'div' );
 		corner.className = 'schedule-grid__corner';
-		grid.appendChild( corner );
+		fragment.appendChild( corner );
 
 		dates.forEach( function ( d ) {
 			var iso = toISO( d );
@@ -307,10 +311,13 @@
 			var numberEl = document.createElement( 'div' );
 			numberEl.className = 'schedule-grid__day-number';
 			numberEl.setAttribute( 'data-date', iso );
-			numberEl.innerHTML = '<span data-date-part="day"></span>';
+			// Day + month together, e.g. "28 Mordad" -- previously this
+			// was just the bare day number, ambiguous once a week spans
+			// a month boundary.
+			numberEl.innerHTML = '<span data-date-part="day"></span><span data-date-part="month" class="schedule-grid__day-month"></span>';
 			head.appendChild( weekdayEl );
 			head.appendChild( numberEl );
-			grid.appendChild( head );
+			fragment.appendChild( head );
 		} );
 
 		// Pre-compute which (day, slot) cells are covered by a session's span
@@ -337,7 +344,7 @@
 				var hh = slotTime( slot );
 				timeLabel.textContent = lang === 'fa' ? toFaDigitsLocal( hh ) : hh;
 			}
-			grid.appendChild( timeLabel );
+			fragment.appendChild( timeLabel );
 
 			for ( var dayIdx = 0; dayIdx < 7; dayIdx++ ) {
 				var key = dayIdx + ':' + slot;
@@ -366,7 +373,7 @@
 						return function () { openSessionDetails( sessId ); };
 					}( s.id ) ) );
 					cell.appendChild( block );
-					grid.appendChild( cell );
+					fragment.appendChild( cell );
 				} else {
 					var emptyCell = document.createElement( 'button' );
 					emptyCell.type = 'button';
@@ -376,10 +383,17 @@
 					emptyCell.addEventListener( 'click', ( function ( iso, time ) {
 						return function () { openBookModal( iso, time ); };
 					}( thisIso, thisTime ) ) );
-					grid.appendChild( emptyCell );
+					fragment.appendChild( emptyCell );
 				}
 			}
 		}
+
+		// The one and only write to the live grid: swap old content for
+		// new content atomically. replaceChildren() removes everything
+		// that was there and inserts the fragment's contents in a single
+		// operation -- there is no moment where the browser could observe
+		// (or paint) a half-built or empty grid.
+		grid.replaceChildren( fragment );
 
 		window.mahtelaCalendar.applyScheduleDates();
 		renderWeekRange( dates, lang, cal );
@@ -397,7 +411,8 @@
 		var cal = window.mahtelaCalendar.resolve( lang );
 		document.getElementById( 'book-session-time-label' ).textContent = window.mahtelaCalendar.formatScheduleDate( iso, time, lang, cal );
 		document.getElementById( 'book-session-student' ).value = '';
-		document.getElementById( 'book-session-duration' ).value = '60';
+		document.getElementById( 'book-session-duration' ).value = '1:00';
+		document.getElementById( 'book-session-duration' ).closest( '.form-field' ).classList.remove( 'has-error' );
 		document.getElementById( 'book-session-classtype' ).value = 'in-person';
 		document.getElementById( 'book-session-error' ).style.display = 'none';
 		document.getElementById( 'modal-book-session' ).classList.add( 'is-open' );
@@ -410,7 +425,9 @@
 	function setStatusUI( status ) {
 		pendingStatus = status;
 		document.querySelectorAll( '#details-status-control .seg-control__btn' ).forEach( function ( btn ) {
-			btn.setAttribute( 'aria-checked', btn.getAttribute( 'data-status' ) === status ? 'true' : 'false' );
+			var checked = btn.getAttribute( 'data-status' ) === status;
+			btn.setAttribute( 'aria-checked', checked ? 'true' : 'false' );
+			btn.tabIndex = checked ? 0 : -1;
 		} );
 		document.getElementById( 'details-cancel-subform' ).style.display = status === 'cancelled' ? 'block' : 'none';
 	}
@@ -469,8 +486,11 @@
 	document.getElementById( 'book-session-form' ).addEventListener( 'submit', function ( e ) {
 		e.preventDefault();
 		var studentKey = document.getElementById( 'book-session-student' ).value;
-		var duration = parseInt( document.getElementById( 'book-session-duration' ).value, 10 );
-		if ( ! studentKey || ! pendingBooking ) { return; }
+		var durationField = document.getElementById( 'book-session-duration' );
+		var duration = window.mahtelaData.parseDurationHHMM( durationField.value );
+		document.getElementById( 'book-session-error' ).style.display = 'none';
+		durationField.closest( '.form-field' ).classList.toggle( 'has-error', duration === null );
+		if ( ! studentKey || ! pendingBooking || duration === null ) { return; }
 
 		var conflict = sessionsOnDate( pendingBooking.iso ).some( function ( s ) {
 			return overlaps( pendingBooking.time, duration, s.time, s.duration );

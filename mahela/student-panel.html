@@ -70,7 +70,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahELA v1.10.0</div>
+			<div class="sidebar__version">MahELA v1.11.0</div>
 		</div>
 	</aside>
 
@@ -219,16 +219,17 @@
 		var lang = window.mahtelaI18n.currentLang();
 		var s = window.mahtelaRoster.loadStudents()[ STUDENT_KEY ];
 		if ( ! s ) { return; }
-		var fmt = new Intl.NumberFormat( lang === 'fa' ? 'fa-IR' : 'en-US' );
+		var fmt = new Intl.NumberFormat( lang === 'fa' ? 'fa-IR' : 'en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 } );
 
 		[ 'listening', 'speaking', 'reading', 'writing' ].forEach( function ( key ) {
 			document.getElementById( 'panel-skill-val-' + key ).textContent = fmt.format( s.skills[ key ] );
-			document.getElementById( 'panel-skill-fill-' + key ).style.width = s.skills[ key ] + '%';
+			document.getElementById( 'panel-skill-fill-' + key ).style.width = ( s.skills[ key ] / 9 * 100 ) + '%';
 		} );
 
 		MahtelaRadar.render( document.getElementById( 'my-skills-radar' ), {
 			labels: [ 'Listening', 'Speaking', 'Reading', 'Writing' ],
 			values: [ s.skills.listening, s.skills.speaking, s.skills.reading, s.skills.writing ],
+			max: 9,
 			color: 'var(--student-accent)'
 		} );
 	}

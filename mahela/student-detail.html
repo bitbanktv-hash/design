@@ -76,7 +76,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahELA v1.10.0</div>
+			<div class="sidebar__version">MahELA v1.11.0</div>
 		</div>
 	</aside>
 
@@ -338,22 +338,23 @@
 			<h2 class="modal-box__title" data-i18n="skills_new_assessment">+ New Assessment</h2>
 			<button type="button" class="modal-box__close" data-modal-close aria-label="Close">&times;</button>
 		</div>
+		<p style="font-size:12.5px; color:var(--ink-soft); margin-top:-10px; margin-bottom:18px;" data-i18n="skills_ielts_hint">IELTS band scores, 0–9 in half-point steps.</p>
 		<form id="new-assessment-form">
 			<div class="form-field">
-				<label data-i18n="skills_listening" for="student-detail-skills-listening">Listening</label>
-				<input id="student-detail-skills-listening" type="range" min="0" max="100" value="78">
+				<label for="student-detail-skills-listening"><span data-i18n="skills_listening">Listening</span> · <span class="skill-slider-value" id="val-skills-listening">6.5</span></label>
+				<input id="student-detail-skills-listening" type="range" min="0" max="9" step="0.5" value="6.5">
 			</div>
 			<div class="form-field">
-				<label data-i18n="skills_speaking" for="student-detail-skills-speaking">Speaking</label>
-				<input id="student-detail-skills-speaking" type="range" min="0" max="100" value="62">
+				<label for="student-detail-skills-speaking"><span data-i18n="skills_speaking">Speaking</span> · <span class="skill-slider-value" id="val-skills-speaking">6.0</span></label>
+				<input id="student-detail-skills-speaking" type="range" min="0" max="9" step="0.5" value="6">
 			</div>
 			<div class="form-field">
-				<label data-i18n="skills_reading" for="student-detail-skills-reading">Reading</label>
-				<input id="student-detail-skills-reading" type="range" min="0" max="100" value="85">
+				<label for="student-detail-skills-reading"><span data-i18n="skills_reading">Reading</span> · <span class="skill-slider-value" id="val-skills-reading">7.0</span></label>
+				<input id="student-detail-skills-reading" type="range" min="0" max="9" step="0.5" value="7">
 			</div>
 			<div class="form-field">
-				<label data-i18n="skills_writing" for="student-detail-skills-writing">Writing</label>
-				<input id="student-detail-skills-writing" type="range" min="0" max="100" value="58">
+				<label for="student-detail-skills-writing"><span data-i18n="skills_writing">Writing</span> · <span class="skill-slider-value" id="val-skills-writing">6.0</span></label>
+				<input id="student-detail-skills-writing" type="range" min="0" max="9" step="0.5" value="6">
 			</div>
 			<div class="form-actions">
 				<button type="button" class="btn btn--ghost" data-modal-close data-i18n="btn_cancel">Cancel</button>
@@ -376,7 +377,12 @@
 				<div class="form-field"><label for="student-detail-time">Time</label><input id="student-detail-time" type="time" required></div>
 			</div>
 			<div class="form-grid">
-				<div class="form-field"><label data-i18n="field_session_duration" for="student-detail-field-session-duration">Session Duration (minutes)</label><input id="student-detail-field-session-duration" type="number" value="60" min="15" step="15"></div>
+				<div class="form-field">
+					<label data-i18n="field_duration" for="student-detail-field-session-duration">Duration</label>
+					<input id="student-detail-field-session-duration" type="text" dir="ltr" placeholder="1:00" data-i18n-ph="duration_ph" value="1:00">
+					<span style="font-size:11px; color:var(--ink-faint); margin-top:4px; display:block;" data-i18n="duration_format_hint">Format: hours:minutes, e.g. 1:15</span>
+					<span id="student-detail-duration-error" class="form-field__error" data-i18n="duration_invalid_error">Enter a valid duration like 1:15.</span>
+				</div>
 				<div class="form-field">
 					<label for="add-session-classtype" data-i18n="class_type">Class Type</label>
 					<select id="add-session-classtype">
@@ -527,9 +533,10 @@
 
 		document.getElementById( 'student-page-body' ).setAttribute( 'data-gender', s.gender );
 
+		var numFmt = new Intl.NumberFormat( window.mahtelaI18n.currentLang() === 'fa' ? 'fa-IR' : 'en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 } );
 		[ 'listening', 'speaking', 'reading', 'writing' ].forEach( function ( key ) {
-			document.getElementById( 'skill-val-' + key ).textContent = new Intl.NumberFormat( window.mahtelaI18n.currentLang() === 'fa' ? 'fa-IR' : 'en-US' ).format( s.skills[ key ] );
-			document.getElementById( 'skill-fill-' + key ).style.width = s.skills[ key ] + '%';
+			document.getElementById( 'skill-val-' + key ).textContent = numFmt.format( s.skills[ key ] );
+			document.getElementById( 'skill-fill-' + key ).style.width = ( s.skills[ key ] / 9 * 100 ) + '%';
 		} );
 
 		document.getElementById( 'edit-level-select' ).value = s.level;
@@ -537,17 +544,26 @@
 		document.getElementById( 'edit-duration-input' ).value = s.duration;
 		document.getElementById( 'edit-price-input' ).value = new Intl.NumberFormat( 'en-US' ).format( s.rate );
 
-		document.getElementById( 'student-detail-skills-listening' ).value = s.skills.listening;
-		document.getElementById( 'student-detail-skills-speaking' ).value = s.skills.speaking;
-		document.getElementById( 'student-detail-skills-reading' ).value = s.skills.reading;
-		document.getElementById( 'student-detail-skills-writing' ).value = s.skills.writing;
+		[ 'listening', 'speaking', 'reading', 'writing' ].forEach( function ( key ) {
+			document.getElementById( 'student-detail-skills-' + key ).value = s.skills[ key ];
+			document.getElementById( 'val-skills-' + key ).textContent = s.skills[ key ].toFixed( 1 );
+		} );
 
 		MahtelaRadar.render( document.getElementById( 'skills-radar' ), {
 			labels: [ 'Listening', 'Speaking', 'Reading', 'Writing' ],
 			values: [ s.skills.listening, s.skills.speaking, s.skills.reading, s.skills.writing ],
+			max: 9,
 			color: 'var(--student-accent)'
 		} );
 	}
+
+	// Live value label next to each assessment slider, so the exact IELTS
+	// band being set is always visible while dragging, not just after.
+	[ 'listening', 'speaking', 'reading', 'writing' ].forEach( function ( key ) {
+		document.getElementById( 'student-detail-skills-' + key ).addEventListener( 'input', function ( e ) {
+			document.getElementById( 'val-skills-' + key ).textContent = parseFloat( e.target.value ).toFixed( 1 );
+		} );
+	} );
 
 	document.getElementById( 'edit-student-form' ).addEventListener( 'submit', function ( e ) {
 		e.preventDefault();
@@ -570,10 +586,10 @@
 		var students = window.mahtelaRoster.loadStudents();
 		var s = students[ key ];
 		s.skills = {
-			listening: parseInt( document.getElementById( 'student-detail-skills-listening' ).value, 10 ),
-			speaking: parseInt( document.getElementById( 'student-detail-skills-speaking' ).value, 10 ),
-			reading: parseInt( document.getElementById( 'student-detail-skills-reading' ).value, 10 ),
-			writing: parseInt( document.getElementById( 'student-detail-skills-writing' ).value, 10 )
+			listening: parseFloat( document.getElementById( 'student-detail-skills-listening' ).value ),
+			speaking: parseFloat( document.getElementById( 'student-detail-skills-speaking' ).value ),
+			reading: parseFloat( document.getElementById( 'student-detail-skills-reading' ).value ),
+			writing: parseFloat( document.getElementById( 'student-detail-skills-writing' ).value )
 		};
 		window.mahtelaRoster.saveStudents( students );
 		document.getElementById( 'modal-new-assessment' ).classList.remove( 'is-open' );
@@ -712,7 +728,9 @@
 	function setStatusUI( status ) {
 		pendingStatus = status;
 		document.querySelectorAll( '#manage-session-status-control .seg-control__btn' ).forEach( function ( btn ) {
-			btn.setAttribute( 'aria-checked', btn.getAttribute( 'data-status' ) === status ? 'true' : 'false' );
+			var checked = btn.getAttribute( 'data-status' ) === status;
+			btn.setAttribute( 'aria-checked', checked ? 'true' : 'false' );
+			btn.tabIndex = checked ? 0 : -1;
 		} );
 		document.getElementById( 'manage-session-cancel-subform' ).style.display = status === 'cancelled' ? 'block' : 'none';
 	}
@@ -754,11 +772,14 @@
 		e.preventDefault();
 		var date = document.getElementById( 'student-detail-date' ).value;
 		var time = document.getElementById( 'student-detail-time' ).value;
-		if ( ! date || ! time ) { return; }
+		var durationField = document.getElementById( 'student-detail-field-session-duration' );
+		var duration = window.mahtelaData.parseDurationHHMM( durationField.value );
+		durationField.closest( '.form-field' ).classList.toggle( 'has-error', duration === null );
+		if ( ! date || ! time || duration === null ) { return; }
 		SESSIONS.push( {
 			id: 'sd' + Date.now(),
 			date: date, time: time,
-			duration: parseInt( document.getElementById( 'student-detail-field-session-duration' ).value, 10 ) || 60,
+			duration: duration,
 			studentKey: currentStudentKey(),
 			classType: document.getElementById( 'add-session-classtype' ).value,
 			status: 'scheduled', cancelReason: null, chargeApplied: null, note: '', settled: false

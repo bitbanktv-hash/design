@@ -111,6 +111,28 @@
 	}
 
 	/**
+	 * Parses a manually-typed "H:MM" duration (e.g. "1:15" = 75 minutes)
+	 * into total minutes, or returns null if the format/value is invalid.
+	 * Accepts 1-2 digit hours and exactly 2-digit minutes (00-59); caps
+	 * at 5 hours as a sanity bound against typos.
+	 */
+	function parseDurationHHMM( str ) {
+		if ( typeof str !== 'string' ) { return null; }
+		var match = /^([0-9]{1,2}):([0-5][0-9])$/.exec( str.trim() );
+		if ( ! match ) { return null; }
+		var total = parseInt( match[ 1 ], 10 ) * 60 + parseInt( match[ 2 ], 10 );
+		if ( total <= 0 || total > 300 ) { return null; }
+		return total;
+	}
+
+	/** Reverse of parseDurationHHMM -- total minutes back to "H:MM". */
+	function formatDurationHHMM( totalMinutes ) {
+		var h = Math.floor( totalMinutes / 60 );
+		var m = totalMinutes % 60;
+		return h + ':' + ( m < 10 ? '0' + m : m );
+	}
+
+	/**
 	 * Appends an outgoing (teacher -> student) message to a student's
 	 * thread and persists it -- this is what lets "Request Settlement"
 	 * on the Finance tab actually show up in messages.html.
@@ -128,6 +150,8 @@
 		saveSessions: saveSessions,
 		loadConversations: loadConversations,
 		saveConversations: saveConversations,
-		sendMessageTo: sendMessageTo
+		sendMessageTo: sendMessageTo,
+		parseDurationHHMM: parseDurationHHMM,
+		formatDurationHHMM: formatDurationHHMM
 	};
 }() );
