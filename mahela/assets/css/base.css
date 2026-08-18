@@ -86,6 +86,11 @@ html[dir="rtl"] {
 	--font-mono: 'Vazirmatn', sans-serif;
 }
 
+/* Directional wayfinding icons (back-arrows, etc.) point the opposite
+   way in RTL -- "back" reads toward the right, not the left. Content
+   icons (checkmarks, clocks, search, ...) are untouched. */
+html[dir="rtl"] .icon-flip-rtl { transform: scaleX(-1); }
+
 /* ==========================================================================
    Reset / base
    ========================================================================== */

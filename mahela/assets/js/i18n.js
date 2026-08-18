@@ -162,6 +162,8 @@
 		field_gender: { en: 'Gender', fa: 'جنسیت' },
 		gender_female: { en: 'Female', fa: 'دختر' },
 		gender_male: { en: 'Male', fa: 'پسر' },
+		account_gender_female: { en: 'Female', fa: 'زن' },
+		account_gender_male: { en: 'Male', fa: 'مرد' },
 		field_session_duration: { en: 'Session Duration (minutes)', fa: 'مدت هر جلسه (دقیقه)' },
 		field_session_price: { en: 'Price per Session (Toman)', fa: 'هزینه‌ی هر جلسه (تومان)' },
 		btn_save: { en: 'Save', fa: 'ذخیره' },
