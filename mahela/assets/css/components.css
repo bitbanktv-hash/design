@@ -17,9 +17,9 @@
 .sidebar__brand { display: flex; align-items: center; gap: 10px; padding: 0 6px 26px; }
 .sidebar__logo {
 	width: 38px; height: 38px; border-radius: 12px;
-	background: linear-gradient(135deg, var(--c-pink), var(--c-teal));
+	background: linear-gradient(135deg, var(--brand), var(--accent));
 	display: flex; align-items: center; justify-content: center;
-	color: #fff; font-family: var(--font-display); font-weight: 700; font-size: 15px;
+	color: var(--c-ink); font-family: var(--font-display); font-weight: 700; font-size: 15px;
 	flex-shrink: 0;
 }
 .sidebar__brand-text { display: flex; flex-direction: column; line-height: 1.3; min-width: 0; }
@@ -271,7 +271,7 @@ html[dir="rtl"] .search-input svg { inset-inline-start: auto; inset-inline-end: 
 .finance-hero__card { padding: 24px; text-align: center; }
 .finance-hero__value { font-family: var(--font-mono); font-size: 26px; font-weight: 700; }
 .finance-hero__label { font-size: 12.5px; color: var(--ink-soft); margin-top: 6px; }
-.finance-hero__card--highlight { background: linear-gradient(135deg, var(--c-pink), var(--c-teal)); }
+.finance-hero__card--highlight { background: linear-gradient(135deg, var(--brand), var(--accent)); }
 .finance-hero__card--highlight .finance-hero__value,
 .finance-hero__card--highlight .finance-hero__label { color: var(--c-ink); }
 
@@ -502,6 +502,7 @@ html[dir="rtl"] .switch input:checked + .switch__track::before { transform: tran
 .form-notice--error { background: #FBEAE9; color: #A23A34; }
 [data-theme="dark"] .form-notice--error { background: rgba(192,69,63,0.16); color: #E5928C; }
 .form-notice--success { background: rgba(152,197,78,0.16); color: var(--success-strong); }
+.form-notice--info { background: var(--surface-soft); color: var(--ink-soft); }
 
 /* ==========================================================================
    Responsive

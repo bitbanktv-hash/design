@@ -1,8 +1,47 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.13.0 — Current
+v1.14.0 — Current
 ------------------
+- Fixed a severe bug: the teacher's weekly schedule opened completely
+  blank -- no calendar at all. Root cause found via actually executing
+  the page's script (not just checking syntax): the schedule already
+  filtered STUDENTS down to just this teacher's own students, but
+  SESSIONS was still loaded unfiltered. The moment the visible week
+  contained a session belonging to another teacher's student (several
+  of the 21 seeded sessions do), the render crashed trying to look up
+  a student that didn't exist in the filtered map, and nothing after
+  that point ever rendered. Filtered sessions the same way at load
+  time. While fixing this, caught a second, more serious bug the
+  naive fix would have caused: saving a session would have silently
+  overwritten the entire shared sessions store with only this
+  teacher's own sessions, deleting every other teacher's classes.
+  saveSessions now merges this teacher's current state back with
+  everyone else's untouched sessions instead. Verified both with a
+  real script execution and a save/reload simulation.
+- Settlement history dates were showing both calendars stacked
+  together (e.g. "Jun 1, 2026 | 1405/Tir/10"), which read as garbled.
+  Changed to show a single calendar based on language/preference,
+  matching how every other date in the app already behaves.
+- Finished applying the teacher/admin role colors everywhere: the
+  main sidebar logo badge, the clock widget icon, the teacher's own
+  avatar (sidebar and chat bubbles), and the highlighted Finance stat
+  card were all still hardcoded to the pink/teal gradient regardless
+  of role -- the most visible offender being the logo itself, shown
+  on every single page. Also fixed a genuine contrast violation found
+  in the process (white text sitting directly on the logo's gradient).
+- The sidebar's own "Dashboard" nav link/tab, not just the page
+  heading, now says "Teacher Dashboard" or "Admin Dashboard" -- this
+  is specifically what was meant by the earlier request, which the
+  page-heading change alone didn't cover.
+- Added an explanatory note under the required email/mobile fields in
+  Settings' Personal Details, explaining they're used for
+  notifications and contact. The required + valid-format enforcement
+  itself was already correctly wired from earlier work; only the
+  explanatory hint was missing.
+
+v1.13.0
+--------
 - Fixed a real navigation bug: clicking "Messages" in the sidebar while
   already on student-panel.html did nothing, though the exact same
   link worked fine when clicked from Settings. Root cause: the tab

@@ -250,7 +250,7 @@ p { margin: 0 0 1em; color: var(--ink-soft); }
 html[dir="rtl"] .clock-widget { padding: 10px 12px 10px 18px; }
 .clock-widget__icon {
 	width: 34px; height: 34px; border-radius: 50%;
-	background: linear-gradient(135deg, var(--c-teal), var(--c-pink));
+	background: linear-gradient(135deg, var(--accent), var(--brand));
 	display: flex; align-items: center; justify-content: center;
 	color: var(--c-ink); flex-shrink: 0;
 }

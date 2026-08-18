@@ -48,7 +48,7 @@
 		<nav class="sidebar__nav">
 			<a href="teacher-dashboard.html" class="sidebar__link">
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-				<span data-i18n="nav_dashboard">Dashboard</span>
+				<span data-i18n="nav_dashboard">Teacher Dashboard</span>
 			</a>
 			<a href="teacher-students.html" class="sidebar__link">
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="12" width="8" height="9" rx="2"/><rect x="3" y="14" width="8" height="7" rx="2"/></svg>
@@ -70,7 +70,7 @@
 		</nav>
 		<div class="sidebar__footer">
 			<div class="sidebar__user">
-				<span class="sidebar__avatar" style="background: var(--c-pink); color:var(--c-ink);">JD</span>
+				<span class="sidebar__avatar" style="background: var(--brand); color:var(--c-ink);">JD</span>
 				<div class="sidebar__user-info">
 					<span class="sidebar__user-name">Jane Doe</span>
 					<span class="sidebar__user-role">English Teacher</span>
@@ -80,7 +80,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.13.0</div>
+			<div class="sidebar__version">MahFLA v1.14.0</div>
 		</div>
 	</aside>
 
@@ -307,9 +307,9 @@
 
 				<div class="card" style="padding:24px;">
 					<h3 style="font-size:15px; margin-bottom:6px;" data-i18n="finance_history">Settlement History</h3>
-					<div class="settlement-row"><span><span data-date="2026-07-01" data-date-style="dual"></span> → <span data-date="2026-08-01" data-date-style="dual"></span></span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1000000">—</span> · 4 sessions</span></div>
-					<div class="settlement-row"><span><span data-date="2026-06-01" data-date-style="dual"></span> → <span data-date="2026-07-01" data-date-style="dual"></span></span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1250000">—</span> · 5 sessions</span></div>
-					<div class="settlement-row"><span><span data-date="2026-05-01" data-date-style="dual"></span> → <span data-date="2026-06-01" data-date-style="dual"></span></span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1000000">—</span> · 4 sessions</span></div>
+					<div class="settlement-row"><span><span data-date="2026-07-01" data-date-style="full"></span> → <span data-date="2026-08-01" data-date-style="full"></span></span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1000000">—</span> · 4 sessions</span></div>
+					<div class="settlement-row"><span><span data-date="2026-06-01" data-date-style="full"></span> → <span data-date="2026-07-01" data-date-style="full"></span></span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1250000">—</span> · 5 sessions</span></div>
+					<div class="settlement-row"><span><span data-date="2026-05-01" data-date-style="full"></span> → <span data-date="2026-06-01" data-date-style="full"></span></span><span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="1000000">—</span> · 4 sessions</span></div>
 				</div>
 			</div>
 
@@ -944,7 +944,7 @@
 			var bubble = document.createElement( 'div' );
 			bubble.className = 'message-bubble message-bubble--' + m.dir;
 			var avatarIn = m.dir === 'in' ? '<span class="message-bubble__avatar">' + student.initials + '</span>' : '';
-			var avatarOut = m.dir === 'out' ? '<span class="message-bubble__avatar" style="background:var(--c-pink); color:var(--c-ink);">JD</span>' : '';
+			var avatarOut = m.dir === 'out' ? '<span class="message-bubble__avatar" style="background:var(--brand); color:var(--c-ink);">JD</span>' : '';
 			bubble.innerHTML = avatarIn +
 				'<div class="message-bubble__content"><div class="message-bubble__text">' + m.html + '</div><span class="message-bubble__time">' + m.time + '</span></div>' +
 				avatarOut;

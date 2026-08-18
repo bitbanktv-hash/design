@@ -27,7 +27,7 @@
 		<nav class="sidebar__nav">
 			<a href="teacher-dashboard.html" class="sidebar__link">
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-				<span data-i18n="nav_dashboard">Dashboard</span>
+				<span data-i18n="nav_dashboard">Teacher Dashboard</span>
 			</a>
 			<a href="teacher-students.html" class="sidebar__link">
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="12" width="8" height="9" rx="2"/><rect x="3" y="14" width="8" height="7" rx="2"/></svg>
@@ -48,7 +48,7 @@
 		</nav>
 		<div class="sidebar__footer">
 			<div class="sidebar__user">
-				<span class="sidebar__avatar" style="background: var(--c-pink); color: var(--ink);">JD</span>
+				<span class="sidebar__avatar" style="background: var(--brand); color: var(--ink);">JD</span>
 				<div class="sidebar__user-info">
 					<span class="sidebar__user-name">Jane Doe</span>
 					<span class="sidebar__user-role">English Teacher</span>
@@ -58,7 +58,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.13.0</div>
+			<div class="sidebar__version">MahFLA v1.14.0</div>
 		</div>
 	</aside>
 
@@ -243,10 +243,27 @@
 
 	/* Sessions now come from the shared data layer (assets/js/sessions-data.js)
 	   so this page, student-detail.html, and messages.html all agree on the
-	   same state instead of each hardcoding a disconnected copy. */
-	var SESSIONS = window.mahtelaData.loadSessions();
-	function saveSessions() { window.mahtelaData.saveSessions( SESSIONS ); }
-
+	   same state instead of each hardcoding its own disconnected copy.
+	   Filtered to just this teacher's own students -- without this, any
+	   session belonging to another teacher's student (there are 21 seeded
+	   sessions across 5 students split between multiple teachers) would
+	   crash renderGrid trying to look up a student that isn't in this
+	   teacher's STUDENTS map, which is exactly why the whole week could
+	   render completely blank depending on which sessions fell in it. */
+	function myTeacherSessions() {
+		return window.mahtelaData.loadSessions().filter( function ( s ) { return !! STUDENTS[ s.studentKey ]; } );
+	}
+	var SESSIONS = myTeacherSessions();
+	/* SESSIONS only ever holds this teacher's own sessions (needed so
+	   nothing here has to touch another teacher's data to render or
+	   edit), but saving must never just overwrite the whole shared
+	   store with that filtered view -- it would silently delete every
+	   other teacher's sessions. Merge back with everyone else's
+	   untouched sessions instead. */
+	function saveSessions() {
+		var others = window.mahtelaData.loadSessions().filter( function ( s ) { return ! STUDENTS[ s.studentKey ]; } );
+		window.mahtelaData.saveSessions( others.concat( SESSIONS ) );
+	}
 
 	/* Week state: currentWeekStart is always a Saturday (Iranian week
 	   start), stored as a plain local-midnight Date. */
@@ -566,7 +583,7 @@
 	document.addEventListener( 'mahtela:langchange', renderGrid );
 	document.addEventListener( 'mahtela:calendarchange', renderGrid );
 	document.addEventListener( 'mahtela:sessionschange', function () {
-		SESSIONS = window.mahtelaData.loadSessions();
+		SESSIONS = myTeacherSessions();
 		renderGrid();
 	} );
 	document.addEventListener( 'mahtela:studentschange', function () {
@@ -575,6 +592,7 @@
 		Object.keys( ALL_STUDENTS ).forEach( function ( key ) {
 			if ( ALL_STUDENTS[ key ].teacherId === CURRENT_TEACHER_ID ) { STUDENTS[ key ] = ALL_STUDENTS[ key ]; }
 		} );
+		SESSIONS = myTeacherSessions();
 		document.getElementById( 'book-session-student' ).innerHTML = '<option value="" data-i18n="field_select_student_ph">Choose a student…</option>';
 		populateStudentSelect();
 		window.mahtelaI18n.apply( window.mahtelaI18n.currentLang() );

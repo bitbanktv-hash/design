@@ -11,7 +11,7 @@
 		// Shared / nav
 		brand_name: { en: 'MahFLA', fa: 'MahFLA' },
 		brand_tagline: { en: 'Mahta Foreign Language Academy', fa: 'آکادمی زبان خارجی مهتا' },
-		nav_dashboard: { en: 'Dashboard', fa: 'داشبورد' },
+		nav_dashboard: { en: 'Teacher Dashboard', fa: 'داشبورد معلم' },
 		nav_students: { en: 'Students', fa: 'شاگردان' },
 		nav_schedule: { en: 'Schedule', fa: 'زمان‌بندی' },
 		schedule_sub_page: { en: 'Your full weekly timetable — click any open slot to book a class.', fa: 'برنامه‌ی هفتگی کامل تو — روی هر بازه‌ی خالی کلیک کن تا کلاس رزرو کنی.' },
@@ -84,6 +84,7 @@
 		// Validation
 		validate_email_error: { en: 'Enter a valid email address.', fa: 'یه ایمیل معتبر وارد کن.' },
 		validate_phone_error: { en: 'Enter a valid mobile number.', fa: 'یه شماره موبایل معتبر وارد کن.' },
+		settings_contact_required_hint: { en: 'Email and mobile number are required and used for notifications and contact — please keep them accurate and up to date.', fa: 'ایمیل و شماره موبایل اجباری هستن و برای اطلاع‌رسانی و ارتباط استفاده می‌شن — لطفاً درست و به‌روز نگهشون دار.' },
 		validate_required: { en: 'This field is required.', fa: 'پر کردن این فیلد الزامیه.' },
 
 		// Admin role + CAPTCHA + forgot password
@@ -102,7 +103,7 @@
 
 		// Admin: shared
 		admin_panel_title: { en: 'Admin Panel', fa: 'پنل مدیریت' },
-		nav_admin_dashboard: { en: 'Dashboard', fa: 'داشبورد' },
+		nav_admin_dashboard: { en: 'Admin Dashboard', fa: 'داشبورد ادمین' },
 		nav_admin_teachers: { en: 'Teachers', fa: 'معلم‌ها' },
 		nav_admin_students: { en: 'Students', fa: 'شاگردان' },
 		admin_super_admin: { en: 'Super Admin', fa: 'سوپر ادمین' },
