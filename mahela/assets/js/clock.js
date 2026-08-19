@@ -88,6 +88,208 @@
 		return d2j( g2d( gy, gm, gd ) );
 	}
 
+	function j2d( jy, jm, jd ) {
+		var r = jalCal( jy );
+		var estimate = g2d( jy + 621, 3, r.march ) + ( jm - 1 ) * 31 - div( jm, 7 ) * ( jm - 7 ) + jd - 1;
+		// The formula above is usually exact, but self-correct by checking
+		// against the already-verified d2j (this function's own inverse)
+		// -- guarantees j2d/d2j stay true inverses of each other, rather
+		// than risking a subtly wrong result from an independently
+		// re-derived formula in rare edge cases near year boundaries.
+		for ( var delta = -2; delta <= 2; delta += 1 ) {
+			var candidate = estimate + delta;
+			var check = d2j( candidate );
+			if ( check.jy === jy && check.jm === jm && check.jd === jd ) { return candidate; }
+		}
+		return estimate;
+	}
+
+	/** Reverse of gregorianToJalali -- needed for a bilingual date picker
+	 * that lets someone pick a date by its Jalali numbers but still needs
+	 * to produce the standard Gregorian ISO date the rest of the app's
+	 * data model expects. */
+	function jalaliToGregorian( jy, jm, jd ) {
+		return d2g( j2d( jy, jm, jd ) );
+	}
+
+	/**
+	 * Native <input type="date"> always shows the browser's OWN built-in
+	 * picker, which is hard-coded to the Gregorian calendar -- there is
+	 * no way to make it show Jalali, no matter what CSS/JS is applied.
+	 * So for any date the user needs to actually PICK (not just view),
+	 * this renders three Day/Month/Year <select> dropdowns instead,
+	 * showing Jalali month names and year numbers when Persian is
+	 * active and Gregorian otherwise, while always producing a
+	 * standard Gregorian ISO date string as the underlying value (since
+	 * that's what the rest of the app's data model expects).
+	 *
+	 * container: a DOM element to render the three selects into.
+	 * options.initialISO: optional 'YYYY-MM-DD' to start pre-filled.
+	 * options.onChange: called with the new ISO string (or null while
+	 *   incomplete) whenever the user changes any of the three selects.
+	 * Returns { getValue(), setValue(iso) }.
+	 */
+	function createDatePicker( container, options ) {
+		options = options || {};
+		var onChange = options.onChange || function () {};
+		var daySel = document.createElement( 'select' );
+		var monthSel = document.createElement( 'select' );
+		var yearSel = document.createElement( 'select' );
+		[ daySel, monthSel, yearSel ].forEach( function ( el ) {
+			el.className = 'date-picker-field';
+		} );
+		container.innerHTML = '';
+		container.className = ( container.className ? container.className + ' ' : '' ) + 'date-picker-fields';
+		container.appendChild( daySel );
+		container.appendChild( monthSel );
+		container.appendChild( yearSel );
+
+		// Internally tracked as Jalali or Gregorian y/m/d depending on
+		// which calendar is currently active, converted to/from the ISO
+		// Gregorian value only at the boundary (getValue/setValue).
+		var current = null; // { y, m, d } in whichever calendar is active
+
+		function activeCalendar() {
+			return resolveCalendar( currentLangSafe() );
+		}
+		function currentLangSafe() {
+			return window.mahtelaI18n ? window.mahtelaI18n.currentLang() : 'en';
+		}
+
+		function monthNames() {
+			return activeCalendar() === 'jalali' ? JALALI_MONTHS_FA_OR_EN() : GREG_MONTHS_EN;
+		}
+		function JALALI_MONTHS_FA_OR_EN() {
+			return currentLangSafe() === 'fa' ? JALALI_MONTHS_FA : JALALI_MONTHS_EN;
+		}
+
+		function dayCount( y, m ) {
+			if ( activeCalendar() === 'jalali' ) { return jalaliMonthLength( y, m ); }
+			return new Date( y, m, 0 ).getDate(); // Gregorian, m is 1-indexed here
+		}
+
+		function yearRange() {
+			// A generous +/- range around "now" in whichever calendar is
+			// active -- covers realistic session-scheduling and
+			// student-history dates without an unwieldy dropdown.
+			var nowIso = new Date().toISOString().slice( 0, 10 );
+			var parts = nowIso.split( '-' ).map( Number );
+			var nowY;
+			if ( activeCalendar() === 'jalali' ) {
+				nowY = gregorianToJalali( parts[ 0 ], parts[ 1 ], parts[ 2 ] ).jy;
+			} else {
+				nowY = parts[ 0 ];
+			}
+			var years = [];
+			for ( var y = nowY - 3; y <= nowY + 2; y += 1 ) { years.push( y ); }
+			return years;
+		}
+
+		function render() {
+			var cal = activeCalendar();
+			var months = monthNames();
+			var years = yearRange();
+
+			if ( ! current ) {
+				var todayIso = new Date().toISOString().slice( 0, 10 );
+				var tp = todayIso.split( '-' ).map( Number );
+				if ( cal === 'jalali' ) {
+					var todayJ = gregorianToJalali( tp[ 0 ], tp[ 1 ], tp[ 2 ] );
+					current = { y: todayJ.jy, m: todayJ.jm, d: todayJ.jd, cal: cal };
+				} else {
+					current = { y: tp[ 0 ], m: tp[ 1 ], d: tp[ 2 ], cal: cal };
+				}
+			}
+
+			var dc = dayCount( current.y, current.m );
+			if ( current.d > dc ) { current.d = dc; }
+
+			daySel.innerHTML = '';
+			for ( var d = 1; d <= dc; d += 1 ) {
+				var dOpt = document.createElement( 'option' );
+				dOpt.value = d;
+				dOpt.textContent = d;
+				if ( d === current.d ) { dOpt.selected = true; }
+				daySel.appendChild( dOpt );
+			}
+
+			monthSel.innerHTML = '';
+			months.forEach( function ( name, idx ) {
+				var mOpt = document.createElement( 'option' );
+				mOpt.value = idx + 1;
+				mOpt.textContent = name;
+				if ( idx + 1 === current.m ) { mOpt.selected = true; }
+				monthSel.appendChild( mOpt );
+			} );
+
+			yearSel.innerHTML = '';
+			years.forEach( function ( y ) {
+				var yOpt = document.createElement( 'option' );
+				yOpt.value = y;
+				yOpt.textContent = y;
+				if ( y === current.y ) { yOpt.selected = true; }
+				yearSel.appendChild( yOpt );
+			} );
+		}
+
+		function isoFromCurrent() {
+			if ( ! current ) { return null; }
+			var g = current.cal === 'jalali' ? jalaliToGregorian( current.y, current.m, current.d ) : { gy: current.y, gm: current.m, gd: current.d };
+			var pad = function ( n ) { return n < 10 ? '0' + n : '' + n; };
+			return g.gy + '-' + pad( g.gm ) + '-' + pad( g.gd );
+		}
+
+		function handleFieldChange() {
+			current = { y: parseInt( yearSel.value, 10 ), m: parseInt( monthSel.value, 10 ), d: parseInt( daySel.value, 10 ), cal: activeCalendar() };
+			render();
+			onChange( isoFromCurrent() );
+		}
+		daySel.addEventListener( 'change', handleFieldChange );
+		monthSel.addEventListener( 'change', handleFieldChange );
+		yearSel.addEventListener( 'change', handleFieldChange );
+
+		function setValue( iso ) {
+			if ( ! iso ) { current = null; render(); return; }
+			var p = iso.split( '-' ).map( Number );
+			var cal = activeCalendar();
+			if ( cal === 'jalali' ) {
+				var j = gregorianToJalali( p[ 0 ], p[ 1 ], p[ 2 ] );
+				current = { y: j.jy, m: j.jm, d: j.jd, cal: cal };
+			} else {
+				current = { y: p[ 0 ], m: p[ 1 ], d: p[ 2 ], cal: cal };
+			}
+			render();
+		}
+
+		document.addEventListener( 'mahtela:langchange', function () {
+			// isoFromCurrent() uses current.cal (the calendar system its
+			// values were captured in), not the just-changed global
+			// setting, so this correctly recovers the real underlying
+			// date before re-deriving it for the new calendar -- never
+			// loses or shifts the actual selected date on a language
+			// switch.
+			var iso = isoFromCurrent();
+			setValue( iso );
+		} );
+
+		if ( options.initialISO ) { setValue( options.initialISO ); } else { render(); }
+
+		return {
+			getValue: isoFromCurrent,
+			setValue: setValue
+		};
+	}
+
+	function isLeapJalaliYear( jy ) {
+		return jalCal( jy ).leap === 0;
+	}
+
+	function jalaliMonthLength( jy, jm ) {
+		if ( jm <= 6 ) { return 31; }
+		if ( jm <= 11 ) { return 30; }
+		return isLeapJalaliYear( jy ) ? 30 : 29;
+	}
+
 	var JALALI_MONTHS_FA = [ 'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند' ];
 	var JALALI_MONTHS_EN = [ 'Farvardin', 'Ordibehesht', 'Khordad', 'Tir', 'Mordad', 'Shahrivar', 'Mehr', 'Aban', 'Azar', 'Dey', 'Bahman', 'Esfand' ];
 	var GREG_MONTHS_EN = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
@@ -295,7 +497,12 @@
 		formatScheduleDate: formatScheduleDate,
 		formatFullDate: formatFullDate,
 		formatDualDate: formatDualDate,
-		applyScheduleDates: applyScheduleDates
+		applyScheduleDates: applyScheduleDates,
+		gregorianToJalali: gregorianToJalali,
+		jalaliToGregorian: jalaliToGregorian,
+		jalaliMonthLength: jalaliMonthLength,
+		isLeapJalaliYear: isLeapJalaliYear,
+		createDatePicker: createDatePicker
 	};
 
 	document.addEventListener( 'DOMContentLoaded', function () {

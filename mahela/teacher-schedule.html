@@ -58,7 +58,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.17.1</div>
+			<div class="sidebar__version">MahFLA v1.18.0</div>
 		</div>
 	</aside>
 
@@ -168,7 +168,7 @@
 		<div class="form-grid">
 			<div class="form-field">
 				<label for="details-date" data-i18n="field_date">Date</label>
-				<input type="date" id="details-date">
+				<div id="details-date-picker"></div>
 			</div>
 			<div class="form-field">
 				<label for="details-time-input" data-i18n="field_time">Time</label>
@@ -509,13 +509,15 @@
 		document.getElementById( 'details-charge-no' ).setAttribute( 'aria-pressed', charge === false ? 'true' : 'false' );
 	}
 
+	var detailsDatePicker = window.mahtelaCalendar.createDatePicker( document.getElementById( 'details-date-picker' ) );
+
 	function openSessionDetails( sessionId ) {
 		var s = SESSIONS.filter( function ( x ) { return x.id === sessionId; } )[ 0 ];
 		if ( ! s ) { return; }
 		pendingRemovalId = sessionId;
 		activeSessionId = sessionId;
 		document.getElementById( 'details-student-name' ).textContent = STUDENTS[ s.studentKey ].name;
-		document.getElementById( 'details-date' ).value = s.date;
+		detailsDatePicker.setValue( s.date );
 		document.getElementById( 'details-time-input' ).value = s.time;
 		document.getElementById( 'details-duration' ).value = window.mahtelaData.formatDurationHHMM( s.duration );
 		document.getElementById( 'details-duration' ).closest( '.form-field' ).classList.remove( 'has-error' );
@@ -540,7 +542,7 @@
 		var s = SESSIONS.filter( function ( x ) { return x.id === activeSessionId; } )[ 0 ];
 		if ( ! s ) { return; }
 
-		var newDate = document.getElementById( 'details-date' ).value;
+		var newDate = detailsDatePicker.getValue();
 		var newTime = document.getElementById( 'details-time-input' ).value;
 		var durationField = document.getElementById( 'details-duration' );
 		var newDuration = window.mahtelaData.parseDurationHHMM( durationField.value );

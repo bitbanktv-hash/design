@@ -264,6 +264,8 @@
 		schedule_add: { en: '+ Add Session', fa: '+ افزودن جلسه' },
 		schedule_upcoming: { en: 'Upcoming', fa: 'پیش‌رو' },
 		schedule_past: { en: 'Past Sessions', fa: 'جلسات گذشته' },
+		schedule_no_upcoming: { en: 'No upcoming sessions yet.', fa: 'هنوز جلسه‌ی پیش‌رویی ثبت نشده.' },
+		schedule_no_past: { en: 'No past sessions yet.', fa: 'هنوز جلسه‌ی گذشته‌ای وجود نداره.' },
 		schedule_held: { en: 'Held', fa: 'برگزار شد' },
 		class_type: { en: 'Class Type', fa: 'نوع کلاس' },
 		class_type_in_person: { en: 'In-Person', fa: 'حضوری' },

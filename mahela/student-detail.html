@@ -106,7 +106,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.17.1</div>
+			<div class="sidebar__version">MahFLA v1.18.0</div>
 		</div>
 	</aside>
 
@@ -267,9 +267,11 @@
 
 				<h3 style="font-size:13.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); margin-bottom:12px;" data-i18n="schedule_upcoming">Upcoming</h3>
 				<div class="session-list" id="schedule-upcoming-list" style="margin-bottom:30px;"></div>
+				<p id="schedule-upcoming-empty" style="display:none; text-align:center; color:var(--ink-faint); padding:16px 0; margin-bottom:30px;" data-i18n="schedule_no_upcoming">No upcoming sessions yet.</p>
 
 				<h3 style="font-size:13.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft); margin-bottom:12px;" data-i18n="schedule_past">Past Sessions</h3>
 				<div class="session-list" id="schedule-past-list"></div>
+				<p id="schedule-past-empty" style="display:none; text-align:center; color:var(--ink-faint); padding:16px 0;" data-i18n="schedule_no_past">No past sessions yet.</p>
 			</div>
 
 			<!-- FINANCE -->
@@ -403,7 +405,7 @@
 		</div>
 		<form id="add-session-form">
 			<div class="form-grid">
-				<div class="form-field"><label for="student-detail-date">Date</label><input id="student-detail-date" type="date" required></div>
+				<div class="form-field"><label>Date</label><div id="student-detail-date-picker"></div></div>
 				<div class="form-field"><label for="student-detail-time">Time</label><input id="student-detail-time" type="time" required></div>
 			</div>
 			<div class="form-grid">
@@ -439,7 +441,7 @@
 		<div class="form-grid">
 			<div class="form-field">
 				<label for="manage-session-date" data-i18n="field_date">Date</label>
-				<input type="date" id="manage-session-date">
+				<div id="manage-session-date-picker"></div>
 			</div>
 			<div class="form-field">
 				<label for="manage-session-time-input" data-i18n="field_time">Time</label>
@@ -768,9 +770,11 @@
 
 		upcomingList.innerHTML = '';
 		upcoming.forEach( function ( s ) { upcomingList.appendChild( renderSessionRow( s, lang ) ); } );
+		document.getElementById( 'schedule-upcoming-empty' ).style.display = upcoming.length ? 'none' : 'block';
 
 		pastList.innerHTML = '';
 		past.forEach( function ( s ) { pastList.appendChild( renderSessionRow( s, lang ) ); } );
+		document.getElementById( 'schedule-past-empty' ).style.display = past.length ? 'none' : 'block';
 
 		window.mahtelaCalendar.applyScheduleDates();
 	}
@@ -781,6 +785,8 @@
 
 	function findSession( id ) { return SESSIONS.filter( function ( s ) { return s.id === id; } )[ 0 ]; }
 
+	var manageSessionDatePicker = window.mahtelaCalendar.createDatePicker( document.getElementById( 'manage-session-date-picker' ) );
+
 	function openManageSession( id ) {
 		var s = findSession( id );
 		if ( ! s ) { return; }
@@ -788,7 +794,7 @@
 		pendingStatus = s.status;
 		pendingChargeApplied = s.chargeApplied;
 
-		document.getElementById( 'manage-session-date' ).value = s.date;
+		manageSessionDatePicker.setValue( s.date );
 		document.getElementById( 'manage-session-time-input' ).value = s.time;
 		document.getElementById( 'manage-session-duration' ).value = window.mahtelaData.formatDurationHHMM( s.duration );
 		document.getElementById( 'manage-session-duration' ).closest( '.form-field' ).classList.remove( 'has-error' );
@@ -849,7 +855,7 @@
 		var s = findSession( activeSessionId );
 		if ( ! s ) { return; }
 
-		var newDate = document.getElementById( 'manage-session-date' ).value;
+		var newDate = manageSessionDatePicker.getValue();
 		var newTime = document.getElementById( 'manage-session-time-input' ).value;
 		var durationField = document.getElementById( 'manage-session-duration' );
 		var newDuration = window.mahtelaData.parseDurationHHMM( durationField.value );
@@ -876,9 +882,11 @@
 	} );
 
 	/* ---------- Add Session modal ---------- */
+	var addSessionDatePicker = window.mahtelaCalendar.createDatePicker( document.getElementById( 'student-detail-date-picker' ) );
+
 	document.getElementById( 'add-session-form' ).addEventListener( 'submit', function ( e ) {
 		e.preventDefault();
-		var date = document.getElementById( 'student-detail-date' ).value;
+		var date = addSessionDatePicker.getValue();
 		var time = document.getElementById( 'student-detail-time' ).value;
 		var durationField = document.getElementById( 'student-detail-field-session-duration' );
 		var duration = window.mahtelaData.parseDurationHHMM( durationField.value );
@@ -896,6 +904,7 @@
 		document.getElementById( 'modal-add-session' ).classList.remove( 'is-open' );
 		document.body.style.overflow = '';
 		e.target.reset();
+		addSessionDatePicker.setValue( null );
 		mahtelaToast( 'Session added to schedule.' );
 	} );
 

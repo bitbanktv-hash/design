@@ -619,6 +619,8 @@ html[dir="rtl"] .switch input:checked + .switch__track::before { transform: tran
 .class-type-badge--online { background: rgba(0,160,181,0.14); color: var(--accent-strong); }
 .settlement-requested-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 999px; font-size: 10.5px; font-weight: 700; background: rgba(255,169,52,0.18); color: #B36A00; white-space: nowrap; }
 .session-row__sub--cancelled { color: #C0453F; }
+.date-picker-fields { display: flex; gap: 8px; }
+.date-picker-fields .date-picker-field { flex: 1; min-width: 0; }
 
 .session-note {
 	margin-top: 8px; padding: 9px 12px;

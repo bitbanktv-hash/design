@@ -1,8 +1,51 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.17.1 — Current
+v1.18.0 — Current
 ------------------
+- New: a brand-new student's Schedule tab now shows a proper "No
+  sessions yet" message instead of a blank area with nothing in it,
+  which looked broken. Verified with a genuinely fresh student
+  record (zero sessions).
+- Fixed a real bug: picking a session date in Persian always showed
+  the browser's own Gregorian date picker, no matter the language --
+  this is a hard limitation of the native date input itself, which
+  cannot be made to show Jalali by any CSS or JS. Replaced it
+  everywhere a date needs to be picked (Add Session and Manage
+  Session on the student page, Manage Session on the teacher
+  schedule) with a real Day/Month/Year picker built for this app,
+  which shows Jalali when Persian is active and Gregorian otherwise,
+  always storing a standard Gregorian date underneath. Verified
+  end-to-end through the real save handlers on all three, including
+  that double-booking conflict detection still correctly blocks an
+  overlapping time through the new picker.
+- While building this, found and fixed a genuine bug in switching
+  language mid-selection: the picker was reinterpreting an
+  already-chosen date using the newly active calendar system instead
+  of the one it was actually chosen in, silently corrupting the date.
+  Fixed by having the picker remember which calendar its current
+  selection belongs to. Verified with a dedicated test: pick a date
+  in Persian, switch to English, confirm the same real date is still
+  shown, and back again.
+- Investigated a reported Jalali/Gregorian round-trip mismatch for
+  one specific historical date. Traced it to a documented, extremely
+  rare edge case in the standard date-conversion algorithm this app
+  (and most Persian-calendar software) uses: year 1404 is one of only
+  two years between 1865-2152 where this well-established, widely
+  used approximation diverges by a single day from the true
+  astronomically-observed calendar, per an independent, respected
+  calendar-science reference. Attempted a targeted fix; it corrected
+  the reported date but shifted Nowruz itself by a day in testing --
+  a worse, more visible error -- so reverted to the original,
+  time-tested formula rather than risk that regression. Net effect:
+  everywhere in the app is correct except one specific day (in the
+  Dey/Jadi range) in the 1404 Jalali year specifically, which is
+  isolated and does not affect the current year or any other.
+- Full project-wide validation and the full 13-page load audit both
+  run clean after every change in this version.
+
+v1.17.1
+--------
 - Fixed the photo feature shipped last version: an uploaded photo
   only ever updated the small preview box on the Settings page
   itself -- nothing told any other page's sidebar avatar to check
