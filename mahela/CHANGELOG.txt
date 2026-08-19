@@ -1,8 +1,42 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.15.0 — Current
+v1.15.1 — Current
 ------------------
+- Full-project audit at the user's request: ran every page through a
+  real script execution (not just syntax checking) for the first
+  time as a batch, rather than testing individual functions in
+  isolation as before. Found two critical, page-breaking bugs that
+  had gone undetected specifically because prior testing exercised
+  functions directly rather than a full page load with all its event
+  wiring active:
+  - student-detail.html and teacher-students.html both had a
+    function that was simultaneously (a) a listener for
+    mahtela:langchange and (b) calling window.mahtelaI18n.apply(),
+    which itself dispatches mahtela:langchange. Every render
+    triggered another render, infinitely, overflowing the call stack.
+    This would have hung or crashed both pages on essentially every
+    load in a real browser -- and since it happens mid-script, every
+    initialization statement after the point of failure (message
+    composer setup, additional event listeners, etc.) would silently
+    never run either.
+  - Fixed by removing the unnecessary global apply() call from
+    student-detail.html's renderScheduleTab (its dynamic content
+    already translates itself directly and never needed it), and by
+    translating teacher-students.html's dynamic card text directly
+    via dictionary lookup instead of relying on the global scan,
+    since that page's cards do need translation.
+  - Verified via full script execution on all 13 pages: all pass
+    cleanly after the fix, where 2 previously failed.
+  - Also checked every other place that triggers a mahtela:* custom
+    event for the same dispatch-from-within-your-own-listener
+    pattern; none of the others exhibit it.
+- Everything else audited clean: JS syntax, HTML tag balance, CSS
+  balance, i18n key coverage, DOM id references, internal links, and
+  duplicate ids -- no other issues found in this pass.
+
+v1.15.0
+--------
 - Fixed a Persian-calendar bug: dates could get permanently stuck
   showing Gregorian even with the language set to Persian. The
   underlying date logic was already correct, but there was no way to

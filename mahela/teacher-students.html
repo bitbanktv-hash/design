@@ -59,7 +59,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.15.0</div>
+			<div class="sidebar__version">MahFLA v1.15.1</div>
 		</div>
 	</aside>
 
@@ -182,6 +182,7 @@
 	var CURRENT_TEACHER_ID = 'jane'; // this page always represents Jane Doe's logged-in view
 
 	function renderStudentGrid( filterText ) {
+		var lang = window.mahtelaI18n.currentLang();
 		var students = window.mahtelaRoster.loadStudents();
 		var sessions = window.mahtelaData.loadSessions();
 		var grid = document.getElementById( 'student-grid' );
@@ -207,9 +208,10 @@
 				card.className = 'card student-card';
 				card.setAttribute( 'data-gender', s.gender );
 
+				var dict = window.mahtelaI18n.dict;
 				var metaHTML = upcoming
-					? '<span data-i18n="dash_next_class">Next class</span>: <span data-date="' + upcoming.date + '" data-time="' + upcoming.time + '"></span>'
-					: '<span data-i18n="dash_no_upcoming">No upcoming class scheduled</span>';
+					? '<span></span>: <span class="meta-date" data-date="' + upcoming.date + '" data-time="' + upcoming.time + '"></span>'
+					: '<span></span>';
 
 				card.innerHTML =
 					'<div class="student-card__head">' +
@@ -220,6 +222,7 @@
 						'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>' +
 						metaHTML +
 					'</div>';
+				card.querySelector( '.student-card__meta span' ).textContent = upcoming ? dict.dash_next_class[ lang ] : dict.dash_no_upcoming[ lang ];
 				card.querySelector( '.student-card__avatar' ).textContent = s.initials;
 				card.querySelector( '.student-card__name' ).textContent = s.name;
 				card.querySelector( '.badge' ).textContent = level.label;
@@ -227,7 +230,6 @@
 			} );
 
 		document.getElementById( 'no-results' ).style.display = shown === 0 ? 'block' : 'none';
-		window.mahtelaI18n.apply( window.mahtelaI18n.currentLang() );
 		window.mahtelaCalendar.applyScheduleDates();
 	}
 
