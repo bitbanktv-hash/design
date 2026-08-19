@@ -101,6 +101,20 @@
 		return key;
 	}
 
+	/**
+	 * A person (student or teacher record) may have a `photo` field (a
+	 * data URL, set via Settings' upload+crop flow). Every place that
+	 * shows someone's avatar should use this instead of hardcoding
+	 * initials, so an uploaded photo actually shows up everywhere that
+	 * person appears, not just on the Settings page where it was set.
+	 */
+	function avatarHTML( person, fallbackInitials ) {
+		if ( person && person.photo ) {
+			return '<img src="' + person.photo + '" alt="" style="width:100%; height:100%; object-fit:cover;">';
+		}
+		return fallbackInitials;
+	}
+
 	window.mahtelaRoster = {
 		loadStudents: loadStudents,
 		saveStudents: saveStudents,
@@ -109,6 +123,7 @@
 		levelInfo: levelInfo,
 		levels: LEVELS,
 		initials: initials,
-		slugify: slugify
+		slugify: slugify,
+		avatarHTML: avatarHTML
 	};
 }() );

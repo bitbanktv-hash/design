@@ -1,8 +1,33 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.17.0 — Current
+v1.17.1 — Current
 ------------------
+- Fixed the photo feature shipped last version: an uploaded photo
+  only ever updated the small preview box on the Settings page
+  itself -- nothing told any other page's sidebar avatar to check
+  for one, so it never showed up anywhere else. Built a shared
+  avatarHTML helper and wired it into every place someone's avatar
+  appears: the sidebar avatar on all six teacher-facing pages, the
+  teacher-profile popup and strip shown to students, the student's
+  own header avatar in the teacher's view, the student grid cards,
+  and both admin tables (students and teachers). Verified with a
+  proper cross-page simulation this time -- a photo saved on one
+  page correctly shows up on a fresh load of every other page.
+- Fixed the teacher's profile-photo background still showing the
+  pink used for female-student accents instead of the teacher's own
+  gold -- the same class of bug fixed once before elsewhere in this
+  project, this time in Settings' photo circle specifically (it was
+  sitting inside a container that sets a gender color for a
+  different, legitimate reason, and accidentally inherited it).
+  Checked three other places using the same pattern; confirmed those
+  are all correctly showing a specific student's own color in
+  contexts that are genuinely about that student, not this bug.
+- Re-ran the full 13-page load audit after every change in this
+  version -- no regressions.
+
+v1.17.0
+--------
 - Settlement flow now has a real middle state. Previously "Request
   Settlement" sent a message but never recorded anything on the
   sessions themselves, so there was no way to see afterward which

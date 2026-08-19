@@ -74,7 +74,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.17.0</div>
+			<div class="sidebar__version">MahFLA v1.17.1</div>
 		</div>
 	</aside>
 
@@ -276,7 +276,7 @@
 	function renderTeacherStrip() {
 		var teacher = myTeacher();
 		if ( ! teacher ) { return; }
-		document.getElementById( 'teacher-strip-avatar' ).textContent = window.mahtelaRoster.initials( teacher.name );
+		document.getElementById( 'teacher-strip-avatar' ).innerHTML = window.mahtelaRoster.avatarHTML( teacher, window.mahtelaRoster.initials( teacher.name ) );
 		document.getElementById( 'teacher-strip-name' ).textContent = teacher.name;
 		document.getElementById( 'teacher-strip-specialization' ).textContent = teacher.specialization || '—';
 	}
@@ -284,7 +284,7 @@
 	function openTeacherProfile() {
 		var teacher = myTeacher();
 		if ( ! teacher ) { return; }
-		document.getElementById( 'teacher-profile-avatar' ).textContent = window.mahtelaRoster.initials( teacher.name );
+		document.getElementById( 'teacher-profile-avatar' ).innerHTML = window.mahtelaRoster.avatarHTML( teacher, window.mahtelaRoster.initials( teacher.name ) );
 		document.getElementById( 'teacher-profile-name' ).textContent = teacher.name;
 		document.getElementById( 'teacher-profile-specialization' ).textContent = teacher.specialization || '—';
 		document.getElementById( 'teacher-profile-email' ).textContent = teacher.email;

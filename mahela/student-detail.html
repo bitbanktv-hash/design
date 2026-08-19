@@ -17,6 +17,7 @@
 		display: flex; align-items: center; justify-content: center;
 		font-family: var(--font-display); font-weight: 700; font-size: 22px;
 		background: var(--student-accent, var(--c-pink)); color: var(--c-ink); flex-shrink: 0;
+		overflow: hidden;
 	}
 	.student-header__name { font-size: 24px; margin-bottom: 4px; }
 	.info-card-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 30px; }
@@ -88,7 +89,7 @@
 		</nav>
 		<div class="sidebar__footer">
 			<div class="sidebar__user" id="sidebar-user-teacher">
-				<span class="sidebar__avatar" style="background: var(--brand); color:var(--c-ink);">JD</span>
+				<span class="sidebar__avatar" id="sidebar-avatar" style="background: var(--brand); color:var(--c-ink);">JD</span>
 				<div class="sidebar__user-info">
 					<span class="sidebar__user-name">Jane Doe</span>
 					<span class="sidebar__user-role">English Teacher</span>
@@ -105,7 +106,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.17.0</div>
+			<div class="sidebar__version">MahFLA v1.17.1</div>
 		</div>
 	</aside>
 
@@ -550,6 +551,15 @@
 	 * level/skills from whichever record is selected) carries over as-is.
 	 */
 	var STUDENTS = window.mahtelaRoster.loadStudents();
+
+	function renderSidebarAvatar() {
+		var el = document.getElementById( 'sidebar-avatar' );
+		if ( ! el ) { return; }
+		var teacher = window.mahtelaRoster.loadTeachers()[ 'jane' ];
+		el.innerHTML = window.mahtelaRoster.avatarHTML( teacher, 'JD' );
+	}
+	renderSidebarAvatar();
+	document.addEventListener( 'mahtela:teacherschange', renderSidebarAvatar );
 	var SESSIONS = window.mahtelaData.loadSessions();
 
 	/**
@@ -584,7 +594,7 @@
 		var level = window.mahtelaRoster.levelInfo( s.level );
 
 		document.title = s.name + ' — MahFLA';
-		document.getElementById( 'student-avatar' ).textContent = s.initials;
+		document.getElementById( 'student-avatar' ).innerHTML = window.mahtelaRoster.avatarHTML( s, s.initials );
 		document.getElementById( 'student-name' ).textContent = s.name;
 
 		var levelBadge = document.getElementById( 'student-level-badge' );
