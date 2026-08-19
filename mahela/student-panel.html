@@ -26,8 +26,12 @@
 		display: flex; align-items: center; gap: 12px;
 		padding: 14px 18px; margin-bottom: 24px;
 		background: var(--surface-soft); border-radius: var(--radius-md);
+		width: 100%; text-align: start; cursor: pointer; border: none;
+		transition: background-color .15s ease;
 	}
-	.teacher-strip__avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--c-pink); color: var(--c-ink); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+	.teacher-strip:hover { background: var(--border); }
+	.teacher-strip__avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--c-pink); color: var(--c-ink); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; overflow: hidden; }
+	.teacher-strip__avatar img { width: 100%; height: 100%; object-fit: cover; }
 </style>
 </head>
 <body>
@@ -70,7 +74,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.14.0</div>
+			<div class="sidebar__version">MahFLA v1.15.0</div>
 		</div>
 	</aside>
 
@@ -108,13 +112,13 @@
 				</div>
 			</div>
 
-			<div class="teacher-strip reveal-on-load" style="--rl-delay:40ms">
-				<span class="teacher-strip__avatar">JD</span>
+			<button type="button" class="teacher-strip reveal-on-load" style="--rl-delay:40ms" id="teacher-strip-btn">
+				<span class="teacher-strip__avatar" id="teacher-strip-avatar">JD</span>
 				<div>
-					<div style="font-weight:700; font-size:13.5px;">Jane Doe</div>
-					<div style="font-size:12px; color:var(--ink-soft);"><span data-i18n="student_my_teacher">Teacher</span> · English</div>
+					<div style="font-weight:700; font-size:13.5px;" id="teacher-strip-name">—</div>
+					<div style="font-size:12px; color:var(--ink-soft);"><span data-i18n="student_my_teacher">Teacher</span> · <span id="teacher-strip-specialization">—</span></div>
 				</div>
-			</div>
+			</button>
 
 			<nav class="tabs-nav" data-tabs="panel">
 				<button type="button" class="tabs-nav__btn is-active" data-tab-btn="panel" data-tab-target="schedule">
@@ -207,6 +211,33 @@
 	</div>
 </div>
 
+<!-- Teacher Profile popup -->
+<div class="modal-overlay" id="modal-teacher-profile">
+	<div class="modal-box" style="max-width:420px;">
+		<div class="modal-box__head">
+			<h2 class="modal-box__title" data-i18n="teacher_profile_title">Teacher Profile</h2>
+			<button type="button" class="modal-box__close" data-modal-close aria-label="Close">&times;</button>
+		</div>
+		<div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px; margin-bottom:22px;">
+			<span id="teacher-profile-avatar" style="width:76px; height:76px; border-radius:50%; background:var(--c-pink); color:var(--c-ink); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:26px; overflow:hidden; margin-bottom:8px;">—</span>
+			<div style="font-weight:700; font-size:17px;" id="teacher-profile-name">—</div>
+			<span class="badge badge--brand" id="teacher-profile-specialization">—</span>
+		</div>
+		<div class="form-field">
+			<label data-i18n="settings_email">Email</label>
+			<p style="font-size:13.5px; margin:0; text-align:end;" id="teacher-profile-email" dir="ltr">—</p>
+		</div>
+		<div class="form-field">
+			<label data-i18n="settings_phone">Mobile Number</label>
+			<p style="font-size:13.5px; margin:0; text-align:end;" id="teacher-profile-phone" dir="ltr">—</p>
+		</div>
+		<div class="form-field" style="margin-bottom:0;">
+			<label data-i18n="teacher_profile_about">About Me</label>
+			<p style="font-size:13.5px; color:var(--ink-soft); margin:0; line-height:1.6;" id="teacher-profile-bio">—</p>
+		</div>
+	</div>
+</div>
+
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/theme.js"></script>
 <script src="assets/js/clock.js"></script>
@@ -235,6 +266,37 @@
 	}
 
 	var STUDENT_KEY = 'elena'; // this panel always represents Elena's own logged-in view
+
+	function myTeacher() {
+		var student = window.mahtelaRoster.loadStudents()[ STUDENT_KEY ];
+		if ( ! student ) { return null; }
+		return window.mahtelaRoster.loadTeachers()[ student.teacherId ] || null;
+	}
+
+	function renderTeacherStrip() {
+		var teacher = myTeacher();
+		if ( ! teacher ) { return; }
+		document.getElementById( 'teacher-strip-avatar' ).textContent = window.mahtelaRoster.initials( teacher.name );
+		document.getElementById( 'teacher-strip-name' ).textContent = teacher.name;
+		document.getElementById( 'teacher-strip-specialization' ).textContent = teacher.specialization || '—';
+	}
+
+	function openTeacherProfile() {
+		var teacher = myTeacher();
+		if ( ! teacher ) { return; }
+		document.getElementById( 'teacher-profile-avatar' ).textContent = window.mahtelaRoster.initials( teacher.name );
+		document.getElementById( 'teacher-profile-name' ).textContent = teacher.name;
+		document.getElementById( 'teacher-profile-specialization' ).textContent = teacher.specialization || '—';
+		document.getElementById( 'teacher-profile-email' ).textContent = teacher.email;
+		document.getElementById( 'teacher-profile-phone' ).textContent = teacher.phone;
+		document.getElementById( 'teacher-profile-bio' ).textContent = teacher.bio || '—';
+		window.mahtelaModal.open( document.getElementById( 'modal-teacher-profile' ), document.getElementById( 'teacher-strip-btn' ) );
+	}
+
+	renderTeacherStrip();
+	document.getElementById( 'teacher-strip-btn' ).addEventListener( 'click', openTeacherProfile );
+	document.addEventListener( 'mahtela:langchange', renderTeacherStrip );
+	document.addEventListener( 'mahtela:teacherschange', renderTeacherStrip );
 
 	renderSkillsTab();
 	document.addEventListener( 'mahtela:langchange', renderSkillsTab );

@@ -58,7 +58,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.14.0</div>
+			<div class="sidebar__version">MahFLA v1.15.0</div>
 		</div>
 	</aside>
 
@@ -161,9 +161,27 @@
 			<h2 class="modal-box__title" data-i18n="modal_manage_session_title">Manage Session</h2>
 			<button type="button" class="modal-box__close" data-modal-close aria-label="Close">&times;</button>
 		</div>
-		<p style="font-size:13px; color:var(--ink-soft); margin-top:-10px; margin-bottom:18px;">
-			<span id="details-student-name">—</span> · <span id="details-time">—</span>
+		<p style="font-size:13px; color:var(--ink-soft); margin-top:-10px; margin-bottom:14px;">
+			<span id="details-student-name">—</span>
 		</p>
+
+		<div class="form-grid">
+			<div class="form-field">
+				<label for="details-date" data-i18n="field_date">Date</label>
+				<input type="date" id="details-date">
+			</div>
+			<div class="form-field">
+				<label for="details-time-input" data-i18n="field_time">Time</label>
+				<input type="time" id="details-time-input">
+			</div>
+		</div>
+		<div class="form-field">
+			<label for="details-duration" data-i18n="field_duration">Duration</label>
+			<input type="text" id="details-duration" dir="ltr" placeholder="1:00" data-i18n-ph="duration_ph">
+			<span style="font-size:11px; color:var(--ink-faint); margin-top:4px; display:block;" data-i18n="duration_format_hint">Format: hours:minutes, e.g. 1:15</span>
+			<span id="details-duration-error" class="form-field__error" data-i18n="duration_invalid_error">Enter a valid duration like 1:15.</span>
+		</div>
+		<div id="details-conflict-error" class="form-notice form-notice--error" style="display:none;" data-i18n="schedule_slot_taken">This slot overlaps an existing session.</div>
 
 		<div class="form-field">
 			<label for="details-classtype" data-i18n="class_type">Class Type</label>
@@ -487,10 +505,12 @@
 		if ( ! s ) { return; }
 		pendingRemovalId = sessionId;
 		activeSessionId = sessionId;
-		var lang = window.mahtelaI18n.currentLang();
-		var cal = window.mahtelaCalendar.resolve( lang );
 		document.getElementById( 'details-student-name' ).textContent = STUDENTS[ s.studentKey ].name;
-		document.getElementById( 'details-time' ).textContent = window.mahtelaCalendar.formatScheduleDate( s.date, s.time, lang, cal );
+		document.getElementById( 'details-date' ).value = s.date;
+		document.getElementById( 'details-time-input' ).value = s.time;
+		document.getElementById( 'details-duration' ).value = window.mahtelaData.formatDurationHHMM( s.duration );
+		document.getElementById( 'details-duration' ).closest( '.form-field' ).classList.remove( 'has-error' );
+		document.getElementById( 'details-conflict-error' ).style.display = 'none';
 		document.getElementById( 'details-classtype' ).value = s.classType;
 		document.getElementById( 'details-note' ).value = s.note || '';
 		document.getElementById( 'details-cancel-reason' ).value = s.cancelReason || 'teacher';
@@ -510,6 +530,27 @@
 	document.getElementById( 'save-session-details-btn' ).addEventListener( 'click', function () {
 		var s = SESSIONS.filter( function ( x ) { return x.id === activeSessionId; } )[ 0 ];
 		if ( ! s ) { return; }
+
+		var newDate = document.getElementById( 'details-date' ).value;
+		var newTime = document.getElementById( 'details-time-input' ).value;
+		var durationField = document.getElementById( 'details-duration' );
+		var newDuration = window.mahtelaData.parseDurationHHMM( durationField.value );
+
+		durationField.closest( '.form-field' ).classList.toggle( 'has-error', newDuration === null );
+		document.getElementById( 'details-conflict-error' ).style.display = 'none';
+		if ( ! newDate || ! newTime || newDuration === null ) { return; }
+
+		var conflict = sessionsOnDate( newDate ).some( function ( other ) {
+			return other.id !== s.id && overlaps( newTime, newDuration, other.time, other.duration );
+		} );
+		if ( conflict ) {
+			document.getElementById( 'details-conflict-error' ).style.display = 'block';
+			return;
+		}
+
+		s.date = newDate;
+		s.time = newTime;
+		s.duration = newDuration;
 		s.classType = document.getElementById( 'details-classtype' ).value;
 		s.status = pendingStatus;
 		s.note = document.getElementById( 'details-note' ).value.trim();

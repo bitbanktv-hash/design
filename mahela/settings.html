@@ -74,7 +74,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.14.0</div>
+			<div class="sidebar__version">MahFLA v1.15.0</div>
 		</div>
 	</aside>
 
@@ -114,7 +114,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.14.0</div>
+			<div class="sidebar__version">MahFLA v1.15.0</div>
 		</div>
 	</aside>
 
@@ -157,7 +157,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.14.0</div>
+			<div class="sidebar__version">MahFLA v1.15.0</div>
 		</div>
 	</aside>
 
@@ -237,6 +237,24 @@
 				</form>
 			</div>
 
+			<div class="card" id="teaching-profile-card" style="padding:28px; margin-bottom:20px; max-width:640px; display:none;">
+				<h2 class="settings-section-title" data-i18n="settings_teaching_profile_title">Teaching Profile</h2>
+				<p class="page-head__sub" style="margin-top:4px; margin-bottom:18px;" data-i18n="settings_teaching_profile_sub">Shown to your students on their own panel.</p>
+				<form id="teaching-profile-form" style="margin-top:0;">
+					<div class="form-field">
+						<label data-i18n="settings_specialization" for="field-specialization">Specialization / Language Taught</label>
+						<input type="text" id="field-specialization" placeholder="e.g. English, Spanish" data-clear-on-focus>
+					</div>
+					<div class="form-field" style="margin-bottom:0;">
+						<label data-i18n="settings_bio" for="field-bio">Short Bio</label>
+						<textarea id="field-bio" rows="4" data-i18n-ph="settings_bio_ph" placeholder="Tell students a bit about your teaching background and style."></textarea>
+					</div>
+					<div class="form-actions">
+						<button type="submit" class="btn btn--primary" data-i18n="settings_save_teaching_profile">Save Teaching Profile</button>
+					</div>
+				</form>
+			</div>
+
 			<div class="card" style="padding:28px; margin-bottom:20px; max-width:640px;">
 				<h2 class="settings-section-title" data-i18n="settings_calendar_title">Calendar</h2>
 				<p class="page-head__sub" style="margin-top:4px; margin-bottom:18px;" data-i18n="settings_calendar_sub">Choose which calendar dates are shown in, independent of your language.</p>
@@ -244,6 +262,7 @@
 					<div class="form-field" style="margin-bottom:0;">
 						<label data-i18n="settings_calendar_type" for="field-calendar">Calendar type</label>
 						<select id="field-calendar">
+							<option value="auto" data-i18n="calendar_auto">Automatic (follows language)</option>
 							<option value="gregorian" data-i18n="calendar_gregorian">Gregorian</option>
 							<option value="jalali" data-i18n="calendar_jalali">Jalali (Shamsi)</option>
 						</select>
@@ -284,8 +303,11 @@
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/theme.js"></script>
 <script src="assets/js/clock.js"></script>
+<script src="assets/js/roster-data.js"></script>
 <script src="assets/js/app.js"></script>
 <script>
+	var CURRENT_TEACHER_ID = 'jane'; // this settings page always represents Jane Doe's logged-in teacher view
+
 	function currentRole() {
 		var params = new URLSearchParams( window.location.search );
 		var r = params.get( 'role' );
@@ -314,13 +336,21 @@
 		document.getElementById( 'field-email' ).value = user.email;
 		document.getElementById( 'field-phone' ).value = user.phone;
 		document.getElementById( 'field-gender' ).value = user.gender;
+
+		document.getElementById( 'teaching-profile-card' ).style.display = role === 'teacher' ? 'block' : 'none';
+		if ( role === 'teacher' ) {
+			var teacher = window.mahtelaRoster.loadTeachers()[ CURRENT_TEACHER_ID ];
+			if ( teacher ) {
+				document.getElementById( 'field-specialization' ).value = teacher.specialization || '';
+				document.getElementById( 'field-bio' ).value = teacher.bio || '';
+			}
+		}
 	}
 
 	renderProfile();
 
 	function renderCalendarField() {
-		var lang = window.mahtelaI18n.currentLang();
-		document.getElementById( 'field-calendar' ).value = window.mahtelaCalendar.resolve( lang );
+		document.getElementById( 'field-calendar' ).value = window.mahtelaCalendar.getPreference() || 'auto';
 	}
 	renderCalendarField();
 	document.addEventListener( 'mahtela:langchange', renderCalendarField );
@@ -357,6 +387,17 @@
 		e.preventDefault();
 		if ( ! window.mahtelaValidate.validateForm( e.target ) ) { return; }
 		mahtelaToast( 'Profile details saved.' );
+	} );
+
+	document.getElementById( 'teaching-profile-form' ).addEventListener( 'submit', function ( e ) {
+		e.preventDefault();
+		var teachers = window.mahtelaRoster.loadTeachers();
+		var teacher = teachers[ CURRENT_TEACHER_ID ];
+		if ( ! teacher ) { return; }
+		teacher.specialization = document.getElementById( 'field-specialization' ).value.trim();
+		teacher.bio = document.getElementById( 'field-bio' ).value.trim();
+		window.mahtelaRoster.saveTeachers( teachers );
+		mahtelaToast( window.mahtelaI18n.dict.settings_teaching_profile_saved[ window.mahtelaI18n.currentLang() ] );
 	} );
 
 	document.getElementById( 'password-form' ).addEventListener( 'submit', function ( e ) {

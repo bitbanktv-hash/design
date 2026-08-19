@@ -1,8 +1,39 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.14.0 — Current
+v1.15.0 — Current
 ------------------
+- Fixed a Persian-calendar bug: dates could get permanently stuck
+  showing Gregorian even with the language set to Persian. The
+  underlying date logic was already correct, but there was no way to
+  reset the calendar preference back to "follow language" once
+  someone had explicitly picked Gregorian (including just while
+  testing the setting) -- there were only two fixed options, no way
+  back to auto. Added an "Automatic (follows language)" option.
+  Reproduced the exact reported bug, then verified the fix resolves
+  it.
+- Fixed the admin panel's "Teacher's Students" modal: a shared table
+  style meant for wide, many-column tables was forcing this narrow
+  3-column modal table to overflow and stretch its columns apart
+  awkwardly. Scoped fix that only touches this modal.
+- Manage Session now lets a teacher actually correct a mis-booked
+  session's date, time, and duration, instead of only being able to
+  cancel it -- in both the weekly schedule view and the per-student
+  detail view. The schedule view also re-checks for a double-booking
+  conflict when rescheduling, using the same check as booking a new
+  session. Verified both the happy path and that a genuine conflict
+  correctly blocks the save.
+- New: teachers can set a specialization/language-taught and a short
+  bio in Settings > Teaching Profile. Students now see their actual
+  teacher's name and specialization on their panel (previously
+  hardcoded "Jane Doe · English" regardless of who their real teacher
+  was), and can click through to a profile popup showing photo, name,
+  specialization, email, phone, and bio, using the app's existing
+  dark + blurred modal backdrop. Verified end-to-end: a teacher's
+  edit in Settings shows up correctly on the student's side.
+
+v1.14.0
+--------
 - Fixed a severe bug: the teacher's weekly schedule opened completely
   blank -- no calendar at all. Root cause found via actually executing
   the page's script (not just checking syntax): the schedule already

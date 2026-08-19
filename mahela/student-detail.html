@@ -80,7 +80,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.14.0</div>
+			<div class="sidebar__version">MahFLA v1.15.0</div>
 		</div>
 	</aside>
 
@@ -410,7 +410,22 @@
 			<h2 class="modal-box__title" data-i18n="modal_manage_session_title">Manage Session</h2>
 			<button type="button" class="modal-box__close" data-modal-close aria-label="Close">&times;</button>
 		</div>
-		<p style="font-size:13px; color:var(--ink-soft); margin-top:-10px; margin-bottom:18px;" id="manage-session-datetime">—</p>
+		<div class="form-grid">
+			<div class="form-field">
+				<label for="manage-session-date" data-i18n="field_date">Date</label>
+				<input type="date" id="manage-session-date">
+			</div>
+			<div class="form-field">
+				<label for="manage-session-time-input" data-i18n="field_time">Time</label>
+				<input type="time" id="manage-session-time-input">
+			</div>
+		</div>
+		<div class="form-field">
+			<label for="manage-session-duration" data-i18n="field_duration">Duration</label>
+			<input type="text" id="manage-session-duration" dir="ltr" placeholder="1:00" data-i18n-ph="duration_ph">
+			<span style="font-size:11px; color:var(--ink-faint); margin-top:4px; display:block;" data-i18n="duration_format_hint">Format: hours:minutes, e.g. 1:15</span>
+			<span id="manage-session-duration-error" class="form-field__error" data-i18n="duration_invalid_error">Enter a valid duration like 1:15.</span>
+		</div>
 
 		<div class="form-field">
 			<label for="manage-session-classtype" data-i18n="class_type">Class Type</label>
@@ -718,9 +733,10 @@
 		pendingStatus = s.status;
 		pendingChargeApplied = s.chargeApplied;
 
-		var lang = window.mahtelaI18n.currentLang();
-		var cal = window.mahtelaCalendar.resolve( lang );
-		document.getElementById( 'manage-session-datetime' ).textContent = window.mahtelaCalendar.formatScheduleDate( s.date, s.time, lang, cal );
+		document.getElementById( 'manage-session-date' ).value = s.date;
+		document.getElementById( 'manage-session-time-input' ).value = s.time;
+		document.getElementById( 'manage-session-duration' ).value = window.mahtelaData.formatDurationHHMM( s.duration );
+		document.getElementById( 'manage-session-duration' ).closest( '.form-field' ).classList.remove( 'has-error' );
 		document.getElementById( 'manage-session-classtype' ).value = s.classType;
 		document.getElementById( 'manage-session-note' ).value = s.note || '';
 		document.getElementById( 'manage-session-cancel-reason' ).value = s.cancelReason || 'teacher';
@@ -777,6 +793,17 @@
 	document.getElementById( 'manage-session-save-btn' ).addEventListener( 'click', function () {
 		var s = findSession( activeSessionId );
 		if ( ! s ) { return; }
+
+		var newDate = document.getElementById( 'manage-session-date' ).value;
+		var newTime = document.getElementById( 'manage-session-time-input' ).value;
+		var durationField = document.getElementById( 'manage-session-duration' );
+		var newDuration = window.mahtelaData.parseDurationHHMM( durationField.value );
+		durationField.closest( '.form-field' ).classList.toggle( 'has-error', newDuration === null );
+		if ( ! newDate || ! newTime || newDuration === null ) { return; }
+
+		s.date = newDate;
+		s.time = newTime;
+		s.duration = newDuration;
 		s.classType = document.getElementById( 'manage-session-classtype' ).value;
 		s.status = pendingStatus;
 		s.note = document.getElementById( 'manage-session-note' ).value.trim();

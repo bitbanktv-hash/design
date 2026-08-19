@@ -127,8 +127,13 @@
 	}
 
 	function setCalendarPref( value ) {
-		if ( value !== 'jalali' && value !== 'gregorian' ) { return; }
-		localStorage.setItem( CALENDAR_STORAGE_KEY, value );
+		if ( value === 'auto' ) {
+			localStorage.removeItem( CALENDAR_STORAGE_KEY );
+		} else if ( value === 'jalali' || value === 'gregorian' ) {
+			localStorage.setItem( CALENDAR_STORAGE_KEY, value );
+		} else {
+			return;
+		}
 		updateClock();
 		applyScheduleDates();
 		document.dispatchEvent( new CustomEvent( 'mahtela:calendarchange', { detail: { calendar: value } } ) );
