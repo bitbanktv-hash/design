@@ -1,8 +1,28 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.18.0 — Current
+v1.18.1 — Current
 ------------------
+- Fixed a real, reported bug: a student's own panel had its
+  gender-based color hardcoded directly in the HTML ("female"),
+  completely disconnected from the actual student record -- meaning
+  it could never reflect a gender change no matter what, not even
+  after a save and a fresh reload. Every other page that colors by
+  student gender (the teacher's own view of a student, the schedule
+  grid, the student list, the admin table) already read this live
+  from the real record, so this was specific to the student's own
+  panel. Verified end-to-end: change a student's gender via the
+  teacher's Edit Details, then open that same student's own panel
+  fresh -- it now correctly shows the updated color.
+- Gender labels in Persian now read "زن/دختر" and "مرد/پسر" instead
+  of just "زن"/"مرد" or "دختر"/"پسر" -- since students span a wide
+  age range, a single label implying only "adult woman" or only
+  "girl" (and the same for the male side) didn't fit everyone.
+  Updated everywhere this appears: Edit Details, Add Student, and
+  the shared account settings form.
+
+v1.18.0
+--------
 - New: a brand-new student's Schedule tab now shows a proper "No
   sessions yet" message instead of a blank area with nothing in it,
   which looked broken. Verified with a genuinely fresh student
