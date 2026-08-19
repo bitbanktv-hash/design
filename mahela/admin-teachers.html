@@ -54,7 +54,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.15.1</div>
+			<div class="sidebar__version">MahFLA v1.16.0</div>
 		</div>
 	</aside>
 
@@ -147,6 +147,62 @@
 				<button type="submit" class="btn btn--primary" data-i18n="btn_save">Save</button>
 			</div>
 		</form>
+	</div>
+</div>
+
+<!-- Edit Teacher modal -->
+<div class="modal-overlay" id="modal-edit-teacher">
+	<div class="modal-box">
+		<div class="modal-box__head">
+			<h2 class="modal-box__title" data-i18n="modal_edit_teacher_title">Edit Teacher</h2>
+			<button type="button" class="modal-box__close" data-modal-close aria-label="Close">&times;</button>
+		</div>
+		<form id="edit-teacher-form">
+			<div class="form-field">
+				<label for="edit-teacher-full-name"><span class="required-mark" aria-hidden="true">*</span> <span data-i18n="settings_full_name">Full Name</span></label>
+				<input id="edit-teacher-full-name" type="text" required>
+			</div>
+			<div class="form-grid">
+				<div class="form-field">
+					<label for="edit-teacher-email"><span class="required-mark" aria-hidden="true">*</span> <span data-i18n="settings_email">Email</span></label>
+					<input id="edit-teacher-email" type="email" data-validate="email" required>
+					<span class="form-field__error" data-i18n="validate_email_error">Enter a valid email address.</span>
+				</div>
+				<div class="form-field">
+					<label for="edit-teacher-mobile-number"><span class="required-mark" aria-hidden="true">*</span> <span data-i18n="settings_phone">Mobile Number</span></label>
+					<input id="edit-teacher-mobile-number" type="tel" data-validate="phone" dir="ltr" required>
+					<span class="form-field__error" data-i18n="validate_phone_error">Enter a valid mobile number.</span>
+				</div>
+			</div>
+			<div class="form-field">
+				<label data-i18n="settings_specialization" for="edit-teacher-specialization">Specialization / Language Taught</label>
+				<input id="edit-teacher-specialization" type="text" placeholder="e.g. English, Spanish">
+			</div>
+			<div class="form-field" style="margin-bottom:0;">
+				<label data-i18n="settings_bio" for="edit-teacher-bio">Short Bio</label>
+				<textarea id="edit-teacher-bio" rows="3"></textarea>
+			</div>
+			<div class="form-actions">
+				<button type="button" class="btn btn--ghost" data-modal-close data-i18n="btn_cancel">Cancel</button>
+				<button type="submit" class="btn btn--primary" data-i18n="btn_save">Save</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- Delete Teacher confirmation modal -->
+<div class="modal-overlay" id="modal-delete-teacher">
+	<div class="modal-box" style="max-width:420px;">
+		<div class="modal-box__head">
+			<h2 class="modal-box__title" data-i18n="modal_delete_teacher_title">Delete Teacher?</h2>
+			<button type="button" class="modal-box__close" data-modal-close aria-label="Close">&times;</button>
+		</div>
+		<p style="font-size:13.5px; color:var(--ink-soft); line-height:1.6;" id="delete-teacher-message">—</p>
+		<div class="form-notice form-notice--error" style="margin-top:14px;" data-i18n="modal_delete_teacher_warning">This can't be undone. The teacher's account will be permanently removed.</div>
+		<div class="form-actions" style="margin-top:20px;">
+			<button type="button" class="btn btn--ghost" data-modal-close data-i18n="btn_cancel">Cancel</button>
+			<button type="button" class="btn btn--primary" id="confirm-delete-teacher-btn" style="background:#C0453F;" data-i18n="btn_delete">Delete</button>
+		</div>
 	</div>
 </div>
 
@@ -305,10 +361,12 @@
 				'<td>' + new Intl.NumberFormat( lang === 'fa' ? 'fa-IR' : 'en-US' ).format( t.students ) + '</td>' +
 				'<td>' + statusBadge( t.status ) + '</td>' +
 				'<td><div class="data-table__actions">' +
+					'<button type="button" class="data-table__icon-btn" data-action="edit-teacher" data-id="' + t.id + '" aria-label="' + window.mahtelaI18n.dict.action_edit[ lang ] + '" title="' + window.mahtelaI18n.dict.action_edit[ lang ] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg></button>' +
 					'<button type="button" class="data-table__icon-btn" data-action="view-students" data-id="' + t.id + '" aria-label="' + window.mahtelaI18n.dict.action_view_students[ lang ] + '" title="' + window.mahtelaI18n.dict.action_view_students[ lang ] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></button>' +
 					'<button type="button" class="data-table__icon-btn" data-action="permissions" data-id="' + t.id + '" aria-label="' + window.mahtelaI18n.dict.action_permissions[ lang ] + '" title="' + window.mahtelaI18n.dict.action_permissions[ lang ] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87 2 2 0 1 1-2.83 2.83 1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 9 19.35a1.7 1.7 0 0 0-1.87.34 2 2 0 1 1-2.83-2.83A1.7 1.7 0 0 0 4.65 15a1.7 1.7 0 0 0-1.56-1.04H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.65 9a1.7 1.7 0 0 0-.34-1.87 2 2 0 1 1 2.83-2.83A1.7 1.7 0 0 0 9 4.65a1.7 1.7 0 0 0 1.04-1.56V3a2 2 0 0 1 4 0v.09A1.7 1.7 0 0 0 15 4.65a1.7 1.7 0 0 0 1.87-.34 2 2 0 1 1 2.83 2.83A1.7 1.7 0 0 0 19.35 9a1.7 1.7 0 0 0 1.56 1.04H21a2 2 0 0 1 0 4h-.09A1.7 1.7 0 0 0 19.4 15Z"/></svg></button>' +
 					'<button type="button" class="data-table__icon-btn" data-action="reset-password" data-id="' + t.id + '" aria-label="' + window.mahtelaI18n.dict.action_reset_password[ lang ] + '" title="' + window.mahtelaI18n.dict.action_reset_password[ lang ] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></button>' +
 					'<button type="button" class="data-table__icon-btn is-danger" data-action="toggle-suspend" data-id="' + t.id + '" aria-label="' + suspendLabel + '" title="' + suspendLabel + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 8l8 8"/></svg></button>' +
+					'<button type="button" class="data-table__icon-btn is-danger" data-action="delete-teacher" data-id="' + t.id + '" aria-label="' + window.mahtelaI18n.dict.action_delete[ lang ] + '" title="' + window.mahtelaI18n.dict.action_delete[ lang ] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg></button>' +
 				'</div></td>';
 			tbody.appendChild( tr );
 		} );
@@ -319,6 +377,8 @@
 	}
 
 	var activePermissionsTeacherId = null;
+	var activeEditTeacherId = null;
+	var activeDeleteTeacherId = null;
 
 	// Tracks which entity #modal-reset-password is currently open for, so
 	// one shared modal/form can reset either a teacher's or a (through the
@@ -346,7 +406,7 @@
 				'<td><div class="data-table__user"><span class="data-table__name">' + s.name + '</span></div></td>' +
 				'<td><span class="badge badge--accent">' + s.level + '</span></td>' +
 				'<td><div class="data-table__actions">' +
-					'<a href="student-detail.html?student=' + s.key + '" class="data-table__icon-btn" aria-label="' + window.mahtelaI18n.dict.action_view_profile[ lang ] + '" title="' + window.mahtelaI18n.dict.action_view_profile[ lang ] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg></a>' +
+					'<a href="student-detail.html?student=' + s.key + '&viewer=admin" class="data-table__icon-btn" aria-label="' + window.mahtelaI18n.dict.action_view_profile[ lang ] + '" title="' + window.mahtelaI18n.dict.action_view_profile[ lang ] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg></a>' +
 					'<button type="button" class="data-table__icon-btn" data-action="reset-student-password" data-key="' + s.key + '" aria-label="' + window.mahtelaI18n.dict.action_reset_password[ lang ] + '" title="' + window.mahtelaI18n.dict.action_reset_password[ lang ] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></button>' +
 				'</div></td>';
 			tbody.appendChild( tr );
@@ -373,6 +433,24 @@
 			document.getElementById( 'teacher-students-teacher-name' ).textContent = teacher.name + ' — ' + teacher.email;
 			renderTeacherStudents( id );
 			window.mahtelaModal.open( document.getElementById( 'modal-teacher-students' ), btn );
+		}
+
+		if ( action === 'edit-teacher' ) {
+			activeEditTeacherId = id;
+			document.getElementById( 'edit-teacher-full-name' ).value = teacher.name;
+			document.getElementById( 'edit-teacher-email' ).value = teacher.email;
+			document.getElementById( 'edit-teacher-mobile-number' ).value = teacher.phone;
+			document.getElementById( 'edit-teacher-specialization' ).value = teacher.specialization || '';
+			document.getElementById( 'edit-teacher-bio' ).value = teacher.bio || '';
+			window.mahtelaModal.open( document.getElementById( 'modal-edit-teacher' ), btn );
+		}
+
+		if ( action === 'delete-teacher' ) {
+			activeDeleteTeacherId = id;
+			var lang = window.mahtelaI18n.currentLang();
+			document.getElementById( 'delete-teacher-message' ).textContent =
+				window.mahtelaI18n.dict.delete_teacher_confirm_msg[ lang ] + ' ' + teacher.name + '?';
+			window.mahtelaModal.open( document.getElementById( 'modal-delete-teacher' ), btn );
 		}
 
 		if ( action === 'permissions' ) {
@@ -452,6 +530,42 @@
 		window.mahtelaModal.close( document.getElementById( 'modal-create-teacher' ) );
 		document.getElementById( 'create-teacher-form' ).reset();
 		mahtelaToast( 'Teacher account created.' );
+	} );
+
+	document.getElementById( 'edit-teacher-form' ).addEventListener( 'submit', function ( e ) {
+		e.preventDefault();
+		if ( ! window.mahtelaValidate.validateForm( e.target ) ) { return; }
+		var teachersObj = window.mahtelaRoster.loadTeachers();
+		var teacher = teachersObj[ activeEditTeacherId ];
+		if ( ! teacher ) { return; }
+
+		teacher.name = document.getElementById( 'edit-teacher-full-name' ).value.trim();
+		teacher.email = document.getElementById( 'edit-teacher-email' ).value.trim();
+		teacher.phone = document.getElementById( 'edit-teacher-mobile-number' ).value.trim();
+		teacher.specialization = document.getElementById( 'edit-teacher-specialization' ).value.trim();
+		teacher.bio = document.getElementById( 'edit-teacher-bio' ).value.trim();
+
+		window.mahtelaRoster.saveTeachers( teachersObj );
+		reloadRosterData();
+		renderTeachers();
+
+		window.mahtelaModal.close( document.getElementById( 'modal-edit-teacher' ) );
+		mahtelaToast( window.mahtelaI18n.dict.teacher_edited_toast[ window.mahtelaI18n.currentLang() ] );
+	} );
+
+	document.getElementById( 'confirm-delete-teacher-btn' ).addEventListener( 'click', function () {
+		var teachersObj = window.mahtelaRoster.loadTeachers();
+		var teacher = teachersObj[ activeDeleteTeacherId ];
+		if ( ! teacher ) { return; }
+		var deletedName = teacher.name;
+		delete teachersObj[ activeDeleteTeacherId ];
+
+		window.mahtelaRoster.saveTeachers( teachersObj );
+		reloadRosterData();
+		renderTeachers();
+
+		window.mahtelaModal.close( document.getElementById( 'modal-delete-teacher' ) );
+		mahtelaToast( deletedName + ' — ' + window.mahtelaI18n.dict.teacher_deleted_toast[ window.mahtelaI18n.currentLang() ] );
 	} );
 
 	document.addEventListener( 'mahtela:langchange', renderTeachers );

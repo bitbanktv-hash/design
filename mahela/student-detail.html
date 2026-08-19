@@ -45,7 +45,7 @@
 				<span class="sidebar__brand-tagline" data-i18n="brand_tagline">Mahta Foreign Language Academy</span>
 			</div>
 		</div>
-		<nav class="sidebar__nav">
+		<nav class="sidebar__nav" id="sidebar-nav-teacher">
 			<a href="teacher-dashboard.html" class="sidebar__link">
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
 				<span data-i18n="nav_dashboard">Teacher Dashboard</span>
@@ -68,19 +68,44 @@
 				<span data-i18n="nav_settings">Settings</span>
 			</a>
 		</nav>
+		<nav class="sidebar__nav" id="sidebar-nav-admin" style="display:none;">
+			<a href="admin-dashboard.html" class="sidebar__link">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="12" width="8" height="9" rx="2"/><rect x="3" y="14" width="8" height="7" rx="2"/></svg>
+				<span data-i18n="nav_admin_dashboard">Admin Dashboard</span>
+			</a>
+			<a href="admin-teachers.html" class="sidebar__link">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+				<span data-i18n="nav_admin_teachers">Teachers</span>
+			</a>
+			<a href="admin-students.html" class="sidebar__link is-active">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="12" width="8" height="9" rx="2"/><rect x="3" y="14" width="8" height="7" rx="2"/></svg>
+				<span data-i18n="nav_admin_students">Students</span>
+			</a>
+			<a href="settings.html?role=admin" class="sidebar__link">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 9 19.35a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.65 15a1.7 1.7 0 0 0-1.56-1.04H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.65 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.65a1.7 1.7 0 0 0 1.04-1.56V3a2 2 0 0 1 4 0v.09A1.7 1.7 0 0 0 15 4.65a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.35 9a1.7 1.7 0 0 0 1.56 1.04H21a2 2 0 0 1 0 4h-.09A1.7 1.7 0 0 0 19.4 15Z"/></svg>
+				<span data-i18n="nav_settings">Settings</span>
+			</a>
+		</nav>
 		<div class="sidebar__footer">
-			<div class="sidebar__user">
+			<div class="sidebar__user" id="sidebar-user-teacher">
 				<span class="sidebar__avatar" style="background: var(--brand); color:var(--c-ink);">JD</span>
 				<div class="sidebar__user-info">
 					<span class="sidebar__user-name">Jane Doe</span>
 					<span class="sidebar__user-role">English Teacher</span>
 				</div>
 			</div>
+			<div class="sidebar__user" id="sidebar-user-admin" style="display:none;">
+				<span class="sidebar__avatar" style="background: var(--c-ink); color:#fff;">SA</span>
+				<div class="sidebar__user-info">
+					<span class="sidebar__user-name">Site Admin</span>
+					<span class="sidebar__user-role" data-i18n="admin_super_admin">Super Admin</span>
+				</div>
+			</div>
 			<a href="login.html" class="sidebar__link">
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.15.1</div>
+			<div class="sidebar__version">MahFLA v1.16.0</div>
 		</div>
 	</aside>
 
@@ -99,7 +124,7 @@
 						<span class="clock-widget__date"><span data-clock-gregorian>—</span><span data-clock-sep> | </span><span data-clock-jalali>—</span></span>
 					</div>
 				</div>
-				<a href="teacher-dashboard.html" class="btn btn--soft btn--small hide-mobile">
+				<a href="teacher-dashboard.html" class="btn btn--soft btn--small hide-mobile" id="back-to-dashboard-link">
 					<svg class="icon-flip-rtl" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
 					<span data-i18n="nav_back_dashboard">Back to Dashboard</span>
 				</a>
@@ -526,6 +551,27 @@
 	 */
 	var STUDENTS = window.mahtelaRoster.loadStudents();
 	var SESSIONS = window.mahtelaData.loadSessions();
+
+	/**
+	 * This page is normally the teacher's own view of a student. When an
+	 * admin clicks through from admin-teachers.html or admin-students.html
+	 * to look at the same student record, they should see their own admin
+	 * chrome (sidebar, nav, colors) here too, not be dropped into "being"
+	 * the teacher -- previously the page always showed Jane Doe's sidebar
+	 * regardless of who was actually looking at it.
+	 */
+	var VIEWER_ROLE = new URLSearchParams( window.location.search ).get( 'viewer' ) === 'admin' ? 'admin' : 'teacher';
+
+	function applyViewerChrome() {
+		if ( VIEWER_ROLE !== 'admin' ) { return; }
+		document.documentElement.setAttribute( 'data-role', 'admin' );
+		document.getElementById( 'sidebar-nav-teacher' ).style.display = 'none';
+		document.getElementById( 'sidebar-nav-admin' ).style.display = '';
+		document.getElementById( 'sidebar-user-teacher' ).style.display = 'none';
+		document.getElementById( 'sidebar-user-admin' ).style.display = '';
+		document.getElementById( 'back-to-dashboard-link' ).setAttribute( 'href', 'admin-students.html' );
+	}
+	applyViewerChrome();
 
 	function currentStudentKey() {
 		var params = new URLSearchParams( window.location.search );

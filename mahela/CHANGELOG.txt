@@ -1,8 +1,47 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.15.1 — Current
+v1.16.0 — Current
 ------------------
+- Admin can now edit and delete teacher accounts -- previously the
+  admin panel only allowed suspend/reactivate, permissions, and
+  password reset, with no way to correct a teacher's name/email/phone
+  or remove an account entirely. Added Edit and Delete actions to
+  each teacher row, with a proper confirmation step before deleting
+  (not a raw browser confirm() -- a real modal matching the rest of
+  the app). Verified end-to-end: editing saves correctly, deleting
+  removes only that teacher and leaves everyone else untouched, and
+  confirmed no other page crashes if a student's assigned teacher no
+  longer exists (the lookups already handled that gracefully).
+- Fixed the admin panel dropping straight into the teacher's own
+  view when clicking through to a student's profile -- from either
+  Admin > Students or Admin > Teachers > a teacher's student list,
+  the admin previously saw Jane Doe's own sidebar, colors, and nav,
+  as if they'd become her. student-detail.html now detects who's
+  actually viewing it and shows proper admin chrome (admin sidebar,
+  admin nav, "Site Admin" identity, admin's own color) when reached
+  from the admin panel, while the teacher's own experience is
+  completely unchanged when reached normally. While wiring the two
+  admin-panel links to signal this, caught and fixed a mistake in my
+  own edit before it shipped -- a dropped opening quote that would
+  have broken both pages' student tables -- via the same validation
+  pass this project always runs before any push.
+- Investigated a reported date bug ("Student Since" showing Gregorian
+  in Persian) in depth: reproduced the exact symptom, traced it to a
+  leftover explicit "Gregorian" calendar preference from testing
+  before the "Automatic" option existed (added last version) --
+  confirmed the underlying code is correct in the default state.
+  Additionally wrote a script that loads every page in Persian and
+  scans all rendered dates for any Gregorian leakage; found one false
+  positive (an artifact of concatenating adjacent elements' text
+  without the whitespace a real render would have) and no other
+  issues.
+- Re-ran the full 13-page load audit and all 22 interaction tests
+  from the previous pass after every change in this version -- all
+  still pass, confirming no regressions.
+
+v1.15.1
+--------
 - Full-project audit at the user's request: ran every page through a
   real script execution (not just syntax checking) for the first
   time as a batch, rather than testing individual functions in

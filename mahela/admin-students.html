@@ -54,7 +54,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.15.1</div>
+			<div class="sidebar__version">MahFLA v1.16.0</div>
 		</div>
 	</aside>
 
@@ -181,7 +181,7 @@
 				'<td dir="ltr" style="text-align:end;">' + s.phone + '</td>' +
 				'<td><span class="badge badge--accent">' + s.level + '</span></td>' +
 				'<td><div class="data-table__actions">' +
-					'<a href="student-detail.html?student=' + s.key + '" class="data-table__icon-btn" aria-label="' + window.mahtelaI18n.dict.action_view_profile[ lang ] + '" title="' + window.mahtelaI18n.dict.action_view_profile[ lang ] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg></a>' +
+					'<a href="student-detail.html?student=' + s.key + '&viewer=admin" class="data-table__icon-btn" aria-label="' + window.mahtelaI18n.dict.action_view_profile[ lang ] + '" title="' + window.mahtelaI18n.dict.action_view_profile[ lang ] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg></a>' +
 					'<button type="button" class="data-table__icon-btn" data-action="reset-password" data-name="' + s.name + '" data-email="' + s.email + '" aria-label="' + window.mahtelaI18n.dict.action_reset_password[ lang ] + '" title="' + window.mahtelaI18n.dict.action_reset_password[ lang ] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></button>' +
 				'</div></td>';
 			tbody.appendChild( tr );
