@@ -1,8 +1,36 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.16.0 — Current
+v1.17.0 — Current
 ------------------
+- Settlement flow now has a real middle state. Previously "Request
+  Settlement" sent a message but never recorded anything on the
+  sessions themselves, so there was no way to see afterward which
+  ones had already been asked about. Clicking it now flags the
+  selected sessions, and each row in the unsettled list shows a
+  "Settlement request sent" badge until the teacher actually settles
+  it, at which point the badge clears and it moves to settled.
+- Each unsettled session row now clearly shows whether it was Held or
+  Cancelled, and for a cancelled-and-charged session, exactly which
+  reason applied (student cancelled vs. no-show) -- previously this
+  required opening Manage Session to check.
+- New: profile photo upload with real cropping and validation, for
+  teacher, student, and admin. The upload button existed before but
+  did nothing real -- no validation, and the "preview" was never
+  actually saved, so it vanished on refresh. Now: real file-type and
+  size checks (JPEG/PNG/WEBP, 5MB cap, 200x200px minimum, each with
+  its own clear error message), a drag-and-zoom circular crop tool,
+  and persistence tied to each role's actual data record. While
+  building this, caught and fixed a real crash: the code that shows
+  the current photo ran before the variable holding a reference to it
+  was set up, which would have broken every load of the Settings page
+  for every role. Verified all three roles both with and without a
+  saved photo after the fix.
+- Full project-wide validation (syntax, tag balance, CSS, translation
+  coverage, element references) run clean before this push.
+
+v1.16.0
+--------
 - Admin can now edit and delete teacher accounts -- previously the
   admin panel only allowed suspend/reactivate, permissions, and
   password reset, with no way to correct a teacher's name/email/phone

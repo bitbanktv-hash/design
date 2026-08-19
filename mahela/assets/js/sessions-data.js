@@ -22,35 +22,35 @@
 
 	var DEFAULT_SESSIONS = [
 		// Elena -- upcoming, held, and one student-cancelled (no charge)
-		{ id: 's1',  date: '2026-08-19', time: '17:00', duration: 60, studentKey: 'elena',  classType: 'in-person', status: 'scheduled', cancelReason: null, chargeApplied: null, note: '', settled: false },
-		{ id: 's5',  date: '2026-08-12', time: '17:00', duration: 60, studentKey: 'elena',  classType: 'in-person', status: 'held',      cancelReason: null, chargeApplied: null, note: 'Great progress on past tense today.', settled: false },
-		{ id: 's6',  date: '2026-08-05', time: '17:00', duration: 60, studentKey: 'elena',  classType: 'online',    status: 'held',      cancelReason: null, chargeApplied: null, note: '', settled: false },
-		{ id: 's7',  date: '2026-07-29', time: '17:00', duration: 60, studentKey: 'elena',  classType: 'in-person', status: 'cancelled', cancelReason: 'student', chargeApplied: false, note: '', settled: false },
-		{ id: 's8',  date: '2026-07-22', time: '17:00', duration: 60, studentKey: 'elena',  classType: 'in-person', status: 'held',      cancelReason: null, chargeApplied: null, note: '', settled: false },
+		{ id: 's1',  date: '2026-08-19', time: '17:00', duration: 60, studentKey: 'elena',  classType: 'in-person', status: 'scheduled', cancelReason: null, chargeApplied: null, note: '', settled: false, settlementRequested: false },
+		{ id: 's5',  date: '2026-08-12', time: '17:00', duration: 60, studentKey: 'elena',  classType: 'in-person', status: 'held',      cancelReason: null, chargeApplied: null, note: 'Great progress on past tense today.', settled: false, settlementRequested: false },
+		{ id: 's6',  date: '2026-08-05', time: '17:00', duration: 60, studentKey: 'elena',  classType: 'online',    status: 'held',      cancelReason: null, chargeApplied: null, note: '', settled: false, settlementRequested: false },
+		{ id: 's7',  date: '2026-07-29', time: '17:00', duration: 60, studentKey: 'elena',  classType: 'in-person', status: 'cancelled', cancelReason: 'student', chargeApplied: false, note: '', settled: false, settlementRequested: false },
+		{ id: 's8',  date: '2026-07-22', time: '17:00', duration: 60, studentKey: 'elena',  classType: 'in-person', status: 'held',      cancelReason: null, chargeApplied: null, note: '', settled: false, settlementRequested: false },
 
 		// Daniel -- upcoming, held, and a teacher-cancelled example (never charged)
-		{ id: 's2',  date: '2026-08-20', time: '10:00', duration: 45, studentKey: 'daniel', classType: 'online',    status: 'scheduled', cancelReason: null, chargeApplied: null, note: '', settled: false },
-		{ id: 's9',  date: '2026-08-13', time: '10:00', duration: 45, studentKey: 'daniel', classType: 'online',    status: 'held',      cancelReason: null, chargeApplied: null, note: '', settled: false },
-		{ id: 's10', date: '2026-08-06', time: '10:00', duration: 45, studentKey: 'daniel', classType: 'online',    status: 'held',      cancelReason: null, chargeApplied: null, note: 'Needs more practice with irregular verbs.', settled: false },
-		{ id: 's11', date: '2026-07-30', time: '10:00', duration: 45, studentKey: 'daniel', classType: 'online',    status: 'cancelled', cancelReason: 'teacher', chargeApplied: false, note: '', settled: false },
+		{ id: 's2',  date: '2026-08-20', time: '10:00', duration: 45, studentKey: 'daniel', classType: 'online',    status: 'scheduled', cancelReason: null, chargeApplied: null, note: '', settled: false, settlementRequested: false },
+		{ id: 's9',  date: '2026-08-13', time: '10:00', duration: 45, studentKey: 'daniel', classType: 'online',    status: 'held',      cancelReason: null, chargeApplied: null, note: '', settled: false, settlementRequested: false },
+		{ id: 's10', date: '2026-08-06', time: '10:00', duration: 45, studentKey: 'daniel', classType: 'online',    status: 'held',      cancelReason: null, chargeApplied: null, note: 'Needs more practice with irregular verbs.', settled: false, settlementRequested: false },
+		{ id: 's11', date: '2026-07-30', time: '10:00', duration: 45, studentKey: 'daniel', classType: 'online',    status: 'cancelled', cancelReason: 'teacher', chargeApplied: false, note: '', settled: false, settlementRequested: false },
 
 		// Sara -- previously had zero sessions at all; upcoming, held, and a no-show example (charged)
-		{ id: 's12', date: '2026-08-22', time: '19:00', duration: 60, studentKey: 'sara',   classType: 'in-person', status: 'scheduled', cancelReason: null, chargeApplied: null, note: '', settled: false },
-		{ id: 's13', date: '2026-08-15', time: '19:00', duration: 60, studentKey: 'sara',   classType: 'in-person', status: 'held',      cancelReason: null, chargeApplied: null, note: '', settled: false },
-		{ id: 's14', date: '2026-08-08', time: '19:00', duration: 60, studentKey: 'sara',   classType: 'online',    status: 'held',      cancelReason: null, chargeApplied: null, note: 'Essay structure much improved.', settled: false },
-		{ id: 's15', date: '2026-08-01', time: '19:00', duration: 60, studentKey: 'sara',   classType: 'in-person', status: 'cancelled', cancelReason: 'no-show', chargeApplied: true, note: '', settled: false },
+		{ id: 's12', date: '2026-08-22', time: '19:00', duration: 60, studentKey: 'sara',   classType: 'in-person', status: 'scheduled', cancelReason: null, chargeApplied: null, note: '', settled: false, settlementRequested: false },
+		{ id: 's13', date: '2026-08-15', time: '19:00', duration: 60, studentKey: 'sara',   classType: 'in-person', status: 'held',      cancelReason: null, chargeApplied: null, note: '', settled: false, settlementRequested: false },
+		{ id: 's14', date: '2026-08-08', time: '19:00', duration: 60, studentKey: 'sara',   classType: 'online',    status: 'held',      cancelReason: null, chargeApplied: null, note: 'Essay structure much improved.', settled: false, settlementRequested: false },
+		{ id: 's15', date: '2026-08-01', time: '19:00', duration: 60, studentKey: 'sara',   classType: 'in-person', status: 'cancelled', cancelReason: 'no-show', chargeApplied: true, note: '', settled: false, settlementRequested: false },
 
 		// Marco -- upcoming, held (one already settled, to test that filtering), and a student-cancelled example (charged)
-		{ id: 's3',  date: '2026-08-21', time: '19:30', duration: 60, studentKey: 'marco',  classType: 'in-person', status: 'scheduled', cancelReason: null, chargeApplied: null, note: '', settled: false },
-		{ id: 's16', date: '2026-08-14', time: '19:30', duration: 60, studentKey: 'marco',  classType: 'in-person', status: 'held',      cancelReason: null, chargeApplied: null, note: '', settled: false },
-		{ id: 's17', date: '2026-08-07', time: '19:30', duration: 60, studentKey: 'marco',  classType: 'in-person', status: 'held',      cancelReason: null, chargeApplied: null, note: '', settled: true },
-		{ id: 's18', date: '2026-07-31', time: '19:30', duration: 60, studentKey: 'marco',  classType: 'online',    status: 'cancelled', cancelReason: 'student', chargeApplied: true, note: '', settled: false },
+		{ id: 's3',  date: '2026-08-21', time: '19:30', duration: 60, studentKey: 'marco',  classType: 'in-person', status: 'scheduled', cancelReason: null, chargeApplied: null, note: '', settled: false, settlementRequested: false },
+		{ id: 's16', date: '2026-08-14', time: '19:30', duration: 60, studentKey: 'marco',  classType: 'in-person', status: 'held',      cancelReason: null, chargeApplied: null, note: '', settled: false, settlementRequested: false },
+		{ id: 's17', date: '2026-08-07', time: '19:30', duration: 60, studentKey: 'marco',  classType: 'in-person', status: 'held',      cancelReason: null, chargeApplied: null, note: '', settled: true, settlementRequested: false },
+		{ id: 's18', date: '2026-07-31', time: '19:30', duration: 60, studentKey: 'marco',  classType: 'online',    status: 'cancelled', cancelReason: 'student', chargeApplied: true, note: '', settled: false, settlementRequested: false },
 
 		// Yuki -- upcoming, held, and a student-cancelled example (no charge)
-		{ id: 's4',  date: '2026-08-24', time: '16:00', duration: 45, studentKey: 'yuki',   classType: 'online',    status: 'scheduled', cancelReason: null, chargeApplied: null, note: '', settled: false },
-		{ id: 's19', date: '2026-08-17', time: '16:00', duration: 45, studentKey: 'yuki',   classType: 'online',    status: 'held',      cancelReason: null, chargeApplied: null, note: '', settled: false },
-		{ id: 's20', date: '2026-08-10', time: '16:00', duration: 45, studentKey: 'yuki',   classType: 'online',    status: 'held',      cancelReason: null, chargeApplied: null, note: 'Good progress on listening comprehension.', settled: false },
-		{ id: 's21', date: '2026-08-03', time: '16:00', duration: 45, studentKey: 'yuki',   classType: 'online',    status: 'cancelled', cancelReason: 'student', chargeApplied: false, note: '', settled: false }
+		{ id: 's4',  date: '2026-08-24', time: '16:00', duration: 45, studentKey: 'yuki',   classType: 'online',    status: 'scheduled', cancelReason: null, chargeApplied: null, note: '', settled: false, settlementRequested: false },
+		{ id: 's19', date: '2026-08-17', time: '16:00', duration: 45, studentKey: 'yuki',   classType: 'online',    status: 'held',      cancelReason: null, chargeApplied: null, note: '', settled: false, settlementRequested: false },
+		{ id: 's20', date: '2026-08-10', time: '16:00', duration: 45, studentKey: 'yuki',   classType: 'online',    status: 'held',      cancelReason: null, chargeApplied: null, note: 'Good progress on listening comprehension.', settled: false, settlementRequested: false },
+		{ id: 's21', date: '2026-08-03', time: '16:00', duration: 45, studentKey: 'yuki',   classType: 'online',    status: 'cancelled', cancelReason: 'student', chargeApplied: false, note: '', settled: false, settlementRequested: false }
 	];
 
 	var DEFAULT_CONVERSATIONS = {
@@ -91,7 +91,7 @@
 		}
 	};
 
-	var SESSION_DEFAULTS = { classType: 'in-person', status: 'scheduled', cancelReason: null, chargeApplied: null, note: '', settled: false };
+	var SESSION_DEFAULTS = { classType: 'in-person', status: 'scheduled', cancelReason: null, chargeApplied: null, note: '', settled: false, settlementRequested: false };
 
 	function loadSessions() {
 		try {

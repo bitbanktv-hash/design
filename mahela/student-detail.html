@@ -105,7 +105,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.16.0</div>
+			<div class="sidebar__version">MahFLA v1.17.0</div>
 		</div>
 	</aside>
 
@@ -905,13 +905,27 @@
 		unsettled.sort( function ( a, b ) { return ( a.date + a.time ).localeCompare( b.date + b.time ); } ).forEach( function ( s ) {
 			var endMin = timeToMinutes( s.time ) + s.duration;
 			var endStr = pad2( Math.floor( endMin / 60 ) ) + ':' + pad2( endMin % 60 );
+
+			var statusText, statusClass = '';
+			if ( s.status === 'held' ) {
+				statusText = window.mahtelaI18n.dict.finance_status_held[ lang ];
+			} else {
+				var reasonKey = s.cancelReason === 'no-show' ? 'cancel_reason_noshow' : 'cancel_reason_student';
+				statusText = window.mahtelaI18n.dict.finance_status_cancelled[ lang ] + ' — ' + window.mahtelaI18n.dict[ reasonKey ][ lang ];
+				statusClass = ' session-row__sub--cancelled';
+			}
+
+			var requestedBadge = s.settlementRequested
+				? '<span class="settlement-requested-badge"><svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="3"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4Z"/></svg>' + window.mahtelaI18n.dict.finance_settlement_requested[ lang ] + '</span>'
+				: '';
+
 			var label = document.createElement( 'label' );
 			label.className = 'session-row settle-row';
 			label.innerHTML =
 				'<input type="checkbox" class="settle-checkbox" data-amount="' + student.rate + '" data-session-id="' + s.id + '" checked style="width:auto; margin-inline-end:6px;">' +
 				'<span class="session-row__date" data-date="' + s.date + '"><span class="session-row__date-day" data-date-part="day"></span><span class="session-row__date-month" data-date-part="month"></span></span>' +
-				'<span class="session-row__info"><span class="session-row__time">' + s.time + ' – ' + endStr + '</span><span class="session-row__sub" data-date="' + s.date + '"><span data-date-part="weekday"></span></span></span>' +
-				'<span class="session-row__actions">' + classTypeBadgeHTML( s.classType, lang ) + '<span data-currency="' + student.rate + '">—</span></span>';
+				'<span class="session-row__info"><span class="session-row__time">' + s.time + ' – ' + endStr + '</span><span class="session-row__sub' + statusClass + '" data-date="' + s.date + '"><span data-date-part="weekday"></span> · ' + statusText + '</span></span>' +
+				'<span class="session-row__actions">' + requestedBadge + classTypeBadgeHTML( s.classType, lang ) + '<span data-currency="' + student.rate + '">—</span></span>';
 			list.appendChild( label );
 		} );
 
@@ -954,7 +968,7 @@
 	document.getElementById( 'settle-selected-btn' ).addEventListener( 'click', function () {
 		var checked = document.querySelectorAll( '.settle-checkbox:checked' );
 		var ids = Array.prototype.map.call( checked, function ( cb ) { return cb.getAttribute( 'data-session-id' ); } );
-		SESSIONS.forEach( function ( s ) { if ( ids.indexOf( s.id ) !== -1 ) { s.settled = true; } } );
+		SESSIONS.forEach( function ( s ) { if ( ids.indexOf( s.id ) !== -1 ) { s.settled = true; s.settlementRequested = false; } } );
 		window.mahtelaData.saveSessions( SESSIONS );
 		mahtelaToast( ids.length + ' session(s) marked as settled.' );
 		renderFinanceTab();
@@ -974,7 +988,13 @@
 		var fullMessage = escapeHtml( customText ) + '<br><br><strong>' + summaryText + '</strong>';
 
 		window.mahtelaData.sendMessageTo( currentStudentKey(), fullMessage );
+
+		var ids = Array.prototype.map.call( checked, function ( cb ) { return cb.getAttribute( 'data-session-id' ); } );
+		SESSIONS.forEach( function ( s ) { if ( ids.indexOf( s.id ) !== -1 ) { s.settlementRequested = true; } } );
+		window.mahtelaData.saveSessions( SESSIONS );
+
 		mahtelaToast( window.mahtelaI18n.dict.settlement_sent_toast[ lang ] );
+		renderFinanceTab();
 	} );
 
 	document.addEventListener( 'mahtela:langchange', function () {

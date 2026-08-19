@@ -23,6 +23,19 @@
 	.photo-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 	.settings-section-title { font-size: 16px; margin-bottom: 4px; }
 	.settings-section-sub { font-size: 13px; margin-bottom: 20px; }
+	.crop-stage {
+		position: relative; width: 100%; max-width: 340px; margin: 0 auto;
+		background: #111; border-radius: var(--radius-md); overflow: hidden;
+		display: flex; align-items: center; justify-content: center;
+		user-select: none; touch-action: none;
+	}
+	.crop-stage img { display: block; max-width: 100%; height: auto; pointer-events: none; }
+	.crop-box {
+		position: absolute; border: 2px solid #fff; box-shadow: 0 0 0 9999px rgba(0,0,0,0.55);
+		border-radius: 50%; cursor: move;
+	}
+	.photo-error { color: #C0453F; font-size: 12.5px; margin-top: 8px; display: none; }
+	.photo-error.is-visible { display: block; }
 </style>
 </head>
 <body>
@@ -74,7 +87,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.16.0</div>
+			<div class="sidebar__version">MahFLA v1.17.0</div>
 		</div>
 	</aside>
 
@@ -114,7 +127,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.16.0</div>
+			<div class="sidebar__version">MahFLA v1.17.0</div>
 		</div>
 	</aside>
 
@@ -157,7 +170,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.16.0</div>
+			<div class="sidebar__version">MahFLA v1.17.0</div>
 		</div>
 	</aside>
 
@@ -202,6 +215,8 @@
 						<input type="file" id="photo-input" accept="image/*" style="display:none;">
 					</div>
 				</div>
+				<p class="photo-error" id="photo-error"></p>
+				<p style="font-size:11.5px; color:var(--ink-faint); margin-top:10px;" data-i18n="settings_photo_standard">JPEG, PNG or WEBP · up to 5MB · at least 200×200px.</p>
 			</div>
 
 			<div class="card" style="padding:28px; margin-bottom:20px; max-width:640px;">
@@ -300,6 +315,28 @@
 	</div>
 </div>
 
+<!-- Photo crop modal -->
+<div class="modal-overlay" id="modal-photo-crop">
+	<div class="modal-box" style="max-width:420px;">
+		<div class="modal-box__head">
+			<h2 class="modal-box__title" data-i18n="photo_crop_title">Adjust Your Photo</h2>
+			<button type="button" class="modal-box__close" data-modal-close aria-label="Close">&times;</button>
+		</div>
+		<div class="crop-stage" id="crop-stage">
+			<img id="crop-image" alt="">
+			<div class="crop-box" id="crop-box"></div>
+		</div>
+		<div class="form-field" style="margin-top:18px; margin-bottom:0;">
+			<label data-i18n="photo_crop_zoom">Zoom</label>
+			<input type="range" id="crop-zoom" min="0" max="100" value="0" style="width:100%;">
+		</div>
+		<div class="form-actions">
+			<button type="button" class="btn btn--ghost" data-modal-close data-i18n="btn_cancel">Cancel</button>
+			<button type="button" class="btn btn--primary" id="crop-apply-btn" data-i18n="photo_crop_apply">Apply</button>
+		</div>
+	</div>
+</div>
+
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/theme.js"></script>
 <script src="assets/js/clock.js"></script>
@@ -331,7 +368,7 @@
 		document.getElementById( 'sidebar-admin' ).style.display = role === 'admin' ? '' : 'none';
 		document.getElementById( 'profile-gender-scope' ).setAttribute( 'data-gender', user.gender );
 
-		document.getElementById( 'photo-preview' ).textContent = user.initials;
+		renderPhotoPreview();
 		document.getElementById( 'field-full-name' ).value = user.name;
 		document.getElementById( 'field-email' ).value = user.email;
 		document.getElementById( 'field-phone' ).value = user.phone;
@@ -346,6 +383,14 @@
 			}
 		}
 	}
+
+	var photoInput = document.getElementById( 'photo-input' );
+	var photoPreview = document.getElementById( 'photo-preview' );
+	var photoError = document.getElementById( 'photo-error' );
+	var cropImage = document.getElementById( 'crop-image' );
+	var cropStage = document.getElementById( 'crop-stage' );
+	var cropBoxEl = document.getElementById( 'crop-box' );
+	var cropZoom = document.getElementById( 'crop-zoom' );
 
 	renderProfile();
 
@@ -362,21 +407,192 @@
 		mahtelaToast( window.mahtelaI18n.dict.settings_calendar_saved[ lang ] );
 	} );
 
-	var photoInput = document.getElementById( 'photo-input' );
-	var photoPreview = document.getElementById( 'photo-preview' );
+	/**
+	 * Profile photo: validate -> crop -> persist. The crop UI shows the
+	 * full image at its natural display size, with a circular crop-box
+	 * overlay the user can drag to reposition and resize (via the zoom
+	 * slider, which shrinks/grows the box rather than panning the image
+	 * itself -- simpler to get right than a pan-and-zoom-the-image
+	 * approach, and just as effective for a single circular avatar crop).
+	 */
+	var MAX_PHOTO_BYTES = 5 * 1024 * 1024; // 5MB
+	var MIN_PHOTO_DIMENSION = 200; // px, on the shorter side
+	var OUTPUT_SIZE = 400; // final stored avatar is always a 400x400 square
+
+	var pendingNaturalWidth = 0, pendingNaturalHeight = 0;
+	var box = { x: 0, y: 0, size: 0 }; // in displayed-image px
+
+	function showPhotoError( key ) {
+		photoError.textContent = window.mahtelaI18n.dict[ key ][ window.mahtelaI18n.currentLang() ];
+		photoError.classList.add( 'is-visible' );
+	}
+	function clearPhotoError() {
+		photoError.classList.remove( 'is-visible' );
+	}
+
+	function getPersistedPhoto( role ) {
+		if ( role === 'teacher' ) {
+			var t = window.mahtelaRoster.loadTeachers()[ CURRENT_TEACHER_ID ];
+			return t ? t.photo : null;
+		}
+		if ( role === 'student' ) {
+			var s = window.mahtelaRoster.loadStudents()[ 'elena' ];
+			return s ? s.photo : null;
+		}
+		try { return localStorage.getItem( 'mahtela-admin-photo' ); } catch ( e ) { return null; }
+	}
+
+	function setPersistedPhoto( role, dataUrl ) {
+		if ( role === 'teacher' ) {
+			var teachers = window.mahtelaRoster.loadTeachers();
+			if ( teachers[ CURRENT_TEACHER_ID ] ) {
+				teachers[ CURRENT_TEACHER_ID ].photo = dataUrl;
+				window.mahtelaRoster.saveTeachers( teachers );
+			}
+			return;
+		}
+		if ( role === 'student' ) {
+			var students = window.mahtelaRoster.loadStudents();
+			if ( students.elena ) {
+				students.elena.photo = dataUrl;
+				window.mahtelaRoster.saveStudents( students );
+			}
+			return;
+		}
+		try {
+			if ( dataUrl ) { localStorage.setItem( 'mahtela-admin-photo', dataUrl ); }
+			else { localStorage.removeItem( 'mahtela-admin-photo' ); }
+		} catch ( e ) { /* ignore */ }
+	}
+
+	function renderPhotoPreview() {
+		var role = currentRole();
+		var photo = getPersistedPhoto( role );
+		photoPreview.innerHTML = photo ? '<img src="' + photo + '" alt="">' : USERS[ role ].initials;
+	}
+
 	document.getElementById( 'photo-upload-btn' ).addEventListener( 'click', function () { photoInput.click(); } );
+
 	photoInput.addEventListener( 'change', function () {
+		clearPhotoError();
 		var file = photoInput.files && photoInput.files[ 0 ];
+		photoInput.value = ''; // allow re-selecting the same file later
 		if ( ! file ) { return; }
+
+		if ( file.type.indexOf( 'image/' ) !== 0 ) {
+			showPhotoError( 'photo_error_type' );
+			return;
+		}
+		if ( file.size > MAX_PHOTO_BYTES ) {
+			showPhotoError( 'photo_error_size' );
+			return;
+		}
+
 		var reader = new FileReader();
 		reader.onload = function ( e ) {
-			photoPreview.innerHTML = '<img src="' + e.target.result + '" alt="">';
+			var img = new Image();
+			img.onload = function () {
+				if ( img.naturalWidth < MIN_PHOTO_DIMENSION || img.naturalHeight < MIN_PHOTO_DIMENSION ) {
+					showPhotoError( 'photo_error_dimensions' );
+					return;
+				}
+				pendingNaturalWidth = img.naturalWidth;
+				pendingNaturalHeight = img.naturalHeight;
+				cropImage.src = e.target.result;
+				window.mahtelaModal.open( document.getElementById( 'modal-photo-crop' ), document.getElementById( 'photo-upload-btn' ) );
+			};
+			img.onerror = function () { showPhotoError( 'photo_error_type' ); };
+			img.src = e.target.result;
 		};
+		reader.onerror = function () { showPhotoError( 'photo_error_type' ); };
 		reader.readAsDataURL( file );
 	} );
+
+	function displayedImageSize() {
+		var rect = cropImage.getBoundingClientRect();
+		return { width: rect.width, height: rect.height };
+	}
+
+	function clampBox() {
+		var d = displayedImageSize();
+		box.size = Math.min( box.size, d.width, d.height );
+		box.x = Math.max( 0, Math.min( box.x, d.width - box.size ) );
+		box.y = Math.max( 0, Math.min( box.y, d.height - box.size ) );
+	}
+
+	function paintBox() {
+		cropBoxEl.style.width = box.size + 'px';
+		cropBoxEl.style.height = box.size + 'px';
+		cropBoxEl.style.left = box.x + 'px';
+		cropBoxEl.style.top = box.y + 'px';
+	}
+
+	function initCropBox() {
+		// Runs after the image has actually rendered at its final displayed
+		// size (needs a frame -- naturalWidth is known immediately, but
+		// layout/getBoundingClientRect isn't reliable until paint).
+		requestAnimationFrame( function () {
+			var d = displayedImageSize();
+			var maxSize = Math.min( d.width, d.height );
+			box.size = maxSize;
+			box.x = ( d.width - box.size ) / 2;
+			box.y = ( d.height - box.size ) / 2;
+			cropZoom.value = 0;
+			paintBox();
+		} );
+	}
+	cropImage.addEventListener( 'load', initCropBox );
+
+	cropZoom.addEventListener( 'input', function () {
+		var d = displayedImageSize();
+		var maxSize = Math.min( d.width, d.height );
+		var minSize = maxSize * 0.3; // don't allow zooming in so far the crop is a few px
+		var t = cropZoom.value / 100; // 0 = no zoom (full box), 1 = max zoom (smallest box)
+		var cx = box.x + box.size / 2, cy = box.y + box.size / 2; // keep centered on current center
+		box.size = maxSize - t * ( maxSize - minSize );
+		box.x = cx - box.size / 2;
+		box.y = cy - box.size / 2;
+		clampBox();
+		paintBox();
+	} );
+
+	var dragState = null;
+	cropBoxEl.addEventListener( 'pointerdown', function ( e ) {
+		dragState = { startX: e.clientX, startY: e.clientY, boxX: box.x, boxY: box.y };
+		cropBoxEl.setPointerCapture( e.pointerId );
+	} );
+	cropBoxEl.addEventListener( 'pointermove', function ( e ) {
+		if ( ! dragState ) { return; }
+		box.x = dragState.boxX + ( e.clientX - dragState.startX );
+		box.y = dragState.boxY + ( e.clientY - dragState.startY );
+		clampBox();
+		paintBox();
+	} );
+	cropBoxEl.addEventListener( 'pointerup', function () { dragState = null; } );
+	cropBoxEl.addEventListener( 'pointercancel', function () { dragState = null; } );
+
+	document.getElementById( 'crop-apply-btn' ).addEventListener( 'click', function () {
+		var d = displayedImageSize();
+		var scale = pendingNaturalWidth / d.width; // displayed-px -> natural-px
+		var sx = box.x * scale, sy = box.y * scale, sSize = box.size * scale;
+
+		var canvas = document.createElement( 'canvas' );
+		canvas.width = OUTPUT_SIZE;
+		canvas.height = OUTPUT_SIZE;
+		var ctx = canvas.getContext( '2d' );
+		ctx.drawImage( cropImage, sx, sy, sSize, sSize, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE );
+		var dataUrl = canvas.toDataURL( 'image/jpeg', 0.85 );
+
+		setPersistedPhoto( currentRole(), dataUrl );
+		renderPhotoPreview();
+		window.mahtelaModal.close( document.getElementById( 'modal-photo-crop' ) );
+		mahtelaToast( window.mahtelaI18n.dict.photo_saved_toast[ window.mahtelaI18n.currentLang() ] );
+	} );
+
 	document.getElementById( 'photo-remove-btn' ).addEventListener( 'click', function () {
-		photoInput.value = '';
-		photoPreview.innerHTML = USERS[ currentRole() ].initials;
+		clearPhotoError();
+		setPersistedPhoto( currentRole(), null );
+		renderPhotoPreview();
 	} );
 
 	document.getElementById( 'field-gender' ).addEventListener( 'change', function ( e ) {
