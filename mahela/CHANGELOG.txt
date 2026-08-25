@@ -1,8 +1,26 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.18.1 — Current
+v1.18.2 — Current
 ------------------
+- Standardized every full Jalali date (year included) to a numeric,
+  zero-padded YYYY/MM/DD, e.g. "۱۴۰۵/۰۶/۲۸" -- previously this used
+  the month NAME (e.g. "۱۴۰۵/مرداد/۲۸"), per explicit request. Fixed
+  centrally in formatFullDate, so this correctly reached every place
+  it's used without touching each one individually: assessment
+  history dates, settlement period dates (both the student's own
+  panel and the teacher's view), the finance summary date, Student
+  Since, and the teacher schedule's week-range label. Verified
+  directly against all of these on real pages.
+  Left two other, intentionally different Jalali date formats
+  unchanged, since they're conversational rather than a standalone
+  full date and weren't what was being asked for: the schedule-row
+  weekday label (e.g. "چهارشنبه، ۲۸ مرداد", used once for the Book
+  Session time label) and the day/month spans shown separately in
+  session rows -- both still use the month name on purpose.
+
+v1.18.1
+--------
 - Fixed a real, reported bug: a student's own panel had its
   gender-based color hardcoded directly in the HTML ("female"),
   completely disconnected from the actual student record -- meaning

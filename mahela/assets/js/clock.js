@@ -439,16 +439,22 @@
 
 	/**
 	 * Standalone full date -- "Student since", a settlement period's start/
-	 * end date, etc (no weekday, no time). Jalali uses Year/Month/Day order
-	 * throughout the app (e.g. "۱۴۰۵/مرداد/۲۷"); Gregorian keeps the
-	 * conventional "Month Day, Year".
+	 * end date, etc (no weekday, no time). Jalali always uses numeric,
+	 * zero-padded Year/Month/Day (e.g. "۱۴۰۵/۰۶/۲۸"), per explicit request
+	 * -- not the month name used elsewhere (schedule-row weekday labels,
+	 * session-row day/month spans), which stay conversational on purpose.
 	 */
 	function formatFullDate( iso, lang, calendarOverride ) {
 		var calendar = calendarOverride || resolveCalendar( lang );
-		var parts = formatDatePieces( iso, lang, calendar );
 		if ( calendar === 'jalali' ) {
-			return parts.year + '/' + parts.month + '/' + parts.day;
+			var p = dateParts( iso );
+			var j = gregorianToJalali( p.y, p.m, p.d );
+			var y = lang === 'fa' ? toFaDigits( j.jy ) : String( j.jy );
+			var m = lang === 'fa' ? toFaDigits( pad( j.jm ) ) : pad( j.jm );
+			var d = lang === 'fa' ? toFaDigits( pad( j.jd ) ) : pad( j.jd );
+			return y + '/' + m + '/' + d;
 		}
+		var parts = formatDatePieces( iso, lang, calendar );
 		return lang === 'fa'
 			? parts.month + ' ' + parts.day + '، ' + parts.year
 			: parts.month + ' ' + parts.day + ', ' + parts.year;
