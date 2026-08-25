@@ -135,9 +135,9 @@
 		var daySel = document.createElement( 'select' );
 		var monthSel = document.createElement( 'select' );
 		var yearSel = document.createElement( 'select' );
-		[ daySel, monthSel, yearSel ].forEach( function ( el ) {
-			el.className = 'date-picker-field';
-		} );
+		daySel.className = 'date-picker-field date-picker-field--day';
+		monthSel.className = 'date-picker-field date-picker-field--month';
+		yearSel.className = 'date-picker-field date-picker-field--year';
 		container.innerHTML = '';
 		container.className = ( container.className ? container.className + ' ' : '' ) + 'date-picker-fields';
 		container.appendChild( daySel );
@@ -208,7 +208,7 @@
 			for ( var d = 1; d <= dc; d += 1 ) {
 				var dOpt = document.createElement( 'option' );
 				dOpt.value = d;
-				dOpt.textContent = d;
+				dOpt.textContent = currentLangSafe() === 'fa' ? toFaDigits( d ) : d;
 				if ( d === current.d ) { dOpt.selected = true; }
 				daySel.appendChild( dOpt );
 			}
@@ -226,7 +226,7 @@
 			years.forEach( function ( y ) {
 				var yOpt = document.createElement( 'option' );
 				yOpt.value = y;
-				yOpt.textContent = y;
+				yOpt.textContent = currentLangSafe() === 'fa' ? toFaDigits( y ) : y;
 				if ( y === current.y ) { yOpt.selected = true; }
 				yearSel.appendChild( yOpt );
 			} );
@@ -276,6 +276,99 @@
 
 		return {
 			getValue: isoFromCurrent,
+			setValue: setValue
+		};
+	}
+
+	/**
+	 * Native <input type="time"> shows a 12-hour AM/PM picker or a
+	 * 24-hour one depending on the visitor's browser/OS locale -- the
+	 * page has no way to force one or the other. This renders two
+	 * Hour/Minute <select> dropdowns instead, always 24-hour, with
+	 * digits shown in the active language's numeral style.
+	 *
+	 * container: a DOM element to render the two selects into.
+	 * options.initialValue: optional 'HH:MM' (24-hour) to start
+	 *   pre-filled.
+	 * options.onChange: called with the new 'HH:MM' string (or null
+	 *   while incomplete) whenever either select changes.
+	 * Returns { getValue(), setValue(hhmm) }.
+	 */
+	function createTimePicker( container, options ) {
+		options = options || {};
+		var onChange = options.onChange || function () {};
+		var hourSel = document.createElement( 'select' );
+		var minuteSel = document.createElement( 'select' );
+		hourSel.className = 'date-picker-field time-picker-field';
+		minuteSel.className = 'date-picker-field time-picker-field';
+		container.innerHTML = '';
+		container.className = ( container.className ? container.className + ' ' : '' ) + 'date-picker-fields time-picker-fields';
+		container.appendChild( hourSel );
+		var sep = document.createElement( 'span' );
+		sep.className = 'time-picker-sep';
+		sep.textContent = ':';
+		container.appendChild( sep );
+		container.appendChild( minuteSel );
+
+		var current = null; // { h, m }
+
+		function langNow() {
+			return window.mahtelaI18n ? window.mahtelaI18n.currentLang() : 'en';
+		}
+		function digits( n ) {
+			var s = pad( n );
+			return langNow() === 'fa' ? toFaDigits( s ) : s;
+		}
+
+		function render() {
+			if ( ! current ) { current = { h: 0, m: 0 }; }
+			hourSel.innerHTML = '';
+			for ( var h = 0; h < 24; h += 1 ) {
+				var hOpt = document.createElement( 'option' );
+				hOpt.value = h;
+				hOpt.textContent = digits( h );
+				if ( h === current.h ) { hOpt.selected = true; }
+				hourSel.appendChild( hOpt );
+			}
+			minuteSel.innerHTML = '';
+			for ( var m = 0; m < 60; m += 1 ) {
+				var mOpt = document.createElement( 'option' );
+				mOpt.value = m;
+				mOpt.textContent = digits( m );
+				if ( m === current.m ) { mOpt.selected = true; }
+				minuteSel.appendChild( mOpt );
+			}
+		}
+
+		function valueStr() {
+			if ( ! current ) { return null; }
+			return pad( current.h ) + ':' + pad( current.m );
+		}
+
+		function handleChange() {
+			current = { h: parseInt( hourSel.value, 10 ), m: parseInt( minuteSel.value, 10 ) };
+			onChange( valueStr() );
+		}
+		hourSel.addEventListener( 'change', handleChange );
+		minuteSel.addEventListener( 'change', handleChange );
+
+		function setValue( hhmm ) {
+			if ( ! hhmm ) { current = null; render(); return; }
+			var p = hhmm.split( ':' ).map( Number );
+			current = { h: p[ 0 ], m: p[ 1 ] };
+			render();
+		}
+
+		// Only the digit GLYPH style depends on language, not the
+		// underlying hour/minute values -- re-render to relabel, no
+		// value conversion needed (unlike the date picker's calendar
+		// switch).
+		document.addEventListener( 'mahtela:langchange', render );
+
+		if ( options.initialValue ) { setValue( options.initialValue ); } else { render(); }
+
+		return {
+			getValue: valueStr,
 			setValue: setValue
 		};
 	}
@@ -508,7 +601,8 @@
 		jalaliToGregorian: jalaliToGregorian,
 		jalaliMonthLength: jalaliMonthLength,
 		isLeapJalaliYear: isLeapJalaliYear,
-		createDatePicker: createDatePicker
+		createDatePicker: createDatePicker,
+		createTimePicker: createTimePicker
 	};
 
 	document.addEventListener( 'DOMContentLoaded', function () {

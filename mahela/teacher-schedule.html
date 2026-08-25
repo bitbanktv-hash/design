@@ -58,7 +58,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.18.2</div>
+			<div class="sidebar__version">MahFLA v1.19.0</div>
 		</div>
 	</aside>
 
@@ -165,15 +165,13 @@
 			<span id="details-student-name">—</span>
 		</p>
 
-		<div class="form-grid">
-			<div class="form-field">
-				<label for="details-date" data-i18n="field_date">Date</label>
-				<div id="details-date-picker"></div>
-			</div>
-			<div class="form-field">
-				<label for="details-time-input" data-i18n="field_time">Time</label>
-				<input type="time" id="details-time-input">
-			</div>
+		<div class="form-field">
+			<label data-i18n="field_date">Date</label>
+			<div id="details-date-picker"></div>
+		</div>
+		<div class="form-field">
+			<label data-i18n="field_time">Time</label>
+			<div id="details-time-picker"></div>
 		</div>
 		<div class="form-field">
 			<label for="details-duration" data-i18n="field_duration">Duration</label>
@@ -510,6 +508,7 @@
 	}
 
 	var detailsDatePicker = window.mahtelaCalendar.createDatePicker( document.getElementById( 'details-date-picker' ) );
+	var detailsTimePicker = window.mahtelaCalendar.createTimePicker( document.getElementById( 'details-time-picker' ) );
 
 	function openSessionDetails( sessionId ) {
 		var s = SESSIONS.filter( function ( x ) { return x.id === sessionId; } )[ 0 ];
@@ -518,7 +517,7 @@
 		activeSessionId = sessionId;
 		document.getElementById( 'details-student-name' ).textContent = STUDENTS[ s.studentKey ].name;
 		detailsDatePicker.setValue( s.date );
-		document.getElementById( 'details-time-input' ).value = s.time;
+		detailsTimePicker.setValue( s.time );
 		document.getElementById( 'details-duration' ).value = window.mahtelaData.formatDurationHHMM( s.duration );
 		document.getElementById( 'details-duration' ).closest( '.form-field' ).classList.remove( 'has-error' );
 		document.getElementById( 'details-conflict-error' ).style.display = 'none';
@@ -543,7 +542,7 @@
 		if ( ! s ) { return; }
 
 		var newDate = detailsDatePicker.getValue();
-		var newTime = document.getElementById( 'details-time-input' ).value;
+		var newTime = detailsTimePicker.getValue();
 		var durationField = document.getElementById( 'details-duration' );
 		var newDuration = window.mahtelaData.parseDurationHHMM( durationField.value );
 

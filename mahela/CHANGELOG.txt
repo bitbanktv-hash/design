@@ -1,8 +1,36 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.18.2 — Current
+v1.19.0 — Current
 ------------------
+- Fixed the garbled date display reported in Add Session (teacher
+  panel, per-student Schedule tab). Two real bugs, both fixed: the
+  day and year dropdowns were never converted to Persian digits even
+  in Persian mode (only the month was), and the three date dropdowns
+  were squeezed into half a form row shared with Time, leaving no
+  room for Jalali month names to actually display. Date and Time now
+  each get their own full-width row in all three places this picker
+  is used (Add Session and Manage Session on the student page,
+  Manage Session on teacher schedule).
+- Fixed the time input to always show 24-hour, regardless of the
+  visitor's browser/OS locale. Native <input type="time"> has the
+  exact same fundamental limitation as the date input fixed last
+  version -- its 12-hour-vs-24-hour display is controlled entirely by
+  the browser/OS, not by anything the page can set. Replaced it
+  everywhere with a real Hour/Minute picker built for this app,
+  always 24-hour, with digits in the active language's numeral style.
+  Verified directly that a late-night hour (23:45) round-trips
+  correctly with no hidden 12-hour conversion anywhere.
+- The Date/Time field labels are now properly translated ("تاریخ" /
+  "ساعت") instead of staying in English even in Persian mode.
+- Fixed the settlement-request default message: it read like a
+  general "here's your session summary" check-in, not a payment
+  request. Now clearly asks the student to arrange payment.
+- Full project-wide validation and the 13-page load audit both run
+  clean after every change in this version.
+
+v1.18.2
+--------
 - Standardized every full Jalali date (year included) to a numeric,
   zero-padded YYYY/MM/DD, e.g. "۱۴۰۵/۰۶/۲۸" -- previously this used
   the month NAME (e.g. "۱۴۰۵/مرداد/۲۸"), per explicit request. Fixed

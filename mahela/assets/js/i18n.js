@@ -288,7 +288,7 @@
 		modal_manage_session_title: { en: 'Manage Session', fa: 'مدیریت جلسه' },
 		session_updated_toast: { en: 'Session updated.', fa: 'جلسه به‌روزرسانی شد.' },
 		settlement_message_label: { en: 'Message', fa: 'پیام' },
-		settlement_message_default: { en: "Hi! Here's a summary of your recent sessions — let me know if you have any questions.", fa: 'سلام! این خلاصه‌ی جلسات اخیرته — اگه سوالی داشتی بگو.' },
+		settlement_message_default: { en: "Hi! You have a few unsettled sessions below — could you arrange payment when you get a chance? Thanks!", fa: 'سلام! چندتا جلسه‌ی تسویه‌نشده هست که پایین اومده — لطفاً هر وقت وقت کردی، هزینه‌شون رو واریز کن. ممنون!' },
 		settlement_summary_note: { en: 'Added automatically from your selection above.', fa: 'به‌صورت خودکار از انتخاب بالا اضافه می‌شه.' },
 		settlement_sent_toast: { en: 'Settlement request sent to the student.', fa: 'درخواست تسویه برای شاگرد ارسال شد.' },
 		settlement_select_first: { en: 'Select at least one session first.', fa: 'اول حداقل یه جلسه رو انتخاب کن.' },

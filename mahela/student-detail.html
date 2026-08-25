@@ -106,7 +106,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.18.2</div>
+			<div class="sidebar__version">MahFLA v1.19.0</div>
 		</div>
 	</aside>
 
@@ -322,7 +322,7 @@
 					<h3 style="font-size:15px; margin-bottom:4px;" data-i18n="finance_request_settlement">Request Settlement</h3>
 					<div class="form-field" style="margin-top:14px; margin-bottom:0;">
 						<label for="settlement-message" data-i18n="settlement_message_label">Message</label>
-						<textarea id="settlement-message" rows="3" data-i18n-ph="settlement_message_default" placeholder="Hi! Here's a summary of your recent sessions — let me know if you have any questions."></textarea>
+						<textarea id="settlement-message" rows="3" data-i18n-ph="settlement_message_default" placeholder="Hi! You have a few unsettled sessions below — could you arrange payment when you get a chance? Thanks!"></textarea>
 					</div>
 					<div class="settlement-summary-box">
 						<div>
@@ -404,10 +404,8 @@
 			<button type="button" class="modal-box__close" data-modal-close aria-label="Close">&times;</button>
 		</div>
 		<form id="add-session-form">
-			<div class="form-grid">
-				<div class="form-field"><label>Date</label><div id="student-detail-date-picker"></div></div>
-				<div class="form-field"><label for="student-detail-time">Time</label><input id="student-detail-time" type="time" required></div>
-			</div>
+			<div class="form-field"><label data-i18n="field_date">Date</label><div id="student-detail-date-picker"></div></div>
+			<div class="form-field"><label data-i18n="field_time">Time</label><div id="student-detail-time-picker"></div></div>
 			<div class="form-grid">
 				<div class="form-field">
 					<label data-i18n="field_duration" for="student-detail-field-session-duration">Duration</label>
@@ -438,15 +436,13 @@
 			<h2 class="modal-box__title" data-i18n="modal_manage_session_title">Manage Session</h2>
 			<button type="button" class="modal-box__close" data-modal-close aria-label="Close">&times;</button>
 		</div>
-		<div class="form-grid">
-			<div class="form-field">
-				<label for="manage-session-date" data-i18n="field_date">Date</label>
-				<div id="manage-session-date-picker"></div>
-			</div>
-			<div class="form-field">
-				<label for="manage-session-time-input" data-i18n="field_time">Time</label>
-				<input type="time" id="manage-session-time-input">
-			</div>
+		<div class="form-field">
+			<label data-i18n="field_date">Date</label>
+			<div id="manage-session-date-picker"></div>
+		</div>
+		<div class="form-field">
+			<label data-i18n="field_time">Time</label>
+			<div id="manage-session-time-picker"></div>
 		</div>
 		<div class="form-field">
 			<label for="manage-session-duration" data-i18n="field_duration">Duration</label>
@@ -786,6 +782,7 @@
 	function findSession( id ) { return SESSIONS.filter( function ( s ) { return s.id === id; } )[ 0 ]; }
 
 	var manageSessionDatePicker = window.mahtelaCalendar.createDatePicker( document.getElementById( 'manage-session-date-picker' ) );
+	var manageSessionTimePicker = window.mahtelaCalendar.createTimePicker( document.getElementById( 'manage-session-time-picker' ) );
 
 	function openManageSession( id ) {
 		var s = findSession( id );
@@ -795,7 +792,7 @@
 		pendingChargeApplied = s.chargeApplied;
 
 		manageSessionDatePicker.setValue( s.date );
-		document.getElementById( 'manage-session-time-input' ).value = s.time;
+		manageSessionTimePicker.setValue( s.time );
 		document.getElementById( 'manage-session-duration' ).value = window.mahtelaData.formatDurationHHMM( s.duration );
 		document.getElementById( 'manage-session-duration' ).closest( '.form-field' ).classList.remove( 'has-error' );
 		document.getElementById( 'manage-session-classtype' ).value = s.classType;
@@ -856,7 +853,7 @@
 		if ( ! s ) { return; }
 
 		var newDate = manageSessionDatePicker.getValue();
-		var newTime = document.getElementById( 'manage-session-time-input' ).value;
+		var newTime = manageSessionTimePicker.getValue();
 		var durationField = document.getElementById( 'manage-session-duration' );
 		var newDuration = window.mahtelaData.parseDurationHHMM( durationField.value );
 		durationField.closest( '.form-field' ).classList.toggle( 'has-error', newDuration === null );
@@ -883,11 +880,12 @@
 
 	/* ---------- Add Session modal ---------- */
 	var addSessionDatePicker = window.mahtelaCalendar.createDatePicker( document.getElementById( 'student-detail-date-picker' ) );
+	var addSessionTimePicker = window.mahtelaCalendar.createTimePicker( document.getElementById( 'student-detail-time-picker' ) );
 
 	document.getElementById( 'add-session-form' ).addEventListener( 'submit', function ( e ) {
 		e.preventDefault();
 		var date = addSessionDatePicker.getValue();
-		var time = document.getElementById( 'student-detail-time' ).value;
+		var time = addSessionTimePicker.getValue();
 		var durationField = document.getElementById( 'student-detail-field-session-duration' );
 		var duration = window.mahtelaData.parseDurationHHMM( durationField.value );
 		durationField.closest( '.form-field' ).classList.toggle( 'has-error', duration === null );
@@ -905,6 +903,7 @@
 		document.body.style.overflow = '';
 		e.target.reset();
 		addSessionDatePicker.setValue( null );
+		addSessionTimePicker.setValue( null );
 		mahtelaToast( 'Session added to schedule.' );
 	} );
 
