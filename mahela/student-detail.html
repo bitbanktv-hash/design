@@ -106,7 +106,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.19.0</div>
+			<div class="sidebar__version">MahFLA v1.20.0</div>
 		</div>
 	</aside>
 
@@ -740,8 +740,8 @@
 		row.innerHTML =
 			'<div class="session-row__date" data-date="' + s.date + '"><span class="session-row__date-day" data-date-part="day"></span><span class="session-row__date-month" data-date-part="month"></span></div>' +
 			'<div class="session-row__info">' +
-				'<div class="session-row__time">' + s.time + ' – ' + endStr + '</div>' +
-				'<div class="session-row__sub" data-date="' + s.date + '"><span data-date-part="weekday"></span> · ' + s.duration + ' <span data-i18n-inline="overview_minutes"></span></div>' +
+				'<div class="session-row__time">' + ( lang === 'fa' ? window.mahtelaCalendar.toFaDigits( s.time + ' – ' + endStr ) : s.time + ' – ' + endStr ) + '</div>' +
+				'<div class="session-row__sub" data-date="' + s.date + '"><span data-date-part="weekday"></span> · ' + ( lang === 'fa' ? window.mahtelaCalendar.toFaDigits( s.duration ) : s.duration ) + ' <span data-i18n-inline="overview_minutes"></span></div>' +
 				noteHTML +
 			'</div>' +
 			'<div class="session-row__actions" style="flex-direction:column; align-items:flex-end; gap:6px;">' + classTypeBadgeHTML( s.classType, lang ) + statusBadgeHTML( s, lang ) + '</div>';
@@ -942,7 +942,7 @@
 			label.innerHTML =
 				'<input type="checkbox" class="settle-checkbox" data-amount="' + student.rate + '" data-session-id="' + s.id + '" checked style="width:auto; margin-inline-end:6px;">' +
 				'<span class="session-row__date" data-date="' + s.date + '"><span class="session-row__date-day" data-date-part="day"></span><span class="session-row__date-month" data-date-part="month"></span></span>' +
-				'<span class="session-row__info"><span class="session-row__time">' + s.time + ' – ' + endStr + '</span><span class="session-row__sub' + statusClass + '" data-date="' + s.date + '"><span data-date-part="weekday"></span> · ' + statusText + '</span></span>' +
+				'<span class="session-row__info"><span class="session-row__time">' + ( lang === 'fa' ? window.mahtelaCalendar.toFaDigits( s.time + ' – ' + endStr ) : s.time + ' – ' + endStr ) + '</span><span class="session-row__sub' + statusClass + '" data-date="' + s.date + '"><span data-date-part="weekday"></span> · ' + statusText + '</span></span>' +
 				'<span class="session-row__actions">' + requestedBadge + classTypeBadgeHTML( s.classType, lang ) + '<span data-currency="' + student.rate + '">—</span></span>';
 			list.appendChild( label );
 		} );

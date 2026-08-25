@@ -24,6 +24,8 @@
 		field_select_student_ph: { en: 'Choose a student…', fa: 'یه شاگرد رو انتخاب کن…' },
 		field_date: { en: 'Date', fa: 'تاریخ' },
 		field_time: { en: 'Time', fa: 'ساعت' },
+		time_picker_hour: { en: 'Hour', fa: 'ساعت' },
+		time_picker_minute: { en: 'Minute', fa: 'دقیقه' },
 		field_duration: { en: 'Duration', fa: 'مدت زمان' },
 		duration_ph: { en: '1:00', fa: '۱:۰۰' },
 		duration_format_hint: { en: 'Format: hours:minutes, e.g. 1:15', fa: 'فرمت: ساعت:دقیقه، مثلاً ۱:۱۵' },

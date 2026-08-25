@@ -1,8 +1,44 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.19.0 — Current
+v1.20.0 — Current
 ------------------
+- Fixed session times showing Latin digits in Persian mode (e.g.
+  "17:00 – 18:00" instead of "۱۷:۰۰ – ۱۸:۰۰"). Traced it to an
+  inconsistency: one page (teacher schedule) already handled this
+  correctly with its own local helper, but two others (the teacher's
+  per-student schedule view, and the student's own panel) never got
+  the same treatment, since each page had to remember to build its
+  own copy of the conversion. Exported a single, shared version from
+  the calendar module so every page now uses the same correct
+  implementation, and fixed both places that were missing it (times
+  and session durations).
+- Redesigned the Teacher Profile popup students see -- previously a
+  plain, unstyled stack of label/value text that looked unfinished.
+  Now has a soft-tinted header panel behind the photo and name,
+  icon-plus-value rows for email and phone instead of bare
+  right-aligned text, and a distinct quote-styled card for the bio.
+- Rebuilt the Hour/Minute entry in Add Session and Manage Session
+  from the ground up, fixing a real, reported bug and a real,
+  requested change:
+  - The two fields were visually swapped -- caused by the page's
+    right-to-left direction reversing their left-to-right DOM order.
+    Time notation is read left-to-right even in Persian, so the
+    picker's container now has its direction explicitly locked,
+    regardless of the page's own direction.
+  - Replaced the dropdown-based picker with two clearly labeled
+    ("Hour" / "Minute") manually-typed fields, per explicit request
+    -- much faster than scrolling a 60-item list, and now the only
+    way to enter a time anywhere in the app. Accepts Persian digit
+    input directly, rejects out-of-range values with a visible error
+    state rather than silently correcting them, and blocks saving
+    until fixed.
+- Verified all of the above end-to-end through the real save
+  handlers on every page they touch, then re-ran the full 13-page
+  load audit -- no regressions.
+
+v1.19.0
+--------
 - Fixed the garbled date display reported in Add Session (teacher
   panel, per-student Schedule tab). Two real bugs, both fixed: the
   day and year dropdowns were never converted to Persian digits even

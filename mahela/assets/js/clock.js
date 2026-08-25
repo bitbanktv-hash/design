@@ -284,60 +284,96 @@
 	 * Native <input type="time"> shows a 12-hour AM/PM picker or a
 	 * 24-hour one depending on the visitor's browser/OS locale -- the
 	 * page has no way to force one or the other. This renders two
-	 * Hour/Minute <select> dropdowns instead, always 24-hour, with
-	 * digits shown in the active language's numeral style.
+	 * clearly labeled Hour/Minute text inputs instead, typed manually
+	 * rather than picked from a list (much faster than scrolling a
+	 * 60-item minute list), always 24-hour, always Hour-then-Minute
+	 * left-to-right regardless of the page's overall text direction
+	 * (time notation reads left-to-right even in Persian), with digits
+	 * shown in the active language's numeral style once confirmed.
 	 *
-	 * container: a DOM element to render the two selects into.
+	 * container: a DOM element to render the two inputs into.
 	 * options.initialValue: optional 'HH:MM' (24-hour) to start
 	 *   pre-filled.
 	 * options.onChange: called with the new 'HH:MM' string (or null
-	 *   while incomplete) whenever either select changes.
+	 *   while empty/invalid) whenever a field is confirmed (blurred
+	 *   after a change).
 	 * Returns { getValue(), setValue(hhmm) }.
 	 */
 	function createTimePicker( container, options ) {
 		options = options || {};
 		var onChange = options.onChange || function () {};
-		var hourSel = document.createElement( 'select' );
-		var minuteSel = document.createElement( 'select' );
-		hourSel.className = 'date-picker-field time-picker-field';
-		minuteSel.className = 'date-picker-field time-picker-field';
-		container.innerHTML = '';
-		container.className = ( container.className ? container.className + ' ' : '' ) + 'date-picker-fields time-picker-fields';
-		container.appendChild( hourSel );
-		var sep = document.createElement( 'span' );
-		sep.className = 'time-picker-sep';
-		sep.textContent = ':';
-		container.appendChild( sep );
-		container.appendChild( minuteSel );
-
-		var current = null; // { h, m }
 
 		function langNow() {
 			return window.mahtelaI18n ? window.mahtelaI18n.currentLang() : 'en';
+		}
+		function toLatinDigits( s ) {
+			var reverseMap = {};
+			Object.keys( FA_DIGITS ).forEach( function ( latin ) { reverseMap[ FA_DIGITS[ latin ] ] = latin; } );
+			return String( s ).replace( /[۰-۹]/g, function ( d ) { return reverseMap[ d ]; } );
 		}
 		function digits( n ) {
 			var s = pad( n );
 			return langNow() === 'fa' ? toFaDigits( s ) : s;
 		}
 
-		function render() {
-			if ( ! current ) { current = { h: 0, m: 0 }; }
-			hourSel.innerHTML = '';
-			for ( var h = 0; h < 24; h += 1 ) {
-				var hOpt = document.createElement( 'option' );
-				hOpt.value = h;
-				hOpt.textContent = digits( h );
-				if ( h === current.h ) { hOpt.selected = true; }
-				hourSel.appendChild( hOpt );
+		container.innerHTML = '';
+		container.className = ( container.className ? container.className + ' ' : '' ) + 'time-picker-fields';
+
+		var hourCol = document.createElement( 'div' );
+		hourCol.className = 'time-picker-col';
+		var hourInput = document.createElement( 'input' );
+		hourInput.type = 'text';
+		hourInput.inputMode = 'numeric';
+		hourInput.maxLength = 2;
+		hourInput.className = 'time-picker-input';
+		var hourCaption = document.createElement( 'span' );
+		hourCaption.className = 'time-picker-caption';
+		hourCol.appendChild( hourInput );
+		hourCol.appendChild( hourCaption );
+
+		var sep = document.createElement( 'span' );
+		sep.className = 'time-picker-sep';
+		sep.textContent = ':';
+
+		var minuteCol = document.createElement( 'div' );
+		minuteCol.className = 'time-picker-col';
+		var minuteInput = document.createElement( 'input' );
+		minuteInput.type = 'text';
+		minuteInput.inputMode = 'numeric';
+		minuteInput.maxLength = 2;
+		minuteInput.className = 'time-picker-input';
+		var minuteCaption = document.createElement( 'span' );
+		minuteCaption.className = 'time-picker-caption';
+		minuteCol.appendChild( minuteInput );
+		minuteCol.appendChild( minuteCaption );
+
+		container.appendChild( hourCol );
+		container.appendChild( sep );
+		container.appendChild( minuteCol );
+
+		var current = null; // { h, m } once both fields hold a confirmed, valid value
+
+		function relabel() {
+			var dict = window.mahtelaI18n ? window.mahtelaI18n.dict : null;
+			var lang = langNow();
+			hourCaption.textContent = dict ? dict.time_picker_hour[ lang ] : 'Hour';
+			minuteCaption.textContent = dict ? dict.time_picker_minute[ lang ] : 'Minute';
+			if ( current ) {
+				hourInput.value = digits( current.h );
+				minuteInput.value = digits( current.m );
 			}
-			minuteSel.innerHTML = '';
-			for ( var m = 0; m < 60; m += 1 ) {
-				var mOpt = document.createElement( 'option' );
-				mOpt.value = m;
-				mOpt.textContent = digits( m );
-				if ( m === current.m ) { mOpt.selected = true; }
-				minuteSel.appendChild( mOpt );
-			}
+		}
+
+		function setFieldValid( input, valid ) {
+			input.classList.toggle( 'time-picker-input--invalid', ! valid );
+		}
+
+		function parseField( input, max ) {
+			var raw = toLatinDigits( input.value ).replace( /[^0-9]/g, '' );
+			if ( raw === '' ) { return null; }
+			var n = parseInt( raw, 10 );
+			if ( isNaN( n ) || n < 0 || n > max ) { return null; }
+			return n;
 		}
 
 		function valueStr() {
@@ -345,27 +381,59 @@
 			return pad( current.h ) + ':' + pad( current.m );
 		}
 
-		function handleChange() {
-			current = { h: parseInt( hourSel.value, 10 ), m: parseInt( minuteSel.value, 10 ) };
+		function commit() {
+			var h = parseField( hourInput, 23 );
+			var m = parseField( minuteInput, 59 );
+			setFieldValid( hourInput, h !== null );
+			setFieldValid( minuteInput, m !== null );
+			if ( h === null || m === null ) {
+				current = null;
+				onChange( null );
+				return;
+			}
+			current = { h: h, m: m };
+			hourInput.value = digits( h );
+			minuteInput.value = digits( m );
 			onChange( valueStr() );
 		}
-		hourSel.addEventListener( 'change', handleChange );
-		minuteSel.addEventListener( 'change', handleChange );
+
+		// Live-filter while typing (strip anything that isn't a digit,
+		// accepting either Persian or Latin glyphs) without yet padding
+		// or validating range -- that happens on commit, so a user
+		// typing "9" isn't fought mid-keystroke.
+		[ hourInput, minuteInput ].forEach( function ( input ) {
+			input.addEventListener( 'input', function () {
+				var cleaned = String( input.value ).replace( /[^0-9۰-۹]/g, '' ).slice( 0, 2 );
+				if ( cleaned !== input.value ) { input.value = cleaned; }
+			} );
+			input.addEventListener( 'blur', commit );
+		} );
 
 		function setValue( hhmm ) {
-			if ( ! hhmm ) { current = null; render(); return; }
+			if ( ! hhmm ) {
+				current = null;
+				hourInput.value = '';
+				minuteInput.value = '';
+				setFieldValid( hourInput, true );
+				setFieldValid( minuteInput, true );
+				return;
+			}
 			var p = hhmm.split( ':' ).map( Number );
 			current = { h: p[ 0 ], m: p[ 1 ] };
-			render();
+			hourInput.value = digits( p[ 0 ] );
+			minuteInput.value = digits( p[ 1 ] );
+			setFieldValid( hourInput, true );
+			setFieldValid( minuteInput, true );
 		}
 
 		// Only the digit GLYPH style depends on language, not the
-		// underlying hour/minute values -- re-render to relabel, no
-		// value conversion needed (unlike the date picker's calendar
-		// switch).
-		document.addEventListener( 'mahtela:langchange', render );
+		// underlying hour/minute values -- relabel captions and
+		// redisplay in the new style, no value conversion needed
+		// (unlike the date picker's calendar switch).
+		document.addEventListener( 'mahtela:langchange', relabel );
 
-		if ( options.initialValue ) { setValue( options.initialValue ); } else { render(); }
+		relabel();
+		if ( options.initialValue ) { setValue( options.initialValue ); }
 
 		return {
 			getValue: valueStr,
@@ -602,7 +670,8 @@
 		jalaliMonthLength: jalaliMonthLength,
 		isLeapJalaliYear: isLeapJalaliYear,
 		createDatePicker: createDatePicker,
-		createTimePicker: createTimePicker
+		createTimePicker: createTimePicker,
+		toFaDigits: toFaDigits
 	};
 
 	document.addEventListener( 'DOMContentLoaded', function () {
