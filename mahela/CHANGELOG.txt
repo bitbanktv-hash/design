@@ -1,8 +1,32 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.20.0 — Current
+v1.20.1 — Current
 ------------------
+- Add Session's date picker no longer requires picking a year, and no
+  longer allows a past date -- both per explicit request, since a new
+  session is always being booked for today or later. The Year
+  dropdown is gone entirely for this specific picker; the month list
+  instead becomes a rolling 12-month window starting at the current
+  month, so each month name still appears exactly once with no
+  ambiguity about which year it falls in (the year is still tracked
+  correctly underneath, just never shown or picked directly). For the
+  current month specifically, the day list starts at today, not the
+  1st; every other month in the window is inherently in the future,
+  so its full day range is offered normally.
+  Manage Session (editing a session that may already be in the past)
+  is intentionally unchanged -- still shows all three dropdowns,
+  including Year, and still allows any date. Verified this
+  specifically: selecting a genuinely past date there still works
+  exactly as before.
+  Verified the new mode thoroughly, including the trickiest case --
+  a selection wrapping from the end of one year into the next, in
+  both Gregorian and Jalali terms -- with a reverse-conversion check
+  confirming the resulting date is exactly right, and that switching
+  language mid-selection doesn't shift the underlying date.
+
+v1.20.0
+--------
 - Fixed session times showing Latin digits in Persian mode (e.g.
   "17:00 – 18:00" instead of "۱۷:۰۰ – ۱۸:۰۰"). Traced it to an
   inconsistency: one page (teacher schedule) already handled this

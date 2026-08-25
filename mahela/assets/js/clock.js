@@ -117,32 +117,44 @@
 	 * picker, which is hard-coded to the Gregorian calendar -- there is
 	 * no way to make it show Jalali, no matter what CSS/JS is applied.
 	 * So for any date the user needs to actually PICK (not just view),
-	 * this renders three Day/Month/Year <select> dropdowns instead,
-	 * showing Jalali month names and year numbers when Persian is
-	 * active and Gregorian otherwise, while always producing a
-	 * standard Gregorian ISO date string as the underlying value (since
-	 * that's what the rest of the app's data model expects).
+	 * this renders Day/Month(/Year) <select> dropdowns instead, showing
+	 * Jalali month names and year numbers when Persian is active and
+	 * Gregorian otherwise, while always producing a standard Gregorian
+	 * ISO date string as the underlying value (since that's what the
+	 * rest of the app's data model expects).
 	 *
-	 * container: a DOM element to render the three selects into.
+	 * container: a DOM element to render the selects into.
 	 * options.initialISO: optional 'YYYY-MM-DD' to start pre-filled.
 	 * options.onChange: called with the new ISO string (or null while
-	 *   incomplete) whenever the user changes any of the three selects.
+	 *   incomplete) whenever the user changes any select.
+	 * options.futureOnly: for booking a new date (not editing an
+	 *   existing one that may already be in the past) -- hides the
+	 *   Year selector entirely and only offers today or later. The
+	 *   month list becomes a rolling 12-month window starting at the
+	 *   current month, so each month name appears exactly once with no
+	 *   ambiguity about which year it belongs to (the year is still
+	 *   tracked and used internally, just never shown or chosen
+	 *   directly). The day list for the current month starts at
+	 *   today's day, not the 1st.
 	 * Returns { getValue(), setValue(iso) }.
 	 */
 	function createDatePicker( container, options ) {
 		options = options || {};
 		var onChange = options.onChange || function () {};
+		var futureOnly = !! options.futureOnly;
 		var daySel = document.createElement( 'select' );
 		var monthSel = document.createElement( 'select' );
-		var yearSel = document.createElement( 'select' );
+		var yearSel = futureOnly ? null : document.createElement( 'select' );
 		daySel.className = 'date-picker-field date-picker-field--day';
 		monthSel.className = 'date-picker-field date-picker-field--month';
-		yearSel.className = 'date-picker-field date-picker-field--year';
 		container.innerHTML = '';
 		container.className = ( container.className ? container.className + ' ' : '' ) + 'date-picker-fields';
 		container.appendChild( daySel );
 		container.appendChild( monthSel );
-		container.appendChild( yearSel );
+		if ( yearSel ) {
+			yearSel.className = 'date-picker-field date-picker-field--year';
+			container.appendChild( yearSel );
+		}
 
 		// Internally tracked as Jalali or Gregorian y/m/d depending on
 		// which calendar is currently active, converted to/from the ISO
@@ -168,18 +180,38 @@
 			return new Date( y, m, 0 ).getDate(); // Gregorian, m is 1-indexed here
 		}
 
+		function todayParts() {
+			var todayIso = new Date().toISOString().slice( 0, 10 );
+			var tp = todayIso.split( '-' ).map( Number );
+			if ( activeCalendar() === 'jalali' ) {
+				var j = gregorianToJalali( tp[ 0 ], tp[ 1 ], tp[ 2 ] );
+				return { y: j.jy, m: j.jm, d: j.jd };
+			}
+			return { y: tp[ 0 ], m: tp[ 1 ], d: tp[ 2 ] };
+		}
+
+		// A rolling 12-month window starting at the current month, each
+		// entry tagged with how many years ahead it falls -- e.g. if
+		// today is month 11, this yields months 11,12 at yearOffset 0,
+		// then 1..10 at yearOffset 1. Every month name appears exactly
+		// once, so there's never any ambiguity about which year a
+		// selected month belongs to without needing to show it.
+		function monthWindow( today ) {
+			var win = [];
+			for ( var i = 0; i < 12; i += 1 ) {
+				var m = today.m + i;
+				var yearOffset = 0;
+				while ( m > 12 ) { m -= 12; yearOffset += 1; }
+				win.push( { m: m, yearOffset: yearOffset } );
+			}
+			return win;
+		}
+
 		function yearRange() {
 			// A generous +/- range around "now" in whichever calendar is
 			// active -- covers realistic session-scheduling and
 			// student-history dates without an unwieldy dropdown.
-			var nowIso = new Date().toISOString().slice( 0, 10 );
-			var parts = nowIso.split( '-' ).map( Number );
-			var nowY;
-			if ( activeCalendar() === 'jalali' ) {
-				nowY = gregorianToJalali( parts[ 0 ], parts[ 1 ], parts[ 2 ] ).jy;
-			} else {
-				nowY = parts[ 0 ];
-			}
+			var nowY = todayParts().y;
 			var years = [];
 			for ( var y = nowY - 3; y <= nowY + 2; y += 1 ) { years.push( y ); }
 			return years;
@@ -188,40 +220,63 @@
 		function render() {
 			var cal = activeCalendar();
 			var months = monthNames();
-			var years = yearRange();
+			var today = todayParts();
 
 			if ( ! current ) {
-				var todayIso = new Date().toISOString().slice( 0, 10 );
-				var tp = todayIso.split( '-' ).map( Number );
-				if ( cal === 'jalali' ) {
-					var todayJ = gregorianToJalali( tp[ 0 ], tp[ 1 ], tp[ 2 ] );
-					current = { y: todayJ.jy, m: todayJ.jm, d: todayJ.jd, cal: cal };
-				} else {
-					current = { y: tp[ 0 ], m: tp[ 1 ], d: tp[ 2 ], cal: cal };
-				}
+				current = { y: today.y, m: today.m, d: today.d, cal: cal };
 			}
 
-			var dc = dayCount( current.y, current.m );
-			if ( current.d > dc ) { current.d = dc; }
+			if ( futureOnly ) {
+				var win = monthWindow( today );
+				monthSel.innerHTML = '';
+				win.forEach( function ( entry ) {
+					var mOpt = document.createElement( 'option' );
+					mOpt.value = entry.m + ':' + entry.yearOffset;
+					mOpt.textContent = months[ entry.m - 1 ];
+					var isSelected = current.m === entry.m && ( current.y - today.y ) === entry.yearOffset;
+					if ( isSelected ) { mOpt.selected = true; }
+					monthSel.appendChild( mOpt );
+				} );
+
+				var isCurrentCycle = current.m === today.m && current.y === today.y;
+				var minDay = isCurrentCycle ? today.d : 1;
+				var dc = dayCount( current.y, current.m );
+				if ( current.d < minDay ) { current.d = minDay; }
+				if ( current.d > dc ) { current.d = dc; }
+
+				daySel.innerHTML = '';
+				for ( var d = minDay; d <= dc; d += 1 ) {
+					var dOpt = document.createElement( 'option' );
+					dOpt.value = d;
+					dOpt.textContent = currentLangSafe() === 'fa' ? toFaDigits( d ) : d;
+					if ( d === current.d ) { dOpt.selected = true; }
+					daySel.appendChild( dOpt );
+				}
+				return;
+			}
+
+			var dc2 = dayCount( current.y, current.m );
+			if ( current.d > dc2 ) { current.d = dc2; }
 
 			daySel.innerHTML = '';
-			for ( var d = 1; d <= dc; d += 1 ) {
-				var dOpt = document.createElement( 'option' );
-				dOpt.value = d;
-				dOpt.textContent = currentLangSafe() === 'fa' ? toFaDigits( d ) : d;
-				if ( d === current.d ) { dOpt.selected = true; }
-				daySel.appendChild( dOpt );
+			for ( var d2 = 1; d2 <= dc2; d2 += 1 ) {
+				var dOpt2 = document.createElement( 'option' );
+				dOpt2.value = d2;
+				dOpt2.textContent = currentLangSafe() === 'fa' ? toFaDigits( d2 ) : d2;
+				if ( d2 === current.d ) { dOpt2.selected = true; }
+				daySel.appendChild( dOpt2 );
 			}
 
 			monthSel.innerHTML = '';
 			months.forEach( function ( name, idx ) {
-				var mOpt = document.createElement( 'option' );
-				mOpt.value = idx + 1;
-				mOpt.textContent = name;
-				if ( idx + 1 === current.m ) { mOpt.selected = true; }
-				monthSel.appendChild( mOpt );
+				var mOpt2 = document.createElement( 'option' );
+				mOpt2.value = idx + 1;
+				mOpt2.textContent = name;
+				if ( idx + 1 === current.m ) { mOpt2.selected = true; }
+				monthSel.appendChild( mOpt2 );
 			} );
 
+			var years = yearRange();
 			yearSel.innerHTML = '';
 			years.forEach( function ( y ) {
 				var yOpt = document.createElement( 'option' );
@@ -240,13 +295,19 @@
 		}
 
 		function handleFieldChange() {
-			current = { y: parseInt( yearSel.value, 10 ), m: parseInt( monthSel.value, 10 ), d: parseInt( daySel.value, 10 ), cal: activeCalendar() };
+			if ( futureOnly ) {
+				var mp = monthSel.value.split( ':' );
+				var today = todayParts();
+				current = { y: today.y + parseInt( mp[ 1 ], 10 ), m: parseInt( mp[ 0 ], 10 ), d: parseInt( daySel.value, 10 ), cal: activeCalendar() };
+			} else {
+				current = { y: parseInt( yearSel.value, 10 ), m: parseInt( monthSel.value, 10 ), d: parseInt( daySel.value, 10 ), cal: activeCalendar() };
+			}
 			render();
 			onChange( isoFromCurrent() );
 		}
 		daySel.addEventListener( 'change', handleFieldChange );
 		monthSel.addEventListener( 'change', handleFieldChange );
-		yearSel.addEventListener( 'change', handleFieldChange );
+		if ( yearSel ) { yearSel.addEventListener( 'change', handleFieldChange ); }
 
 		function setValue( iso ) {
 			if ( ! iso ) { current = null; render(); return; }
