@@ -1,8 +1,33 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.20.1 — Current
+v1.21.0 — Current
 ------------------
+- New: a Grid/List toggle for the teacher's class schedule. Grid is
+  the existing weekly time-slot view, unchanged and fully intact.
+  List is new -- each day of the week as its own row, with a "+ New
+  Class" button and that day's sessions listed underneath, clickable
+  to open the same Manage Session flow as the grid. The chosen view
+  is remembered (localStorage) across visits.
+- While building this, upgraded Book Session: previously the class
+  time was purely fixed by whichever grid cell was clicked, with no
+  way to adjust it inside the modal. Necessary for List view, since
+  clicking "+ New Class" for a day doesn't imply any specific time --
+  it now opens with a sensible default (09:00) and a real, editable
+  time field (the same manual Hour/Minute picker used elsewhere).
+  Verified this doesn't regress the grid's own click-to-prefill
+  behavior: clicking a specific grid cell still opens with that
+  cell's exact time already filled in.
+- Caught and fixed a real bug in this same work: the list view's
+  weekday label used an unsupported value that would have silently
+  rendered blank for every day.
+- Verified end-to-end: switching views, clicking a real session in
+  list view opens Manage Session correctly, booking a brand new class
+  from a list-view day saves with the correct date and the
+  interactively-chosen time. Full 13-page load audit re-run clean.
+
+v1.20.1
+--------
 - Add Session's date picker no longer requires picking a year, and no
   longer allows a past date -- both per explicit request, since a new
   session is always being booked for today or later. The Year

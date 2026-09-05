@@ -58,7 +58,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.20.1</div>
+			<div class="sidebar__version">MahFLA v1.21.0</div>
 		</div>
 	</aside>
 
@@ -104,11 +104,16 @@
 					</button>
 				</div>
 				<div class="schedule-nav__range" id="schedule-week-range">—</div>
+				<div class="seg-control" id="schedule-view-toggle" role="radiogroup" aria-label="Schedule view">
+					<button type="button" class="seg-control__btn" role="radio" data-view="grid" aria-checked="true" data-i18n="schedule_view_grid">Grid</button>
+					<button type="button" class="seg-control__btn" role="radio" data-view="list" aria-checked="false" data-i18n="schedule_view_list">List</button>
+				</div>
 			</div>
 
-			<div class="schedule-grid-wrap">
+			<div class="schedule-grid-wrap" id="schedule-grid-wrap">
 				<div class="schedule-grid" id="schedule-grid"></div>
 			</div>
+			<div class="schedule-list" id="schedule-list" style="display:none;"></div>
 		</div>
 	</div>
 </div>
@@ -120,9 +125,14 @@
 			<h2 class="modal-box__title" data-i18n="modal_book_session_title">Book a Session</h2>
 			<button type="button" class="modal-box__close" data-modal-close aria-label="Close">&times;</button>
 		</div>
-		<p style="font-size:13px; color:var(--ink-soft); margin-top:-10px; margin-bottom:18px;">
-			<span data-i18n="modal_book_session_time">Time</span>: <strong id="book-session-time-label">—</strong>
-		</p>
+		<div class="form-field" style="margin-bottom:14px;">
+			<label data-i18n="field_date">Date</label>
+			<p style="font-size:13.5px; font-weight:600; margin:0;" id="book-session-date-label">—</p>
+		</div>
+		<div class="form-field" style="margin-bottom:18px;">
+			<label data-i18n="field_time">Time</label>
+			<div id="book-session-time-picker"></div>
+		</div>
 		<form id="book-session-form">
 			<div class="form-field">
 				<label for="book-session-student"><span class="required-mark">*</span> <span data-i18n="field_select_student">Student</span></label>
@@ -327,7 +337,27 @@
 	}
 
 	var pendingBooking = null;
+	var bookSessionTimePicker = window.mahtelaCalendar.createTimePicker( document.getElementById( 'book-session-time-picker' ), {
+		onChange: function ( hhmm ) { if ( pendingBooking ) { pendingBooking.time = hhmm; } }
+	} );
 	var pendingRemovalId = null;
+
+	var SCHEDULE_VIEW_KEY = 'mahtela-schedule-view';
+	function currentScheduleView() {
+		try { return localStorage.getItem( SCHEDULE_VIEW_KEY ) === 'list' ? 'list' : 'grid'; } catch ( e ) { return 'grid'; }
+	}
+	function setScheduleView( mode ) {
+		try { localStorage.setItem( SCHEDULE_VIEW_KEY, mode ); } catch ( e ) { /* ignore */ }
+		document.getElementById( 'schedule-grid-wrap' ).style.display = mode === 'grid' ? '' : 'none';
+		document.getElementById( 'schedule-list' ).style.display = mode === 'list' ? '' : 'none';
+		document.querySelectorAll( '#schedule-view-toggle .seg-control__btn' ).forEach( function ( btn ) {
+			btn.setAttribute( 'aria-checked', btn.getAttribute( 'data-view' ) === mode ? 'true' : 'false' );
+		} );
+		renderSchedule();
+	}
+	function renderSchedule() {
+		if ( currentScheduleView() === 'list' ) { renderListView(); } else { renderGrid(); }
+	}
 
 	function renderGrid() {
 		var lang = window.mahtelaI18n.currentLang();
@@ -454,11 +484,90 @@
 		document.getElementById( 'schedule-week-range' ).textContent = first + ' – ' + last;
 	}
 
-	function openBookModal( iso, time ) {
-		pendingBooking = { iso: iso, time: time };
+	function classTypeIconSmall( classType ) {
+		return classType === 'online'
+			? '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="2" y="4" width="14" height="10" rx="1"/><path d="M8 20h4M10 14v6M17 8l5-3v10l-5-3"/></svg>'
+			: '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg>';
+	}
+
+	function renderListView() {
 		var lang = window.mahtelaI18n.currentLang();
 		var cal = window.mahtelaCalendar.resolve( lang );
-		document.getElementById( 'book-session-time-label' ).textContent = window.mahtelaCalendar.formatScheduleDate( iso, time, lang, cal );
+		var dict = window.mahtelaI18n.dict;
+		var dates = weekDates();
+		var todayISO = toISO( new Date() );
+		var container = document.getElementById( 'schedule-list' );
+		var fragment = document.createDocumentFragment();
+
+		dates.forEach( function ( d ) {
+			var iso = toISO( d );
+			var isToday = iso === todayISO;
+			var row = document.createElement( 'div' );
+			row.className = 'schedule-day-row' + ( isToday ? ' is-today' : '' );
+
+			var head = document.createElement( 'div' );
+			head.className = 'schedule-day-row__head';
+			var dateWrap = document.createElement( 'div' );
+			dateWrap.className = 'schedule-day-row__date';
+			dateWrap.setAttribute( 'data-date', iso );
+			dateWrap.innerHTML =
+				'<span class="schedule-day-row__weekday" data-date-part="weekday"></span> ' +
+				'<span class="schedule-day-row__daynum"><span data-date-part="day"></span> <span data-date-part="month"></span></span>' +
+				( isToday ? '<span class="badge badge--brand" style="margin-inline-start:8px;">' + dict.schedule_today[ lang ] + '</span>' : '' );
+			var addBtn = document.createElement( 'button' );
+			addBtn.type = 'button';
+			addBtn.className = 'btn btn--soft btn--small';
+			addBtn.textContent = dict.schedule_list_add_class[ lang ];
+			addBtn.addEventListener( 'click', ( function ( thisIso ) {
+				return function () { openBookModal( thisIso, null ); };
+			}( iso ) ) );
+			head.appendChild( dateWrap );
+			head.appendChild( addBtn );
+			row.appendChild( head );
+
+			var sessions = sessionsOnDate( iso ).sort( function ( a, b ) { return a.time.localeCompare( b.time ); } );
+			var body = document.createElement( 'div' );
+			body.className = 'schedule-day-row__body';
+			if ( ! sessions.length ) {
+				var empty = document.createElement( 'p' );
+				empty.className = 'schedule-day-row__empty';
+				empty.textContent = dict.schedule_list_no_class[ lang ];
+				body.appendChild( empty );
+			} else {
+				sessions.forEach( function ( s ) {
+					var student = STUDENTS[ s.studentKey ];
+					var endMin = timeToMinutes( s.time ) + s.duration;
+					var endStr = pad2( Math.floor( endMin / 60 ) ) + ':' + pad2( endMin % 60 );
+					var timeStr = lang === 'fa' ? toFaDigitsLocal( s.time + ' – ' + endStr ) : ( s.time + ' – ' + endStr );
+					var item = document.createElement( 'button' );
+					item.type = 'button';
+					item.className = 'schedule-day-row__session' + ( s.status === 'cancelled' ? ' is-cancelled' : '' );
+					item.setAttribute( 'data-gender', student ? student.gender : 'female' );
+					item.innerHTML =
+						'<span class="schedule-day-row__session-time">' + timeStr + '</span>' +
+						'<span class="schedule-day-row__session-name">' + escapeHtml( student ? student.name : '—' ) + '</span>' +
+						'<span class="schedule-day-row__session-type">' + classTypeIconSmall( s.classType ) + '</span>';
+					item.addEventListener( 'click', ( function ( sessId ) {
+						return function () { openSessionDetails( sessId ); };
+					}( s.id ) ) );
+					body.appendChild( item );
+				} );
+			}
+			row.appendChild( body );
+			fragment.appendChild( row );
+		} );
+
+		container.replaceChildren( fragment );
+		window.mahtelaCalendar.applyScheduleDates();
+		renderWeekRange( dates, lang, cal );
+	}
+
+	function openBookModal( iso, time ) {
+		pendingBooking = { iso: iso, time: time || '09:00' };
+		var lang = window.mahtelaI18n.currentLang();
+		var cal = window.mahtelaCalendar.resolve( lang );
+		document.getElementById( 'book-session-date-label' ).textContent = window.mahtelaCalendar.formatFullDate( iso, lang, cal );
+		bookSessionTimePicker.setValue( pendingBooking.time );
 		document.getElementById( 'book-session-student' ).value = '';
 		document.getElementById( 'book-session-duration' ).value = '1:00';
 		document.getElementById( 'book-session-duration' ).closest( '.form-field' ).classList.remove( 'has-error' );
@@ -574,7 +683,7 @@
 		saveSessions();
 		document.getElementById( 'modal-session-details' ).classList.remove( 'is-open' );
 		document.body.style.overflow = '';
-		renderGrid();
+		renderSchedule();
 		mahtelaToast( window.mahtelaI18n.dict.session_updated_toast[ window.mahtelaI18n.currentLang() ] );
 	} );
 
@@ -603,7 +712,7 @@
 		saveSessions();
 		document.getElementById( 'modal-book-session' ).classList.remove( 'is-open' );
 		document.body.style.overflow = '';
-		renderGrid();
+		renderSchedule();
 		mahtelaToast( window.mahtelaI18n.dict.schedule_session_saved[ window.mahtelaI18n.currentLang() ] );
 	} );
 
@@ -613,29 +722,41 @@
 		saveSessions();
 		document.getElementById( 'modal-session-details' ).classList.remove( 'is-open' );
 		document.body.style.overflow = '';
-		renderGrid();
+		renderSchedule();
 		mahtelaToast( window.mahtelaI18n.dict.schedule_session_removed[ window.mahtelaI18n.currentLang() ] );
 	} );
 
 	document.getElementById( 'schedule-prev-week' ).addEventListener( 'click', function () {
 		currentWeekStart = new Date( currentWeekStart.getFullYear(), currentWeekStart.getMonth(), currentWeekStart.getDate() - 7 );
-		renderGrid();
+		renderSchedule();
 	} );
 	document.getElementById( 'schedule-next-week' ).addEventListener( 'click', function () {
 		currentWeekStart = new Date( currentWeekStart.getFullYear(), currentWeekStart.getMonth(), currentWeekStart.getDate() + 7 );
-		renderGrid();
+		renderSchedule();
 	} );
 	document.getElementById( 'schedule-today-btn' ).addEventListener( 'click', function () {
 		currentWeekStart = startOfWeek( new Date() );
-		renderGrid();
+		renderSchedule();
 	} );
 
-	renderGrid();
-	document.addEventListener( 'mahtela:langchange', renderGrid );
-	document.addEventListener( 'mahtela:calendarchange', renderGrid );
+	document.querySelectorAll( '#schedule-view-toggle .seg-control__btn' ).forEach( function ( btn ) {
+		btn.addEventListener( 'click', function () { setScheduleView( btn.getAttribute( 'data-view' ) ); } );
+	} );
+	( function () {
+		var mode = currentScheduleView();
+		document.getElementById( 'schedule-grid-wrap' ).style.display = mode === 'grid' ? '' : 'none';
+		document.getElementById( 'schedule-list' ).style.display = mode === 'list' ? '' : 'none';
+		document.querySelectorAll( '#schedule-view-toggle .seg-control__btn' ).forEach( function ( btn ) {
+			btn.setAttribute( 'aria-checked', btn.getAttribute( 'data-view' ) === mode ? 'true' : 'false' );
+		} );
+	}() );
+
+	renderSchedule();
+	document.addEventListener( 'mahtela:langchange', renderSchedule );
+	document.addEventListener( 'mahtela:calendarchange', renderSchedule );
 	document.addEventListener( 'mahtela:sessionschange', function () {
 		SESSIONS = myTeacherSessions();
-		renderGrid();
+		renderSchedule();
 	} );
 	document.addEventListener( 'mahtela:studentschange', function () {
 		ALL_STUDENTS = window.mahtelaRoster.loadStudents();
@@ -647,7 +768,7 @@
 		document.getElementById( 'book-session-student' ).innerHTML = '<option value="" data-i18n="field_select_student_ph">Choose a student…</option>';
 		populateStudentSelect();
 		window.mahtelaI18n.apply( window.mahtelaI18n.currentLang() );
-		renderGrid();
+		renderSchedule();
 	} );
 </script>
 </body>

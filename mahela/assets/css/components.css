@@ -530,6 +530,25 @@ html[dir="rtl"] .switch input:checked + .switch__track::before { transform: tran
 	display: flex; align-items: center; justify-content: space-between;
 	margin-bottom: 20px; gap: 12px; flex-wrap: wrap;
 }
+.schedule-day-row { border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px 18px; margin-bottom: 12px; background: var(--surface); }
+.schedule-day-row.is-today { border-color: var(--brand); background: var(--brand-soft); }
+.schedule-day-row__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.schedule-day-row__weekday { font-weight: 700; font-size: 14.5px; }
+.schedule-day-row__daynum { font-size: 13px; color: var(--ink-soft); font-family: var(--font-mono); }
+.schedule-day-row__body { display: flex; flex-direction: column; gap: 6px; }
+.schedule-day-row__empty { font-size: 12.5px; color: var(--ink-faint); margin: 0; padding: 4px 0; }
+.schedule-day-row__session {
+	display: flex; align-items: center; gap: 10px; width: 100%; text-align: start;
+	padding: 9px 12px; border-radius: var(--radius-sm); border: none; cursor: pointer;
+	background: var(--student-accent-soft, var(--surface-soft)); color: var(--ink);
+	transition: filter .12s ease;
+}
+.schedule-day-row__session:hover { filter: brightness(0.97); }
+[data-theme="dark"] .schedule-day-row__session:hover { filter: brightness(1.15); }
+.schedule-day-row__session.is-cancelled { opacity: 0.6; text-decoration: line-through; }
+.schedule-day-row__session-time { font-family: var(--font-mono); font-size: 12.5px; font-weight: 700; flex-shrink: 0; }
+.schedule-day-row__session-name { font-size: 13px; font-weight: 600; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.schedule-day-row__session-type { flex-shrink: 0; opacity: 0.7; }
 .schedule-nav__range { font-weight: 700; font-size: 15px; font-family: var(--font-mono); }
 .schedule-nav__buttons { display: flex; gap: 8px; align-items: center; }
 
