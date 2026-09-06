@@ -10,89 +10,7 @@
 <link rel="stylesheet" href="assets/css/base.css">
 <link rel="stylesheet" href="assets/css/components.css">
 <link rel="stylesheet" href="assets/css/animations.css">
-<style>
-	body { background: var(--bg); }
-	.public-nav {
-		display: flex; align-items: center; justify-content: space-between;
-		padding: 18px 32px; gap: 20px; flex-wrap: wrap;
-	}
-	.public-nav__brand { display: flex; align-items: center; gap: 8px; text-decoration: none; font-family: var(--font-display); font-weight: 800; font-size: 19px; color: var(--ink); }
-	.public-nav__brand-icon { width: 30px; height: 30px; border-radius: 9px; background: var(--brand); color: var(--c-ink); display: flex; align-items: center; justify-content: center; }
-	.public-nav__links { display: flex; align-items: center; gap: 26px; }
-	.public-nav__links a { font-size: 13.5px; font-weight: 600; color: var(--ink-soft); text-decoration: none; padding-bottom: 4px; border-bottom: 2px solid transparent; }
-	.public-nav__links a:hover { color: var(--ink); }
-	.public-nav__links a.is-active { color: var(--brand-strong, var(--brand)); border-color: var(--brand); }
-	.public-nav__actions { display: flex; align-items: center; gap: 10px; }
-
-	.hero { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; max-width: 1180px; margin: 20px auto 10px; padding: 20px 32px; }
-	.hero__visual { position: relative; border-radius: var(--radius-lg); overflow: hidden; aspect-ratio: 4/3; background: linear-gradient(135deg, var(--brand-soft), var(--surface-soft)); display: flex; align-items: center; justify-content: center; }
-	.hero__visual svg { width: 78%; height: 78%; }
-	.hero__eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--brand-strong, var(--brand)); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 14px; }
-	.hero__eyebrow::before { content: ''; width: 18px; height: 2px; background: var(--brand); display: inline-block; }
-	.hero__title { font-family: var(--font-display); font-size: clamp(34px, 4.4vw, 52px); font-weight: 800; line-height: 1.12; margin: 0 0 16px; }
-	.hero__sub { font-size: 15px; color: var(--ink-soft); line-height: 1.7; max-width: 460px; margin: 0 0 26px; }
-	.hero__ctas { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
-	.hero__meta { display: flex; gap: 20px; flex-wrap: wrap; font-size: 12.5px; color: var(--ink-faint); }
-	.hero__meta span { display: inline-flex; align-items: center; gap: 6px; }
-
-	.search-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; max-width: 1180px; margin: 34px auto; padding: 14px 18px; }
-	.search-bar input, .search-bar select { border: none; background: transparent; font-size: 13.5px; padding: 8px 4px; }
-	.search-bar__field { display: flex; flex-direction: column; flex: 1; min-width: 160px; padding-inline-end: 14px; border-inline-end: 1px solid var(--border); }
-	.search-bar__field:last-of-type { border-inline-end: none; }
-	.search-bar__label { font-size: 10.5px; color: var(--ink-faint); font-weight: 700; text-transform: uppercase; letter-spacing: .03em; }
-
-	.public-section { max-width: 1180px; margin: 0 auto; padding: 44px 32px; }
-	.public-section__head { margin-bottom: 26px; }
-	.public-section__eyebrow { font-size: 12px; font-weight: 700; color: var(--brand-strong, var(--brand)); text-transform: uppercase; letter-spacing: .05em; }
-	.public-section__title { font-family: var(--font-display); font-size: 26px; font-weight: 800; margin: 6px 0 0; }
-	.public-section__link { font-size: 13px; font-weight: 700; color: var(--brand-strong, var(--brand)); text-decoration: none; }
-
-	.public-teacher-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-	.public-teacher-card { padding: 22px; transition: transform .2s ease, box-shadow .2s ease; text-decoration: none; color: inherit; display: block; }
-	.public-teacher-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
-	.public-teacher-card__head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-	.public-teacher-card__avatar { width: 46px; height: 46px; border-radius: 50%; background: var(--brand); color: var(--c-ink); display: flex; align-items: center; justify-content: center; font-weight: 700; overflow: hidden; }
-	.public-teacher-card__lang { font-size: 11px; color: var(--ink-faint); }
-	.public-teacher-card__name { font-weight: 700; font-size: 15px; }
-	.public-teacher-card__intro { font-size: 13px; color: var(--ink-soft); line-height: 1.5; margin: 0 0 14px; min-height: 40px; }
-	.public-teacher-card__meta { display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--ink-soft); margin-bottom: 16px; }
-	.public-teacher-card__meta span { display: flex; align-items: center; gap: 6px; }
-	.public-teacher-card__footer { display: flex; align-items: center; justify-content: space-between; padding-top: 14px; border-top: 1px dashed var(--border); }
-	.public-teacher-card__price { font-family: var(--font-mono); font-weight: 700; font-size: 14px; text-align: end; }
-	.public-teacher-card__price small { display: block; font-family: var(--font-body); font-weight: 500; font-size: 10.5px; color: var(--ink-faint); }
-
-	.public-blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-	.public-blog-card { padding: 22px; text-decoration: none; color: inherit; display: block; transition: transform .2s ease, box-shadow .2s ease; }
-	.public-blog-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
-	.public-blog-card__title { font-weight: 700; font-size: 15.5px; line-height: 1.4; margin: 10px 0; }
-	.public-blog-card__snippet { font-size: 12.5px; color: var(--ink-soft); line-height: 1.6; margin: 0 0 16px; }
-	.public-blog-card__author { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; padding-top: 14px; border-top: 1px dashed var(--border); }
-	.public-blog-card__author-avatar { width: 22px; height: 22px; border-radius: 50%; background: var(--brand); color: var(--c-ink); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; overflow: hidden; }
-
-	.cta-banner {
-		max-width: 1180px; margin: 20px auto 60px; padding: 44px 40px; border-radius: var(--radius-lg);
-		background: linear-gradient(120deg, var(--brand-strong, var(--brand)), var(--accent-strong, var(--accent)));
-		color: var(--c-ink); display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
-	}
-	.cta-banner__title { font-family: var(--font-display); font-size: 24px; font-weight: 800; margin: 0 0 8px; }
-	.cta-banner__sub { font-size: 13.5px; opacity: .85; margin: 0; max-width: 420px; }
-
-	.public-footer { border-top: 1px solid var(--border); padding: 36px 32px; }
-	.public-footer__inner { max-width: 1180px; margin: 0 auto; display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
-	.public-footer__brand { font-family: var(--font-display); font-weight: 800; font-size: 18px; margin-bottom: 6px; }
-	.public-footer__tagline { font-size: 12.5px; color: var(--ink-faint); max-width: 260px; }
-	.public-footer__links { display: flex; gap: 40px; flex-wrap: wrap; }
-	.public-footer__col { display: flex; flex-direction: column; gap: 10px; }
-	.public-footer__col a { font-size: 13px; color: var(--ink-soft); text-decoration: none; }
-	.public-footer__col a:hover { color: var(--brand-strong, var(--brand)); }
-	.public-footer__bottom { max-width: 1180px; margin: 26px auto 0; padding-top: 18px; border-top: 1px solid var(--border); font-size: 12px; color: var(--ink-faint); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
-
-	@media (max-width: 860px) {
-		.hero { grid-template-columns: 1fr; }
-		.public-nav__links { order: 3; width: 100%; justify-content: center; }
-		.public-teacher-grid, .public-blog-grid { grid-template-columns: 1fr; }
-	}
-</style>
+<link rel="stylesheet" href="assets/css/public-site.css">
 </head>
 <body>
 
@@ -221,88 +139,21 @@
 <script src="assets/js/clock.js"></script>
 <script src="assets/js/roster-data.js"></script>
 <script src="assets/js/app.js"></script>
+<script src="assets/js/public-site.js"></script>
 <script>
-	function escapeHtml( s ) {
-		var d = document.createElement( 'div' );
-		d.textContent = s;
-		return d.innerHTML;
-	}
-	var LANGUAGE_NAMES = { en: 'English', fr: 'French', de: 'German', ar: 'Arabic', tr: 'Turkish', es: 'Spanish', fa: 'Persian', it: 'Italian' };
-
-	function publishedTeachers() {
-		var teachers = window.mahtelaRoster.loadTeachers();
-		return Object.keys( teachers )
-			.map( function ( k ) { return teachers[ k ]; } )
-			.filter( function ( t ) { return t.portfolio && t.portfolio.published; } );
-	}
-
 	function renderFeaturedTeachers() {
 		var lang = window.mahtelaI18n.currentLang();
 		var dict = window.mahtelaI18n.dict;
 		var grid = document.getElementById( 'featured-teachers-grid' );
 		grid.innerHTML = '';
-
-		publishedTeachers().slice( 0, 3 ).forEach( function ( t ) {
-			var p = t.portfolio;
-			var langLabel = ( p.languages || [] ).map( function ( code ) { return LANGUAGE_NAMES[ code ] || code; } ).join( ', ' );
-			var classTypeLabel = ( p.classTypes || [] ).map( function ( ct ) { return ct === 'online' ? dict.class_type_online[ lang ] : dict.class_type_in_person[ lang ]; } ).join( ' · ' );
-			var priceLabel = p.priceUnit === 'usd' ? ( '$' + p.sessionPrice ) : window.mahtelaI18n.formatToman( p.sessionPrice, lang );
-
-			var card = document.createElement( 'a' );
-			card.href = 'login.html';
-			card.className = 'card public-teacher-card';
-			card.innerHTML =
-				'<div class="public-teacher-card__head">' +
-					'<span class="public-teacher-card__avatar"></span>' +
-					'<div><div class="public-teacher-card__lang"></div><div class="public-teacher-card__name"></div></div>' +
-				'</div>' +
-				'<p class="public-teacher-card__intro"></p>' +
-				'<div class="public-teacher-card__meta">' +
-					'<span><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5Z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg><span></span></span>' +
-					'<span><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="14" height="10" rx="1"/><path d="M8 20h4M10 14v6M17 8l5-3v10l-5-3"/></svg><span></span></span>' +
-				'</div>' +
-				'<div class="public-teacher-card__footer"><span></span><span class="public-teacher-card__price"></span></div>';
-			card.querySelector( '.public-teacher-card__avatar' ).innerHTML = window.mahtelaRoster.avatarHTML( { photo: t.photo, name: t.name }, window.mahtelaRoster.initials( t.name ) );
-			card.querySelector( '.public-teacher-card__lang' ).textContent = langLabel;
-			card.querySelector( '.public-teacher-card__name' ).textContent = p.displayName || t.name;
-			card.querySelector( '.public-teacher-card__intro' ).textContent = p.introTitle || t.bio || '';
-			var yearsNum = lang === 'fa' ? window.mahtelaCalendar.toFaDigits( p.yearsExperience || 0 ) : ( p.yearsExperience || 0 );
-			card.querySelectorAll( '.public-teacher-card__meta span span' )[ 0 ].textContent = yearsNum + ( lang === 'fa' ? ' سال تجربه تدریس' : ' years teaching' );
-			card.querySelectorAll( '.public-teacher-card__meta span span' )[ 1 ].textContent = classTypeLabel;
-			card.querySelector( '.public-teacher-card__footer span' ).textContent = '';
-			var durationNum = lang === 'fa' ? window.mahtelaCalendar.toFaDigits( p.sessionDuration ) : p.sessionDuration;
-			card.querySelector( '.public-teacher-card__price' ).innerHTML = priceLabel + '<small>' + ( lang === 'fa' ? 'هر جلسه · ' + durationNum + ' دقیقه' : 'per session · ' + durationNum + ' min' ) + '</small>';
-			grid.appendChild( card );
-		} );
+		publishedTeachers().slice( 0, 3 ).forEach( function ( t ) { grid.appendChild( renderPublicTeacherCard( t, lang, dict ) ); } );
 	}
 
 	function renderFeaturedBlog() {
 		var lang = window.mahtelaI18n.currentLang();
-		var teachers = window.mahtelaRoster.loadTeachers();
-		var posts = [];
-		Object.keys( teachers ).forEach( function ( key ) {
-			var t = teachers[ key ];
-			( t.blogPosts || [] ).forEach( function ( post ) { posts.push( { post: post, teacher: t } ); } );
-		} );
-		posts.sort( function ( a, b ) { return b.post.createdAt.localeCompare( a.post.createdAt ); } );
-
 		var grid = document.getElementById( 'featured-blog-grid' );
 		grid.innerHTML = '';
-		posts.slice( 0, 3 ).forEach( function ( item ) {
-			var card = document.createElement( 'a' );
-			card.href = 'public-blog.html';
-			card.className = 'card public-blog-card';
-			var snippet = item.post.body.length > 90 ? item.post.body.slice( 0, 90 ) + '…' : item.post.body;
-			card.innerHTML =
-				'<h3 class="public-blog-card__title"></h3>' +
-				'<p class="public-blog-card__snippet"></p>' +
-				'<div class="public-blog-card__author"><span class="public-blog-card__author-avatar"></span><span></span></div>';
-			card.querySelector( '.public-blog-card__title' ).textContent = item.post.title;
-			card.querySelector( '.public-blog-card__snippet' ).textContent = snippet;
-			card.querySelector( '.public-blog-card__author-avatar' ).innerHTML = window.mahtelaRoster.avatarHTML( { photo: item.teacher.photo, name: item.teacher.name }, window.mahtelaRoster.initials( item.teacher.name ) );
-			card.querySelector( '.public-blog-card__author span:last-child' ).textContent = item.teacher.name;
-			grid.appendChild( card );
-		} );
+		allBlogPosts().slice( 0, 3 ).forEach( function ( item ) { grid.appendChild( renderPublicBlogCard( item, lang, 'public-blog.html' ) ); } );
 	}
 
 	document.getElementById( 'hero-search-btn' ).addEventListener( 'click', function () {

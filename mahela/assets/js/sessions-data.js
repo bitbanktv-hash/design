@@ -167,6 +167,39 @@
 		return true;
 	}
 
+	var ADMIN_INBOX_KEY = 'mahtela-admin-inbox';
+
+	function loadAdminInbox() {
+		try {
+			var raw = localStorage.getItem( ADMIN_INBOX_KEY );
+			if ( raw ) { return JSON.parse( raw ); }
+		} catch ( e ) { /* fall through to empty */ }
+		return [];
+	}
+
+	function saveAdminInbox( entries ) {
+		localStorage.setItem( ADMIN_INBOX_KEY, JSON.stringify( entries ) );
+		document.dispatchEvent( new CustomEvent( 'mahtela:adminInboxChange' ) );
+	}
+
+	/**
+	 * Appends a new entry from the public Contact Us form to the admin
+	 * inbox. teacherContext carries which teacher's portfolio the
+	 * visitor was viewing when they reached the form (if any), matching
+	 * the reference site's "chose a teacher" note.
+	 */
+	function sendToAdminInbox( entry ) {
+		var entries = loadAdminInbox();
+		entries.unshift( {
+			id: 'msg' + Date.now(),
+			name: entry.name, email: entry.email, phone: entry.phone || '',
+			message: entry.message, teacherContext: entry.teacherContext || null,
+			createdAt: new Date().toISOString(), read: false
+		} );
+		saveAdminInbox( entries );
+		return true;
+	}
+
 	window.mahtelaData = {
 		loadSessions: loadSessions,
 		saveSessions: saveSessions,
@@ -174,6 +207,9 @@
 		saveConversations: saveConversations,
 		sendMessageTo: sendMessageTo,
 		parseDurationHHMM: parseDurationHHMM,
-		formatDurationHHMM: formatDurationHHMM
+		formatDurationHHMM: formatDurationHHMM,
+		loadAdminInbox: loadAdminInbox,
+		saveAdminInbox: saveAdminInbox,
+		sendToAdminInbox: sendToAdminInbox
 	};
 }() );

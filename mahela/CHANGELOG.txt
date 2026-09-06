@@ -1,8 +1,36 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.25.1 — Current
+v1.26.0 — Current
 ------------------
+- The public site is now complete. Two new pages join the homepage:
+  - Teachers directory (public-teachers.html): every published
+    teacher, filterable by language, class type, and a name/specialty
+    search, with a live count and a proper empty state. Arriving from
+    the homepage's search bar correctly pre-fills these filters.
+  - Blog (public-blog.html): a listing of every teacher's published
+    posts, plus a real single-post reading view when linked with
+    ?post=id -- an unrecognized id falls back to the listing rather
+    than showing a broken page.
+  - Contact Us (public-contact.html): a real form (name, email with
+    proper format validation, optional phone, message) that now
+    actually saves to a new admin inbox data store instead of going
+    nowhere, laying the groundwork for the admin inbox page. Supports
+    an optional ?teacher= link so a future "request this teacher"
+    flow can carry context into the message automatically -- shows a
+    small note confirming which teacher the message is about.
+  Every link from the homepage that pointed to these pages now
+  resolves; the project-wide broken-link check is clean for the first
+  time since the public site work started.
+- Refactored the homepage's page-specific CSS and JS into two new
+  shared files (public-site.css, public-site.js) before writing the
+  new pages, so the nav, footer, and teacher/blog card rendering
+  logic didn't need to be duplicated three times over. Verified the
+  homepage itself still renders identically after this move.
+- Full 19-page load audit run clean, including all three new pages.
+
+v1.25.1
+--------
 - Fixed a real regression: the Tuition & Settlement page's aggregated
   view had dropped the custom message textarea that the original
   per-student Request Settlement flow had -- meaning there was no way
