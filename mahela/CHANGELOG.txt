@@ -1,8 +1,29 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.22.0 — Current
+v1.23.0 — Current
 ------------------
+- New: a Portfolio & Blog page for the teacher, with two sections.
+  Introduction & Classes is a full public-profile builder: display
+  name, intro title, about-me, teaching languages (multi-select),
+  class type, price unit and per-session price, years of experience,
+  session duration, specialties, certificates, and education, plus a
+  Draft/Published status and an explicit toggle for whether the
+  portfolio should appear in the future public teacher directory --
+  saving without that toggle keeps it as a private draft. Blog & Posts
+  is a simple post editor: create, edit, and delete short posts, kept
+  intentionally basic since it's a new area without an existing
+  design to match closely.
+  Added to the sidebar on every teacher-facing page, between Messages
+  and Settings.
+- Verified end-to-end: filling out and saving the full introduction
+  form persists every field correctly and updates the status badge;
+  creating, editing, and deleting a blog post all work and correctly
+  update the list and empty-state without duplicating or losing data.
+  Full 15-page load audit run clean, including the new page.
+
+v1.22.0
+--------
 - New: a Tuition & Settlement page for the teacher, showing every
   student's account in one place instead of needing to open each
   student individually. Three summary cards (sessions subject to

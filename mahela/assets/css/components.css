@@ -520,6 +520,19 @@ html[dir="rtl"] .switch input:checked + .switch__track::before { transform: tran
 [data-theme="dark"] .form-notice--error { background: rgba(192,69,63,0.16); color: #E5928C; }
 .form-notice--success { background: rgba(152,197,78,0.16); color: var(--success-strong); }
 .form-notice--info { background: var(--surface-soft); color: var(--ink-soft); }
+.form-notice { flex-wrap: wrap; }
+.form-notice a { font-weight: 700; color: var(--brand-strong, var(--brand)); white-space: nowrap; text-decoration: none; }
+.form-notice a:hover { text-decoration: underline; }
+.checkbox-chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.checkbox-chip {
+	display: inline-flex; align-items: center; gap: 6px;
+	padding: 7px 14px; border-radius: 999px; border: 1px solid var(--border);
+	font-size: 12.5px; font-weight: 600; cursor: pointer; color: var(--ink);
+	background: var(--surface-soft); transition: border-color .15s ease, background-color .15s ease;
+}
+.checkbox-chip input { width: auto; margin: 0; accent-color: var(--brand); }
+.checkbox-chip:has(input:checked) { border-color: var(--brand); background: var(--brand-soft); }
+.form-field__hint { display: block; font-size: 11px; color: var(--ink-faint); margin-top: 6px; }
 
 /* ==========================================================================
    Responsive
