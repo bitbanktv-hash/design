@@ -282,6 +282,22 @@ html[dir="rtl"] .search-input svg { inset-inline-start: auto; inset-inline-end: 
 }
 .settlement-row:last-child { border-bottom: 0; }
 
+.settlement-group { border: 1px solid var(--border); border-radius: var(--radius-md); padding: 18px; margin-bottom: 16px; }
+.settlement-group:last-child { margin-bottom: 0; }
+.settlement-group__head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.settlement-group__avatar {
+	width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; overflow: hidden;
+	background: var(--student-accent, var(--brand)); color: var(--c-ink);
+	display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px;
+}
+.settlement-group__name { font-weight: 700; font-size: 14px; color: var(--ink); text-decoration: none; }
+.settlement-group__name:hover { text-decoration: underline; }
+.settlement-group__actions {
+	display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+	margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--border);
+}
+.settlement-group__summary { font-size: 13px; font-weight: 700; }
+
 /* ==========================================================================
    Chat / messages
    ========================================================================== */

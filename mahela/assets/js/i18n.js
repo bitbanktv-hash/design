@@ -14,6 +14,7 @@
 		nav_dashboard: { en: 'Teacher Dashboard', fa: 'داشبورد معلم' },
 		nav_students: { en: 'Students', fa: 'شاگردان' },
 		nav_schedule: { en: 'Schedule', fa: 'زمان‌بندی' },
+		nav_settlement: { en: 'Tuition & Settlement', fa: 'شهریه و تسویه' },
 		schedule_sub_page: { en: 'Your full weekly timetable — click any open slot to book a class.', fa: 'برنامه‌ی هفتگی کامل تو — روی هر بازه‌ی خالی کلیک کن تا کلاس رزرو کنی.' },
 		schedule_prev_week: { en: 'Previous week', fa: 'هفته‌ی قبل' },
 		schedule_next_week: { en: 'Next week', fa: 'هفته‌ی بعد' },
@@ -297,6 +298,16 @@
 		settlement_message_default: { en: "Hi! You have a few unsettled sessions below — could you arrange payment when you get a chance? Thanks!", fa: 'سلام! چندتا جلسه‌ی تسویه‌نشده هست که پایین اومده — لطفاً هر وقت وقت کردی، هزینه‌شون رو واریز کن. ممنون!' },
 		settlement_summary_note: { en: 'Added automatically from your selection above.', fa: 'به‌صورت خودکار از انتخاب بالا اضافه می‌شه.' },
 		settlement_sent_toast: { en: 'Settlement request sent to the student.', fa: 'درخواست تسویه برای شاگرد ارسال شد.' },
+		settlement_settled_toast: { en: 'marked as settled.', fa: 'تسویه ثبت شد.' },
+		settlement_page_title: { en: 'Tuition & Settlement', fa: 'شهریه و تسویه' },
+		settlement_page_sub: { en: 'Every student\'s account, always clear and up to date.', fa: 'حساب همه‌ی شاگردها، همیشه روشن و مرتب.' },
+		settlement_chargeable_sessions: { en: 'Sessions subject to tuition', fa: 'جلسات مشمول شهریه' },
+		settlement_received: { en: 'Tuition received', fa: 'شهریه دریافت‌شده' },
+		settlement_outstanding: { en: 'Settleable balance', fa: 'مانده قابل تسویه' },
+		settlement_pending_title: { en: 'Sessions Awaiting Settlement', fa: 'جلسات در انتظار تسویه' },
+		settlement_pending_sub: { en: 'Select the sessions you want to record for each student.', fa: 'جلسه‌های موردنظر برای ثبت هر شاگرد رو انتخاب کن.' },
+		settlement_all_clear: { en: "Everything is tidy; you have no unsettled tuition.", fa: 'همه‌چیز مرتبه؛ شهریه‌ی تسویه‌نشده‌ای نداری.' },
+		settlement_no_history: { en: 'No receipts recorded yet.', fa: 'هنوز دریافتی ثبت نشده است.' },
 		settlement_select_first: { en: 'Select at least one session first.', fa: 'اول حداقل یه جلسه رو انتخاب کن.' },
 		schedule_mark_held: { en: 'Mark as Held', fa: 'ثبت به‌عنوان برگزارشده' },
 		schedule_missed: { en: 'Missed', fa: 'برگزار نشد' },
@@ -433,7 +444,7 @@
 		applyTranslations( lang );
 	}
 
-	window.mahtelaI18n = { dict: DICT, apply: applyTranslations, setLang: setLang, currentLang: currentLang, formatToman: formatToman, applyNumbers: applyPlainNumbers };
+	window.mahtelaI18n = { dict: DICT, apply: applyTranslations, setLang: setLang, currentLang: currentLang, formatToman: formatToman, applyNumbers: applyPlainNumbers, applyCurrencies: applyCurrencies };
 
 	document.addEventListener( 'DOMContentLoaded', function () {
 		applyTranslations( currentLang() );

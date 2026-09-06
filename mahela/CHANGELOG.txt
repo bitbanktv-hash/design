@@ -1,8 +1,38 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.21.0 — Current
+v1.22.0 — Current
 ------------------
+- New: a Tuition & Settlement page for the teacher, showing every
+  student's account in one place instead of needing to open each
+  student individually. Three summary cards (sessions subject to
+  tuition, tuition received, settleable balance) at the top, then
+  unsettled sessions grouped by student -- each group has its own
+  selection, Settle Selected, and Request Settlement (which sends a
+  real message to that specific student), reusing the exact same
+  status/reason/badge display already used on the per-student page.
+  A real settlement history at the bottom, built from actually-settled
+  sessions rather than static placeholder rows. Added to the sidebar
+  on every teacher-facing page.
+- Found and fixed a real, previously-unnoticed bug while building
+  this: the per-student Finance tab's unsettled session list has
+  always shown "—" instead of the actual per-session amount for every
+  single row, because the function that fills in that value was never
+  being called after the rows were created. It only worked by
+  coincidence elsewhere in the app on rows that already existed when
+  the page first loaded. Fixed at the source (the currency-formatting
+  function wasn't even accessible to other pages before this) and
+  verified real amounts now show correctly in both the original
+  per-student view and the new aggregated one.
+- Verified end-to-end: settling a student's sessions correctly removes
+  them from the list and adds them to history with the right amount,
+  requesting settlement delivers a real message with the correct
+  session count and total, and both actions correctly affect only the
+  intended student, not any other. Full 14-page load audit run clean,
+  including the new page.
+
+v1.21.0
+--------
 - New: a Grid/List toggle for the teacher's class schedule. Grid is
   the existing weekly time-slot view, unchanged and fully intact.
   List is new -- each day of the week as its own row, with a "+ New

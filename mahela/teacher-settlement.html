@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light" data-role="teacher">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tuition & Settlement — MahFLA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/animations.css">
+</head>
+<body>
+
+<div class="app-shell">
+	<div class="sidebar-backdrop" data-sidebar-toggle></div>
+
+	<aside class="sidebar">
+		<div class="sidebar__brand">
+			<span class="sidebar__logo">M</span>
+			<div class="sidebar__brand-text">
+				<span class="sidebar__brand-name" data-i18n="brand_name">MahFLA</span>
+				<span class="sidebar__brand-tagline" data-i18n="brand_tagline">Mahta Foreign Language Academy</span>
+			</div>
+		</div>
+		<nav class="sidebar__nav">
+			<a href="teacher-dashboard.html" class="sidebar__link">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+				<span data-i18n="nav_dashboard">Teacher Dashboard</span>
+			</a>
+			<a href="teacher-students.html" class="sidebar__link">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="12" width="8" height="9" rx="2"/><rect x="3" y="14" width="8" height="7" rx="2"/></svg>
+				<span data-i18n="nav_students">Students</span>
+			</a>
+			<a href="teacher-schedule.html" class="sidebar__link">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
+				<span data-i18n="nav_schedule">Schedule</span>
+			</a>
+			<a href="teacher-settlement.html" class="sidebar__link is-active">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="17" cy="15" r="1.5"/></svg>
+				<span data-i18n="nav_settlement">Tuition &amp; Settlement</span>
+			</a>
+			<a href="messages.html" class="sidebar__link">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+				<span data-i18n="nav_messages">Messages</span>
+				<span class="badge badge--brand" style="margin-inline-start:auto;" data-i18n-number="3">3</span>
+			</a>
+			<a href="settings.html?role=teacher" class="sidebar__link">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 9 19.35a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.65 15a1.7 1.7 0 0 0-1.56-1.04H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.65 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.65a1.7 1.7 0 0 0 1.04-1.56V3a2 2 0 0 1 4 0v.09A1.7 1.7 0 0 0 15 4.65a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.35 9a1.7 1.7 0 0 0 1.56 1.04H21a2 2 0 0 1 0 4h-.09A1.7 1.7 0 0 0 19.4 15Z"/></svg>
+				<span data-i18n="nav_settings">Settings</span>
+			</a>
+		</nav>
+		<div class="sidebar__footer">
+			<div class="sidebar__user">
+				<span class="sidebar__avatar" id="sidebar-avatar" style="background: var(--brand); color:var(--c-ink);">JD</span>
+				<div class="sidebar__user-info">
+					<span class="sidebar__user-name">Jane Doe</span>
+					<span class="sidebar__user-role">English Teacher</span>
+				</div>
+			</div>
+			<a href="login.html" class="sidebar__link">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+				<span data-i18n="nav_logout">Log Out</span>
+			</a>
+			<div class="sidebar__version">MahFLA v1.22.0</div>
+		</div>
+	</aside>
+
+	<div class="main-content">
+		<header class="topbar-app">
+			<div class="topbar-app__left">
+				<button type="button" class="toggle-btn sidebar-toggle" data-sidebar-toggle aria-label="Menu">
+					<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+				</button>
+				<div class="clock-widget hide-mobile" data-clock-widget>
+					<span class="clock-widget__icon">
+						<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+					</span>
+					<div class="clock-widget__dates">
+						<span class="clock-widget__time" data-clock-time>--:--:--</span>
+						<span class="clock-widget__date"><span data-clock-gregorian>—</span><span data-clock-sep> | </span><span data-clock-jalali>—</span></span>
+					</div>
+				</div>
+			</div>
+			<div class="utility-toggles">
+				<button type="button" class="toggle-btn lang-toggle" data-lang-btn>FA</button>
+				<button type="button" class="toggle-btn" data-theme-btn aria-label="Toggle theme">
+					<svg data-icon-moon viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+					<svg data-icon-sun viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+				</button>
+			</div>
+		</header>
+
+		<div class="page-body">
+			<div class="page-head page-head--row reveal-on-load" style="--rl-delay:0ms">
+				<div>
+					<h1 class="page-head__title" data-i18n="settlement_page_title">Tuition &amp; Settlement</h1>
+					<p class="page-head__sub" data-i18n="settlement_page_sub">Every student's account, always clear and up to date.</p>
+				</div>
+			</div>
+
+			<div class="finance-hero">
+				<div class="card finance-hero__card">
+					<div class="finance-hero__value" id="settlement-chargeable-count">—</div>
+					<div class="finance-hero__label" data-i18n="settlement_chargeable_sessions">Sessions subject to tuition</div>
+				</div>
+				<div class="card finance-hero__card">
+					<div class="finance-hero__value" id="settlement-received-total">—</div>
+					<div class="finance-hero__label" data-i18n="settlement_received">Tuition received</div>
+				</div>
+				<div class="card finance-hero__card finance-hero__card--highlight">
+					<div class="finance-hero__value" id="settlement-outstanding-total">—</div>
+					<div class="finance-hero__label" data-i18n="settlement_outstanding">Settleable balance</div>
+				</div>
+			</div>
+
+			<div class="card" style="padding:24px; margin-bottom:20px;">
+				<h3 style="font-size:15px; margin:0 0 4px;" data-i18n="settlement_pending_title">Sessions Awaiting Settlement</h3>
+				<p style="font-size:12.5px; color:var(--ink-soft); margin:0 0 16px;" data-i18n="settlement_pending_sub">Select the sessions you want to record for each student.</p>
+				<div id="settlement-groups"></div>
+				<p id="settlement-empty-state" style="display:none; text-align:center; color:var(--ink-faint); padding:24px 0; margin:0;" data-i18n="settlement_all_clear">Everything is tidy; you have no unsettled tuition.</p>
+			</div>
+
+			<div class="card" style="padding:24px;">
+				<h3 style="font-size:15px; margin-bottom:6px;" data-i18n="finance_history">Settlement History</h3>
+				<div id="settlement-history-list"></div>
+				<p id="settlement-history-empty" style="display:none; text-align:center; color:var(--ink-faint); padding:16px 0; margin:0;" data-i18n="settlement_no_history">No receipts recorded yet.</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/theme.js"></script>
+<script src="assets/js/clock.js"></script>
+<script src="assets/js/roster-data.js"></script>
+<script src="assets/js/sessions-data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+	var CURRENT_TEACHER_ID = 'jane'; // this page always represents Jane Doe's logged-in view
+
+	function renderSidebarAvatar() {
+		var el = document.getElementById( 'sidebar-avatar' );
+		if ( ! el ) { return; }
+		var teacher = window.mahtelaRoster.loadTeachers()[ CURRENT_TEACHER_ID ];
+		el.innerHTML = window.mahtelaRoster.avatarHTML( teacher, 'JD' );
+	}
+	renderSidebarAvatar();
+	document.addEventListener( 'mahtela:teacherschange', renderSidebarAvatar );
+
+	/* ---------- shared helpers, matching the per-student Finance tab ---------- */
+	function pad2( n ) { return n < 10 ? '0' + n : '' + n; }
+	function timeToMinutes( t ) { var p = t.split( ':' ); return parseInt( p[ 0 ], 10 ) * 60 + parseInt( p[ 1 ], 10 ); }
+	function escapeHtml( s ) {
+		var d = document.createElement( 'div' );
+		d.textContent = s;
+		return d.innerHTML;
+	}
+	var CLASS_TYPE_ICONS = {
+		'in-person': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1M9 13h1M14 9h1M14 13h1"/></svg>',
+		online: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="4" width="14" height="10" rx="1"/><path d="M8 20h4M10 14v6M17 8l5-3v10l-5-3"/></svg>'
+	};
+	function classTypeBadgeHTML( classType, lang ) {
+		var dict = window.mahtelaI18n.dict;
+		var label = classType === 'online' ? dict.class_type_online[ lang ] : dict.class_type_in_person[ lang ];
+		var cls = classType === 'online' ? 'class-type-badge--online' : 'class-type-badge--in-person';
+		return '<span class="class-type-badge ' + cls + '">' + CLASS_TYPE_ICONS[ classType ] + label + '</span>';
+	}
+	function isChargeable( s ) {
+		return s.status === 'held' || ( s.status === 'cancelled' && s.chargeApplied === true );
+	}
+
+	var STUDENTS = window.mahtelaRoster.loadStudents();
+	var SESSIONS = window.mahtelaData.loadSessions();
+
+	function myStudents() {
+		return Object.keys( STUDENTS ).map( function ( k ) { return STUDENTS[ k ]; } ).filter( function ( s ) { return s.teacherId === CURRENT_TEACHER_ID; } );
+	}
+	function unsettledForStudent( key ) {
+		return SESSIONS.filter( function ( s ) { return s.studentKey === key && isChargeable( s ) && ! s.settled; } );
+	}
+
+	function renderKPIs() {
+		var lang = window.mahtelaI18n.currentLang();
+		var myKeys = myStudents().map( function ( s ) { return s.key; } );
+		var allChargeable = SESSIONS.filter( function ( s ) { return myKeys.indexOf( s.studentKey ) !== -1 && isChargeable( s ); } );
+		var unsettled = allChargeable.filter( function ( s ) { return ! s.settled; } );
+		var settled = allChargeable.filter( function ( s ) { return s.settled; } );
+		var outstandingTotal = unsettled.reduce( function ( sum, s ) { var st = STUDENTS[ s.studentKey ]; return sum + ( st ? st.rate : 0 ); }, 0 );
+		var receivedTotal = settled.reduce( function ( sum, s ) { var st = STUDENTS[ s.studentKey ]; return sum + ( st ? st.rate : 0 ); }, 0 );
+
+		document.getElementById( 'settlement-chargeable-count' ).textContent = lang === 'fa' ? window.mahtelaCalendar.toFaDigits( allChargeable.length ) : allChargeable.length;
+		document.getElementById( 'settlement-received-total' ).textContent = window.mahtelaI18n.formatToman( receivedTotal, lang );
+		document.getElementById( 'settlement-outstanding-total' ).textContent = window.mahtelaI18n.formatToman( outstandingTotal, lang );
+	}
+
+	function renderSessionCheckRow( s, student, lang ) {
+		var dict = window.mahtelaI18n.dict;
+		var endMin = timeToMinutes( s.time ) + s.duration;
+		var endStr = pad2( Math.floor( endMin / 60 ) ) + ':' + pad2( endMin % 60 );
+
+		var statusText, statusClass = '';
+		if ( s.status === 'held' ) {
+			statusText = dict.finance_status_held[ lang ];
+		} else {
+			var reasonKey = s.cancelReason === 'no-show' ? 'cancel_reason_noshow' : 'cancel_reason_student';
+			statusText = dict.finance_status_cancelled[ lang ] + ' — ' + dict[ reasonKey ][ lang ];
+			statusClass = ' session-row__sub--cancelled';
+		}
+		var requestedBadge = s.settlementRequested
+			? '<span class="settlement-requested-badge"><svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="3"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4Z"/></svg>' + dict.finance_settlement_requested[ lang ] + '</span>'
+			: '';
+
+		var label = document.createElement( 'label' );
+		label.className = 'session-row settle-row';
+		label.innerHTML =
+			'<input type="checkbox" class="settle-checkbox" data-amount="' + student.rate + '" data-session-id="' + s.id + '" checked style="width:auto; margin-inline-end:6px;">' +
+			'<span class="session-row__date" data-date="' + s.date + '"><span class="session-row__date-day" data-date-part="day"></span><span class="session-row__date-month" data-date-part="month"></span></span>' +
+			'<span class="session-row__info"><span class="session-row__time">' + ( lang === 'fa' ? window.mahtelaCalendar.toFaDigits( s.time + ' – ' + endStr ) : s.time + ' – ' + endStr ) + '</span><span class="session-row__sub' + statusClass + '" data-date="' + s.date + '"><span data-date-part="weekday"></span> · ' + statusText + '</span></span>' +
+			'<span class="session-row__actions">' + requestedBadge + classTypeBadgeHTML( s.classType, lang ) + '<span data-currency="' + student.rate + '">—</span></span>';
+		return label;
+	}
+
+	function renderGroups() {
+		var lang = window.mahtelaI18n.currentLang();
+		var dict = window.mahtelaI18n.dict;
+		var container = document.getElementById( 'settlement-groups' );
+		container.innerHTML = '';
+		var anyGroups = false;
+
+		myStudents().forEach( function ( student ) {
+			var unsettled = unsettledForStudent( student.key ).sort( function ( a, b ) { return ( a.date + a.time ).localeCompare( b.date + b.time ); } );
+			if ( ! unsettled.length ) { return; }
+			anyGroups = true;
+
+			var group = document.createElement( 'div' );
+			group.className = 'settlement-group';
+
+			var head = document.createElement( 'div' );
+			head.className = 'settlement-group__head';
+			head.innerHTML =
+				'<span class="settlement-group__avatar" data-gender="' + student.gender + '"></span>' +
+				'<a class="settlement-group__name" href="student-detail.html?student=' + student.key + '"></a>';
+			head.querySelector( '.settlement-group__avatar' ).innerHTML = window.mahtelaRoster.avatarHTML( student, student.initials );
+			head.querySelector( '.settlement-group__name' ).textContent = student.name;
+			group.appendChild( head );
+
+			var list = document.createElement( 'div' );
+			list.className = 'session-list';
+			unsettled.forEach( function ( s ) { list.appendChild( renderSessionCheckRow( s, student, lang ) ); } );
+			group.appendChild( list );
+
+			var actions = document.createElement( 'div' );
+			actions.className = 'settlement-group__actions';
+			actions.innerHTML =
+				'<span class="settlement-group__summary"></span>' +
+				'<button type="button" class="btn btn--primary btn--small" data-action="settle">' + dict.finance_settle_selected[ lang ] + '</button>' +
+				'<button type="button" class="btn btn--accent btn--small" data-action="request">' + dict.finance_request_settlement[ lang ] + '</button>';
+			group.appendChild( actions );
+
+			function updateGroupSummary() {
+				var checked = Array.prototype.filter.call( list.querySelectorAll( '.settle-checkbox' ), function ( cb ) { return cb.checked; } );
+				var total = checked.reduce( function ( sum, cb ) { return sum + parseFloat( cb.getAttribute( 'data-amount' ) ); }, 0 );
+				actions.querySelector( '.settlement-group__summary' ).textContent = checked.length + ' ' + dict.finance_sessions_word[ lang ] + ' · ' + window.mahtelaI18n.formatToman( total, lang );
+				actions.querySelector( '[data-action="settle"]' ).disabled = checked.length === 0;
+				actions.querySelector( '[data-action="request"]' ).disabled = checked.length === 0;
+			}
+			list.querySelectorAll( '.settle-checkbox' ).forEach( function ( cb ) { cb.addEventListener( 'change', updateGroupSummary ); } );
+
+			actions.querySelector( '[data-action="settle"]' ).addEventListener( 'click', function () {
+				var checked = Array.prototype.filter.call( list.querySelectorAll( '.settle-checkbox' ), function ( cb ) { return cb.checked; } );
+				var ids = checked.map( function ( cb ) { return cb.getAttribute( 'data-session-id' ); } );
+				if ( ! ids.length ) { return; }
+				SESSIONS.forEach( function ( s ) { if ( ids.indexOf( s.id ) !== -1 ) { s.settled = true; s.settlementRequested = false; } } );
+				window.mahtelaData.saveSessions( SESSIONS );
+				mahtelaToast( ids.length + ' ' + dict.finance_sessions_word[ lang ] + ' — ' + dict.settlement_settled_toast[ lang ] );
+				renderAll();
+			} );
+
+			actions.querySelector( '[data-action="request"]' ).addEventListener( 'click', function () {
+				var checked = Array.prototype.filter.call( list.querySelectorAll( '.settle-checkbox' ), function ( cb ) { return cb.checked; } );
+				var ids = checked.map( function ( cb ) { return cb.getAttribute( 'data-session-id' ); } );
+				if ( ! ids.length ) { return; }
+				var total = checked.reduce( function ( sum, cb ) { return sum + parseFloat( cb.getAttribute( 'data-amount' ) ); }, 0 );
+				var summaryText = checked.length + ' ' + dict.finance_sessions_word[ lang ] + ' · ' + window.mahtelaI18n.formatToman( total, lang );
+				var msg = escapeHtml( dict.settlement_message_default[ lang ] ) + '<br><br><strong>' + summaryText + '</strong>';
+				window.mahtelaData.sendMessageTo( student.key, msg );
+				SESSIONS.forEach( function ( s ) { if ( ids.indexOf( s.id ) !== -1 ) { s.settlementRequested = true; } } );
+				window.mahtelaData.saveSessions( SESSIONS );
+				mahtelaToast( dict.settlement_sent_toast[ lang ] );
+				renderAll();
+			} );
+
+			updateGroupSummary();
+			container.appendChild( group );
+		} );
+
+		document.getElementById( 'settlement-empty-state' ).style.display = anyGroups ? 'none' : 'block';
+	}
+
+	function renderHistory() {
+		var lang = window.mahtelaI18n.currentLang();
+		var dict = window.mahtelaI18n.dict;
+		var myKeys = myStudents().map( function ( s ) { return s.key; } );
+		var settled = SESSIONS.filter( function ( s ) { return myKeys.indexOf( s.studentKey ) !== -1 && isChargeable( s ) && s.settled; } )
+			.sort( function ( a, b ) { return ( b.date + b.time ).localeCompare( a.date + a.time ); } );
+
+		var list = document.getElementById( 'settlement-history-list' );
+		list.innerHTML = '';
+		settled.forEach( function ( s ) {
+			var student = STUDENTS[ s.studentKey ];
+			var row = document.createElement( 'div' );
+			row.className = 'settlement-row';
+			row.innerHTML =
+				'<span>' + escapeHtml( student ? student.name : '—' ) + ' · <span data-date="' + s.date + '" data-date-style="full"></span></span>' +
+				'<span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="' + ( student ? student.rate : 0 ) + '">—</span></span>';
+			list.appendChild( row );
+		} );
+		document.getElementById( 'settlement-history-empty' ).style.display = settled.length ? 'none' : 'block';
+	}
+
+	function renderAll() {
+		renderKPIs();
+		renderGroups();
+		renderHistory();
+		window.mahtelaCalendar.applyScheduleDates();
+		window.mahtelaI18n.applyCurrencies( window.mahtelaI18n.currentLang() );
+	}
+
+	renderAll();
+	document.addEventListener( 'mahtela:langchange', renderAll );
+	document.addEventListener( 'mahtela:calendarchange', renderAll );
+	document.addEventListener( 'mahtela:sessionschange', function () {
+		SESSIONS = window.mahtelaData.loadSessions();
+		renderAll();
+	} );
+	document.addEventListener( 'mahtela:studentschange', function () {
+		STUDENTS = window.mahtelaRoster.loadStudents();
+		renderAll();
+	} );
+</script>
+</body>
+</html>
