@@ -1,8 +1,36 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.24.0 — Current
+v1.25.0 — Current
 ------------------
+- New: the real public homepage, replacing the old minimal
+  placeholder. Nav bar, a hero section with a headline and two CTAs,
+  a search bar, a "Featured Teachers" section that pulls real,
+  published portfolios (built two versions ago) rather than static
+  examples, a "From the teachers' desk" blog preview pulling real
+  posts across teachers, a contact-management banner, and a full
+  footer -- all in our own established colors, not the green reference
+  theme (per explicit direction to keep our own look). No login
+  needed to view any of it.
+  Added seed portfolio and blog-post data for three teachers (varied
+  languages and pricing) so the homepage has real content to show
+  instead of an empty state.
+- Caught and fixed two real bugs while building this: the hero
+  headline used an embedded line-break tag inside a translated string,
+  which -- since translations are applied as plain text, not HTML --
+  would have shown the literal characters on screen instead of an
+  actual line break (same for a plain ampersand written in encoded
+  form). And the same "Latin digits leak through in Persian mode" bug
+  fixed on other pages this session turned up again here for years of
+  experience and session duration.
+- Not yet built: the Teachers, Blog, and Contact Us pages this
+  homepage already links to -- so those specific links won't resolve
+  yet. Also still outstanding from the broader plan: currency
+  selection, the admin inbox, and dashboard chart enhancements.
+- Full 16-page load audit run clean, including the rebuilt page.
+
+v1.24.0
+--------
 - Separated admin sign-in from the teacher/student login, for security.
   Admin now has its own page (admin-login.html) with its own address,
   its own indigo-branded look, and no role picker -- it's not reachable

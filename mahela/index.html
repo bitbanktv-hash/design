@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>MahFLA</title>
+<title>MahFLA — Learn a Language, Your Way</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,130 +11,319 @@
 <link rel="stylesheet" href="assets/css/components.css">
 <link rel="stylesheet" href="assets/css/animations.css">
 <style>
-	.landing {
-		min-height: 100vh;
-		display: flex; flex-direction: column;
-		position: relative;
-		overflow: hidden;
-	}
-	.landing__topline {
+	body { background: var(--bg); }
+	.public-nav {
 		display: flex; align-items: center; justify-content: space-between;
-		padding: 22px 28px;
-		position: relative; z-index: 2;
+		padding: 18px 32px; gap: 20px; flex-wrap: wrap;
 	}
-	.landing__main {
-		flex: 1;
-		display: flex; align-items: center; justify-content: center;
-		text-align: center;
-		padding: 40px 24px 80px;
-		position: relative; z-index: 2;
+	.public-nav__brand { display: flex; align-items: center; gap: 8px; text-decoration: none; font-family: var(--font-display); font-weight: 800; font-size: 19px; color: var(--ink); }
+	.public-nav__brand-icon { width: 30px; height: 30px; border-radius: 9px; background: var(--brand); color: var(--c-ink); display: flex; align-items: center; justify-content: center; }
+	.public-nav__links { display: flex; align-items: center; gap: 26px; }
+	.public-nav__links a { font-size: 13.5px; font-weight: 600; color: var(--ink-soft); text-decoration: none; padding-bottom: 4px; border-bottom: 2px solid transparent; }
+	.public-nav__links a:hover { color: var(--ink); }
+	.public-nav__links a.is-active { color: var(--brand-strong, var(--brand)); border-color: var(--brand); }
+	.public-nav__actions { display: flex; align-items: center; gap: 10px; }
+
+	.hero { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; max-width: 1180px; margin: 20px auto 10px; padding: 20px 32px; }
+	.hero__visual { position: relative; border-radius: var(--radius-lg); overflow: hidden; aspect-ratio: 4/3; background: linear-gradient(135deg, var(--brand-soft), var(--surface-soft)); display: flex; align-items: center; justify-content: center; }
+	.hero__visual svg { width: 78%; height: 78%; }
+	.hero__eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--brand-strong, var(--brand)); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 14px; }
+	.hero__eyebrow::before { content: ''; width: 18px; height: 2px; background: var(--brand); display: inline-block; }
+	.hero__title { font-family: var(--font-display); font-size: clamp(34px, 4.4vw, 52px); font-weight: 800; line-height: 1.12; margin: 0 0 16px; }
+	.hero__sub { font-size: 15px; color: var(--ink-soft); line-height: 1.7; max-width: 460px; margin: 0 0 26px; }
+	.hero__ctas { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+	.hero__meta { display: flex; gap: 20px; flex-wrap: wrap; font-size: 12.5px; color: var(--ink-faint); }
+	.hero__meta span { display: inline-flex; align-items: center; gap: 6px; }
+
+	.search-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; max-width: 1180px; margin: 34px auto; padding: 14px 18px; }
+	.search-bar input, .search-bar select { border: none; background: transparent; font-size: 13.5px; padding: 8px 4px; }
+	.search-bar__field { display: flex; flex-direction: column; flex: 1; min-width: 160px; padding-inline-end: 14px; border-inline-end: 1px solid var(--border); }
+	.search-bar__field:last-of-type { border-inline-end: none; }
+	.search-bar__label { font-size: 10.5px; color: var(--ink-faint); font-weight: 700; text-transform: uppercase; letter-spacing: .03em; }
+
+	.public-section { max-width: 1180px; margin: 0 auto; padding: 44px 32px; }
+	.public-section__head { margin-bottom: 26px; }
+	.public-section__eyebrow { font-size: 12px; font-weight: 700; color: var(--brand-strong, var(--brand)); text-transform: uppercase; letter-spacing: .05em; }
+	.public-section__title { font-family: var(--font-display); font-size: 26px; font-weight: 800; margin: 6px 0 0; }
+	.public-section__link { font-size: 13px; font-weight: 700; color: var(--brand-strong, var(--brand)); text-decoration: none; }
+
+	.public-teacher-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+	.public-teacher-card { padding: 22px; transition: transform .2s ease, box-shadow .2s ease; text-decoration: none; color: inherit; display: block; }
+	.public-teacher-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+	.public-teacher-card__head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+	.public-teacher-card__avatar { width: 46px; height: 46px; border-radius: 50%; background: var(--brand); color: var(--c-ink); display: flex; align-items: center; justify-content: center; font-weight: 700; overflow: hidden; }
+	.public-teacher-card__lang { font-size: 11px; color: var(--ink-faint); }
+	.public-teacher-card__name { font-weight: 700; font-size: 15px; }
+	.public-teacher-card__intro { font-size: 13px; color: var(--ink-soft); line-height: 1.5; margin: 0 0 14px; min-height: 40px; }
+	.public-teacher-card__meta { display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--ink-soft); margin-bottom: 16px; }
+	.public-teacher-card__meta span { display: flex; align-items: center; gap: 6px; }
+	.public-teacher-card__footer { display: flex; align-items: center; justify-content: space-between; padding-top: 14px; border-top: 1px dashed var(--border); }
+	.public-teacher-card__price { font-family: var(--font-mono); font-weight: 700; font-size: 14px; text-align: end; }
+	.public-teacher-card__price small { display: block; font-family: var(--font-body); font-weight: 500; font-size: 10.5px; color: var(--ink-faint); }
+
+	.public-blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+	.public-blog-card { padding: 22px; text-decoration: none; color: inherit; display: block; transition: transform .2s ease, box-shadow .2s ease; }
+	.public-blog-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+	.public-blog-card__title { font-weight: 700; font-size: 15.5px; line-height: 1.4; margin: 10px 0; }
+	.public-blog-card__snippet { font-size: 12.5px; color: var(--ink-soft); line-height: 1.6; margin: 0 0 16px; }
+	.public-blog-card__author { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; padding-top: 14px; border-top: 1px dashed var(--border); }
+	.public-blog-card__author-avatar { width: 22px; height: 22px; border-radius: 50%; background: var(--brand); color: var(--c-ink); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; overflow: hidden; }
+
+	.cta-banner {
+		max-width: 1180px; margin: 20px auto 60px; padding: 44px 40px; border-radius: var(--radius-lg);
+		background: linear-gradient(120deg, var(--brand-strong, var(--brand)), var(--accent-strong, var(--accent)));
+		color: var(--c-ink); display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
 	}
-	.landing__title {
-		font-size: clamp(52px, 10vw, 108px);
-		font-weight: 800;
-		background: linear-gradient(120deg, var(--c-pink) 0%, var(--c-orange) 45%, var(--c-teal) 100%);
-		-webkit-background-clip: text; background-clip: text; color: transparent;
-		margin-bottom: 6px;
-		letter-spacing: -0.02em;
-	}
-	.landing__tagline { font-size: 13px; font-weight: 600; color: var(--ink-faint); letter-spacing: .02em; margin-bottom: 26px; }
-	.landing__welcome { font-size: 17px; max-width: 460px; margin: 0 auto 34px; }
-	.landing__footer {
-		text-align: center; padding: 22px; font-size: 12.5px; color: var(--ink-faint);
-		position: relative; z-index: 2;
+	.cta-banner__title { font-family: var(--font-display); font-size: 24px; font-weight: 800; margin: 0 0 8px; }
+	.cta-banner__sub { font-size: 13.5px; opacity: .85; margin: 0; max-width: 420px; }
+
+	.public-footer { border-top: 1px solid var(--border); padding: 36px 32px; }
+	.public-footer__inner { max-width: 1180px; margin: 0 auto; display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+	.public-footer__brand { font-family: var(--font-display); font-weight: 800; font-size: 18px; margin-bottom: 6px; }
+	.public-footer__tagline { font-size: 12.5px; color: var(--ink-faint); max-width: 260px; }
+	.public-footer__links { display: flex; gap: 40px; flex-wrap: wrap; }
+	.public-footer__col { display: flex; flex-direction: column; gap: 10px; }
+	.public-footer__col a { font-size: 13px; color: var(--ink-soft); text-decoration: none; }
+	.public-footer__col a:hover { color: var(--brand-strong, var(--brand)); }
+	.public-footer__bottom { max-width: 1180px; margin: 26px auto 0; padding-top: 18px; border-top: 1px solid var(--border); font-size: 12px; color: var(--ink-faint); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+	@media (max-width: 860px) {
+		.hero { grid-template-columns: 1fr; }
+		.public-nav__links { order: 3; width: 100%; justify-content: center; }
+		.public-teacher-grid, .public-blog-grid { grid-template-columns: 1fr; }
 	}
 </style>
 </head>
 <body>
 
-<div class="landing">
-	<div class="radar-bg radar-bg--ambient" id="landing-radar-bg" aria-hidden="true"></div>
+<header class="public-nav">
+	<a href="index.html" class="public-nav__brand">
+		<span class="public-nav__brand-icon">
+			<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>
+		</span>
+		<span data-i18n="brand_name">MahFLA</span>
+	</a>
+	<nav class="public-nav__links">
+		<a href="index.html" class="is-active" data-i18n="pubnav_home">Home</a>
+		<a href="public-teachers.html" data-i18n="pubnav_teachers">Teachers</a>
+		<a href="public-blog.html" data-i18n="pubnav_blog">Blog</a>
+		<a href="public-contact.html" data-i18n="pubnav_contact">Contact Us</a>
+	</nav>
+	<div class="public-nav__actions">
+		<button type="button" class="toggle-btn lang-toggle" data-lang-btn>FA</button>
+		<button type="button" class="toggle-btn" data-theme-btn aria-label="Toggle theme">
+			<svg data-icon-moon viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+			<svg data-icon-sun viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+		</button>
+		<a href="login.html" class="btn btn--primary btn--small" data-i18n="pubnav_teacher_login">Teacher Login</a>
+	</div>
+</header>
 
-	<div class="landing__topline">
-		<div class="clock-widget" data-clock-widget>
-			<span class="clock-widget__icon">
-				<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
-			</span>
-			<div class="clock-widget__dates">
-				<span class="clock-widget__time" data-clock-time>--:--:--</span>
-				<span class="clock-widget__date"><span data-clock-gregorian>—</span><span data-clock-sep> | </span><span data-clock-jalali>—</span></span>
+<section class="hero reveal-on-load" style="--rl-delay:0ms">
+	<div class="hero__visual" aria-hidden="true">
+		<svg viewBox="0 0 200 200" fill="none">
+			<circle cx="100" cy="100" r="72" stroke="var(--brand)" stroke-width="2" stroke-dasharray="6 8" opacity="0.5"/>
+			<circle cx="100" cy="80" r="26" fill="var(--brand)"/>
+			<path d="M56 156c0-26 20-42 44-42s44 16 44 42" fill="var(--brand)" opacity="0.85"/>
+			<circle cx="150" cy="60" r="15" fill="var(--accent)" opacity="0.9"/>
+			<circle cx="42" cy="70" r="10" fill="var(--c-teal)" opacity="0.8"/>
+			<path d="M120 45c10-4 22 2 24 12" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+		</svg>
+	</div>
+	<div class="hero__content">
+		<span class="hero__eyebrow" data-i18n="hero_eyebrow">Learn a language, your way</span>
+		<h1 class="hero__title"><span data-i18n="hero_title_line1">A fresh language,</span><br><span data-i18n="hero_title_line2">a fresh world.</span></h1>
+		<p class="hero__sub" data-i18n="hero_sub">Find a teacher who matches your goals, time, and budget. Online or in person, your journey starts right here.</p>
+		<div class="hero__ctas">
+			<a href="public-teachers.html" class="btn btn--primary btn--large" data-i18n="hero_cta_primary">Find My Teacher</a>
+			<a href="public-teachers.html" class="btn btn--ghost btn--large" data-i18n="hero_cta_secondary">Browse Teachers</a>
+		</div>
+		<div class="hero__meta">
+			<span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg><span data-i18n="hero_meta_pricing">Clear pricing, easy choice</span></span>
+			<span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="14" height="10" rx="1"/><path d="M8 20h4M10 14v6M17 8l5-3v10l-5-3"/></svg><span data-i18n="hero_meta_format">Online &amp; in person</span></span>
+		</div>
+	</div>
+</section>
+
+<div class="card search-bar reveal-on-load" style="--rl-delay:80ms">
+	<div class="search-bar__field" style="flex:1.4;">
+		<span class="search-bar__label" data-i18n="search_language_label">Language</span>
+		<input type="text" id="hero-search-language" data-i18n-ph="search_language_ph" placeholder="What language do you want to learn?">
+	</div>
+	<div class="search-bar__field">
+		<span class="search-bar__label" data-i18n="search_classtype_label">Class Type</span>
+		<select id="hero-search-classtype">
+			<option value="" data-i18n="search_classtype_all">Online &amp; In-person</option>
+			<option value="online" data-i18n="class_type_online">Online</option>
+			<option value="in-person" data-i18n="class_type_in_person">In-person</option>
+		</select>
+	</div>
+	<button type="button" class="btn btn--primary" id="hero-search-btn" data-i18n="search_btn">Search Teachers</button>
+</div>
+
+<section class="public-section">
+	<div class="public-section__head" style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+		<div>
+			<span class="public-section__eyebrow" data-i18n="featured_eyebrow">The people behind your learning</span>
+			<h2 class="public-section__title" data-i18n="featured_title">Your next companion on the journey</h2>
+		</div>
+		<a href="public-teachers.html" class="public-section__link" data-i18n="featured_view_all">View all teachers →</a>
+	</div>
+	<div class="public-teacher-grid" id="featured-teachers-grid"></div>
+</section>
+
+<section class="public-section" style="background:var(--surface-soft); max-width:none; padding-left:0; padding-right:0;">
+	<div style="max-width:1180px; margin:0 auto; padding:0 32px;">
+		<div class="public-section__head" style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+			<div>
+				<span class="public-section__eyebrow" data-i18n="blog_eyebrow">Learning, beyond the classroom</span>
+				<h2 class="public-section__title" data-i18n="blog_title">From the teachers' desk</h2>
+			</div>
+			<a href="public-blog.html" class="public-section__link" data-i18n="blog_view_all">Browse the blog →</a>
+		</div>
+		<div class="public-blog-grid" id="featured-blog-grid"></div>
+	</div>
+</section>
+
+<section class="cta-banner reveal-on-load" style="--rl-delay:120ms">
+	<div>
+		<div class="cta-banner__title" data-i18n="cta_banner_title">Need help choosing a teacher?</div>
+		<p class="cta-banner__sub" data-i18n="cta_banner_sub">Tell us your goals and budget; management will help you find the right match.</p>
+	</div>
+	<a href="public-contact.html" class="btn btn--large" style="background:var(--surface); color:var(--ink);" data-i18n="cta_banner_btn">Contact Management</a>
+</section>
+
+<footer class="public-footer">
+	<div class="public-footer__inner">
+		<div>
+			<div class="public-footer__brand" data-i18n="brand_name">MahFLA</div>
+			<p class="public-footer__tagline" data-i18n="footer_tagline">A shared space for teaching and learning to meet.</p>
+		</div>
+		<div class="public-footer__links">
+			<div class="public-footer__col">
+				<a href="public-teachers.html" data-i18n="pubnav_teachers">Teachers</a>
+				<a href="public-blog.html" data-i18n="pubnav_blog">Blog</a>
+			</div>
+			<div class="public-footer__col">
+				<a href="public-contact.html" data-i18n="pubnav_contact">Contact Us</a>
+				<a href="login.html" data-i18n="pubnav_teacher_login">Teacher Login</a>
 			</div>
 		</div>
-
-		<div class="utility-toggles">
-			<button type="button" class="toggle-btn lang-toggle" data-lang-btn>FA</button>
-			<button type="button" class="toggle-btn" data-theme-btn aria-label="Toggle theme">
-				<svg data-icon-moon viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
-				<svg data-icon-sun viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-			</button>
-		</div>
 	</div>
-
-	<div class="landing__main">
-		<div class="reveal-on-load" style="--rl-delay:0ms">
-			<h1 class="landing__title" data-i18n="brand_name">MahFLA</h1>
-			<p class="landing__tagline" data-i18n="brand_tagline">Mahta Foreign Language Academy</p>
-			<p class="landing__welcome" data-i18n="landing_welcome">Welcome! Track your progress, see your schedule, and stay in touch with your teacher — all in one place.</p>
-			<a href="login.html" class="btn btn--primary btn--large" data-i18n="landing_cta">Enter Panel</a>
-		</div>
+	<div class="public-footer__bottom">
+		<span data-i18n="footer_credit">Designed by Acc Manager</span>
+		<span>© 2026 MahFLA</span>
 	</div>
-
-	<div class="landing__footer" data-i18n="footer_credit">Designed by Acc Manager</div>
-</div>
+</footer>
 
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/theme.js"></script>
 <script src="assets/js/clock.js"></script>
+<script src="assets/js/roster-data.js"></script>
 <script src="assets/js/app.js"></script>
 <script>
-	// Signature ambient background: a large, softly rotating radar/web
-	// pattern behind the hero — echoes the skill-radar feature even before
-	// login, without stealing focus from the title.
-	( function () {
-		var host = document.getElementById( 'landing-radar-bg' );
-		var size = 900;
-		var center = size / 2;
-		var rings = [ 0.25, 0.5, 0.75, 1 ];
-		var maxR = 420;
-		var axes = 4;
+	function escapeHtml( s ) {
+		var d = document.createElement( 'div' );
+		d.textContent = s;
+		return d.innerHTML;
+	}
+	var LANGUAGE_NAMES = { en: 'English', fr: 'French', de: 'German', ar: 'Arabic', tr: 'Turkish', es: 'Spanish', fa: 'Persian', it: 'Italian' };
 
-		function point( angleDeg, r ) {
-			var rad = ( angleDeg - 90 ) * ( Math.PI / 180 );
-			return { x: center + r * Math.cos( rad ), y: center + r * Math.sin( rad ) };
-		}
+	function publishedTeachers() {
+		var teachers = window.mahtelaRoster.loadTeachers();
+		return Object.keys( teachers )
+			.map( function ( k ) { return teachers[ k ]; } )
+			.filter( function ( t ) { return t.portfolio && t.portfolio.published; } );
+	}
 
-		var svg = document.createElementNS( 'http://www.w3.org/2000/svg', 'svg' );
-		svg.setAttribute( 'viewBox', '0 0 ' + size + ' ' + size );
-		svg.setAttribute( 'width', size );
-		svg.setAttribute( 'height', size );
-		svg.style.position = 'absolute';
-		svg.style.top = '50%';
-		svg.style.left = '50%';
-		svg.style.transform = 'translate(-50%,-50%)';
+	function renderFeaturedTeachers() {
+		var lang = window.mahtelaI18n.currentLang();
+		var dict = window.mahtelaI18n.dict;
+		var grid = document.getElementById( 'featured-teachers-grid' );
+		grid.innerHTML = '';
 
-		rings.forEach( function ( frac ) {
-			var pts = [];
-			for ( var i = 0; i < axes; i++ ) { pts.push( point( i * ( 360 / axes ), maxR * frac ) ); }
-			var poly = document.createElementNS( 'http://www.w3.org/2000/svg', 'polygon' );
-			poly.setAttribute( 'points', pts.map( function ( p ) { return p.x + ',' + p.y; } ).join( ' ' ) );
-			poly.setAttribute( 'fill', 'none' );
-			poly.setAttribute( 'stroke', 'var(--border)' );
-			poly.setAttribute( 'stroke-width', '1.5' );
-			svg.appendChild( poly );
+		publishedTeachers().slice( 0, 3 ).forEach( function ( t ) {
+			var p = t.portfolio;
+			var langLabel = ( p.languages || [] ).map( function ( code ) { return LANGUAGE_NAMES[ code ] || code; } ).join( ', ' );
+			var classTypeLabel = ( p.classTypes || [] ).map( function ( ct ) { return ct === 'online' ? dict.class_type_online[ lang ] : dict.class_type_in_person[ lang ]; } ).join( ' · ' );
+			var priceLabel = p.priceUnit === 'usd' ? ( '$' + p.sessionPrice ) : window.mahtelaI18n.formatToman( p.sessionPrice, lang );
+
+			var card = document.createElement( 'a' );
+			card.href = 'login.html';
+			card.className = 'card public-teacher-card';
+			card.innerHTML =
+				'<div class="public-teacher-card__head">' +
+					'<span class="public-teacher-card__avatar"></span>' +
+					'<div><div class="public-teacher-card__lang"></div><div class="public-teacher-card__name"></div></div>' +
+				'</div>' +
+				'<p class="public-teacher-card__intro"></p>' +
+				'<div class="public-teacher-card__meta">' +
+					'<span><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5Z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg><span></span></span>' +
+					'<span><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="14" height="10" rx="1"/><path d="M8 20h4M10 14v6M17 8l5-3v10l-5-3"/></svg><span></span></span>' +
+				'</div>' +
+				'<div class="public-teacher-card__footer"><span></span><span class="public-teacher-card__price"></span></div>';
+			card.querySelector( '.public-teacher-card__avatar' ).innerHTML = window.mahtelaRoster.avatarHTML( { photo: t.photo, name: t.name }, window.mahtelaRoster.initials( t.name ) );
+			card.querySelector( '.public-teacher-card__lang' ).textContent = langLabel;
+			card.querySelector( '.public-teacher-card__name' ).textContent = p.displayName || t.name;
+			card.querySelector( '.public-teacher-card__intro' ).textContent = p.introTitle || t.bio || '';
+			var yearsNum = lang === 'fa' ? window.mahtelaCalendar.toFaDigits( p.yearsExperience || 0 ) : ( p.yearsExperience || 0 );
+			card.querySelectorAll( '.public-teacher-card__meta span span' )[ 0 ].textContent = yearsNum + ( lang === 'fa' ? ' سال تجربه تدریس' : ' years teaching' );
+			card.querySelectorAll( '.public-teacher-card__meta span span' )[ 1 ].textContent = classTypeLabel;
+			card.querySelector( '.public-teacher-card__footer span' ).textContent = '';
+			var durationNum = lang === 'fa' ? window.mahtelaCalendar.toFaDigits( p.sessionDuration ) : p.sessionDuration;
+			card.querySelector( '.public-teacher-card__price' ).innerHTML = priceLabel + '<small>' + ( lang === 'fa' ? 'هر جلسه · ' + durationNum + ' دقیقه' : 'per session · ' + durationNum + ' min' ) + '</small>';
+			grid.appendChild( card );
 		} );
+	}
 
-		for ( var i = 0; i < axes; i++ ) {
-			var outer = point( i * ( 360 / axes ), maxR );
-			var line = document.createElementNS( 'http://www.w3.org/2000/svg', 'line' );
-			line.setAttribute( 'x1', center ); line.setAttribute( 'y1', center );
-			line.setAttribute( 'x2', outer.x ); line.setAttribute( 'y2', outer.y );
-			line.setAttribute( 'stroke', 'var(--border)' );
-			line.setAttribute( 'stroke-width', '1.5' );
-			svg.appendChild( line );
-		}
+	function renderFeaturedBlog() {
+		var lang = window.mahtelaI18n.currentLang();
+		var teachers = window.mahtelaRoster.loadTeachers();
+		var posts = [];
+		Object.keys( teachers ).forEach( function ( key ) {
+			var t = teachers[ key ];
+			( t.blogPosts || [] ).forEach( function ( post ) { posts.push( { post: post, teacher: t } ); } );
+		} );
+		posts.sort( function ( a, b ) { return b.post.createdAt.localeCompare( a.post.createdAt ); } );
 
-		host.appendChild( svg );
-	}() );
+		var grid = document.getElementById( 'featured-blog-grid' );
+		grid.innerHTML = '';
+		posts.slice( 0, 3 ).forEach( function ( item ) {
+			var card = document.createElement( 'a' );
+			card.href = 'public-blog.html';
+			card.className = 'card public-blog-card';
+			var snippet = item.post.body.length > 90 ? item.post.body.slice( 0, 90 ) + '…' : item.post.body;
+			card.innerHTML =
+				'<h3 class="public-blog-card__title"></h3>' +
+				'<p class="public-blog-card__snippet"></p>' +
+				'<div class="public-blog-card__author"><span class="public-blog-card__author-avatar"></span><span></span></div>';
+			card.querySelector( '.public-blog-card__title' ).textContent = item.post.title;
+			card.querySelector( '.public-blog-card__snippet' ).textContent = snippet;
+			card.querySelector( '.public-blog-card__author-avatar' ).innerHTML = window.mahtelaRoster.avatarHTML( { photo: item.teacher.photo, name: item.teacher.name }, window.mahtelaRoster.initials( item.teacher.name ) );
+			card.querySelector( '.public-blog-card__author span:last-child' ).textContent = item.teacher.name;
+			grid.appendChild( card );
+		} );
+	}
+
+	document.getElementById( 'hero-search-btn' ).addEventListener( 'click', function () {
+		var params = new URLSearchParams();
+		var langVal = document.getElementById( 'hero-search-language' ).value.trim();
+		var typeVal = document.getElementById( 'hero-search-classtype' ).value;
+		if ( langVal ) { params.set( 'q', langVal ); }
+		if ( typeVal ) { params.set( 'type', typeVal ); }
+		window.location.href = 'public-teachers.html' + ( params.toString() ? '?' + params.toString() : '' );
+	} );
+
+	renderFeaturedTeachers();
+	renderFeaturedBlog();
+	document.addEventListener( 'mahtela:langchange', function () {
+		renderFeaturedTeachers();
+		renderFeaturedBlog();
+	} );
+	document.addEventListener( 'mahtela:teacherschange', function () {
+		renderFeaturedTeachers();
+		renderFeaturedBlog();
+	} );
 </script>
 </body>
 </html>
