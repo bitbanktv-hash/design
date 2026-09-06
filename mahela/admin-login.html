@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" data-theme="light">
+<html lang="en" dir="ltr" data-theme="light" data-role="admin">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Log In — MahFLA</title>
+<title>Admin Log In — MahFLA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -65,85 +65,40 @@
 				<span class="auth-brand__tagline" data-i18n="brand_tagline">Mahta Foreign Language Academy</span>
 			</div>
 
-			<div class="role-tabs" data-tabs="role">
-				<button type="button" class="role-tabs__btn is-active" data-tab-btn="role" data-tab-target="teacher" data-i18n="auth_role_teacher">Teacher</button>
-				<button type="button" class="role-tabs__btn" data-tab-btn="role" data-tab-target="student" data-i18n="auth_role_student">Student</button>
-			</div>
+			<h1 class="auth-title" data-i18n="admin_auth_title">Admin Sign In</h1>
+			<p class="auth-sub" data-i18n="admin_auth_sub">Restricted access. Authorized administrators only.</p>
 
-			<h1 class="auth-title" data-i18n="auth_login_title">Welcome back</h1>
-			<p class="auth-sub" data-i18n="auth_login_sub">Log in to continue to your panel</p>
-
-			<div class="tab-panel is-active" data-tab-panel="role" data-tab-id="teacher">
-				<div class="captcha-box" id="captcha-box-teacher" style="display:none">
-					<div class="captcha-box__row">
-						<span class="captcha-box__icon">
-							<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
-						</span>
-						<div>
-							<div style="font-size:12.5px; font-weight:700;" data-i18n="captcha_title">Let's confirm you're not a robot</div>
-							<div style="font-size:11.5px; color:var(--ink-soft);" data-i18n="captcha_instruction">Too many failed attempts. Solve this to continue:</div>
-						</div>
+			<div class="captcha-box" id="captcha-box-admin" style="display:none">
+				<div class="captcha-box__row">
+					<span class="captcha-box__icon">
+						<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+					</span>
+					<div>
+						<div style="font-size:12.5px; font-weight:700;" data-i18n="captcha_title">Let's confirm you're not a robot</div>
+						<div style="font-size:11.5px; color:var(--ink-soft);" data-i18n="captcha_instruction">Too many failed attempts. Solve this to continue:</div>
 					</div>
-					<div style="display:flex; align-items:center; gap:10px; margin-top:12px;">
-						<span class="captcha-box__challenge" id="captcha-challenge-teacher">— + — = ?</span>
-						<input type="text" inputmode="numeric" class="captcha-box__input" id="captcha-input-teacher" style="padding:10px;">
-					</div>
-					<div class="captcha-box__error" id="captcha-error-teacher" data-i18n="captcha_wrong">That's not right, try again.</div>
 				</div>
-				<form id="login-form-teacher">
-					<div class="form-field">
-						<label data-i18n="auth_email" for="login-auth-email">Email</label>
-						<input id="login-auth-email" type="email" placeholder="you@example.com" required>
-					</div>
-					<div class="form-field">
-						<label data-i18n="auth_password" for="login-auth-password">Password</label>
-						<input id="login-auth-password" type="password" placeholder="••••••••" required>
-					</div>
-					<div class="form-row-between">
-						<label style="display:flex; align-items:center; gap:7px;">
-							<input type="checkbox" style="width:auto;"> <span data-i18n="auth_remember">Remember me</span>
-						</label>
-						<a href="forgot-password.html" data-i18n="auth_forgot">Forgot password?</a>
-					</div>
-					<button type="submit" class="btn btn--primary" style="width:100%;" data-i18n="auth_login_btn">Log In</button>
-				</form>
-				<p class="student-note" style="display:block; margin-top:18px;" data-i18n="auth_teacher_note">Don't have an account? Ask your school admin to create one for you.</p>
-			</div>
-
-			<div class="tab-panel" data-tab-panel="role" data-tab-id="student">
-				<div class="captcha-box" id="captcha-box-student" style="display:none">
-					<div class="captcha-box__row">
-						<span class="captcha-box__icon">
-							<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
-						</span>
-						<div>
-							<div style="font-size:12.5px; font-weight:700;" data-i18n="captcha_title">Let's confirm you're not a robot</div>
-							<div style="font-size:11.5px; color:var(--ink-soft);" data-i18n="captcha_instruction">Too many failed attempts. Solve this to continue:</div>
-						</div>
-					</div>
-					<div style="display:flex; align-items:center; gap:10px; margin-top:12px;">
-						<span class="captcha-box__challenge" id="captcha-challenge-student">— + — = ?</span>
-						<input type="text" inputmode="numeric" class="captcha-box__input" id="captcha-input-student" style="padding:10px;">
-					</div>
-					<div class="captcha-box__error" id="captcha-error-student" data-i18n="captcha_wrong">That's not right, try again.</div>
+				<div style="display:flex; align-items:center; gap:10px; margin-top:12px;">
+					<span class="captcha-box__challenge" id="captcha-challenge-admin">— + — = ?</span>
+					<input type="text" inputmode="numeric" class="captcha-box__input" id="captcha-input-admin" style="padding:10px;">
 				</div>
-				<form id="login-form-student">
-					<div class="form-field">
-						<label data-i18n="auth_email" for="login-auth-email-2">Email</label>
-						<input id="login-auth-email-2" type="email" placeholder="you@example.com" required>
-					</div>
-					<div class="form-field">
-						<label data-i18n="auth_password" for="login-auth-password-2">Password</label>
-						<input id="login-auth-password-2" type="password" placeholder="••••••••" required>
-					</div>
-					<div class="form-row-between">
-						<span></span>
-						<a href="forgot-password.html" data-i18n="auth_forgot">Forgot password?</a>
-					</div>
-					<button type="submit" class="btn btn--primary" style="width:100%;" data-i18n="auth_login_btn">Log In</button>
-				</form>
-				<p class="student-note" style="display:block; margin-top:18px;" data-i18n="auth_student_note">Students get an invite link from their teacher — no self sign-up.</p>
+				<div class="captcha-box__error" id="captcha-error-admin" data-i18n="captcha_wrong">That's not right, try again.</div>
 			</div>
+			<form id="login-form-admin">
+				<div class="form-field">
+					<label data-i18n="auth_email" for="login-auth-email-3">Email</label>
+					<input id="login-auth-email-3" type="email" placeholder="admin@mahela.com" required>
+				</div>
+				<div class="form-field">
+					<label data-i18n="auth_password" for="login-auth-password-3">Password</label>
+					<input id="login-auth-password-3" type="password" placeholder="••••••••" required>
+				</div>
+				<div class="form-row-between">
+					<span></span>
+					<a href="forgot-password.html?role=admin" data-i18n="auth_forgot">Forgot password?</a>
+				</div>
+				<button type="submit" class="btn btn--primary" style="width:100%;" data-i18n="auth_login_btn">Log In</button>
+			</form>
 		</div>
 	</div>
 
@@ -165,8 +120,8 @@
 	 * both move server-side (this client-side version can't actually stop
 	 * a bot, only demonstrate the intended UX).
 	 */
-	var ROLES = [ 'teacher', 'student' ];
-	var DESTINATIONS = { teacher: 'teacher-dashboard.html', student: 'student-panel.html' };
+	var ROLES = [ 'admin' ];
+	var DESTINATIONS = { admin: 'admin-dashboard.html' };
 	var FAILS_BEFORE_CAPTCHA = 3;
 
 	var state = {};

@@ -1,8 +1,31 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.23.0 — Current
+v1.24.0 — Current
 ------------------
+- Separated admin sign-in from the teacher/student login, for security.
+  Admin now has its own page (admin-login.html) with its own address,
+  its own indigo-branded look, and no role picker -- it's not reachable
+  by tab from the regular login page, and the regular login page no
+  longer mentions admin at all. This is a deliberate choice: the admin
+  address is meant to be known/bookmarked directly rather than
+  discoverable from the public-facing login screen, similar to how a
+  real system's admin panel is usually not linked from the main site.
+  Every admin-facing "Log Out" now correctly returns to this same
+  admin-only page instead of the shared one, including the special
+  case where a teacher page (a student's record) is being viewed in
+  admin mode. The forgot-password flow also respects this: reached via
+  the admin path, its "back to login" correctly returns to the admin
+  page rather than the shared one.
+  Verified end-to-end: the admin page's own 3-fails-then-CAPTCHA flow
+  correctly resolves to the admin dashboard; the shared login page's
+  teacher/student tabs and destinations are unaffected by removing
+  admin from it; both the normal and admin-viewer logout links on a
+  student's record point to the right place.
+- Full 16-page load audit run clean, including the new page.
+
+v1.23.0
+--------
 - New: a Portfolio & Blog page for the teacher, with two sections.
   Introduction & Classes is a full public-profile builder: display
   name, intro title, about-me, teaching languages (multi-select),

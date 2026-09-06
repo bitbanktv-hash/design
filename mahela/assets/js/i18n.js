@@ -106,6 +106,8 @@
 		auth_role_teacher: { en: 'Teacher', fa: 'معلم' },
 		auth_role_student: { en: 'Student', fa: 'شاگرد' },
 		auth_login_title: { en: 'Welcome back', fa: 'خوش برگشتی' },
+		admin_auth_title: { en: 'Admin Sign In', fa: 'ورود مدیر' },
+		admin_auth_sub: { en: 'Restricted access. Authorized administrators only.', fa: 'دسترسی محدود. فقط مدیران مجاز.' },
 		auth_login_sub: { en: 'Log in to continue to your panel', fa: 'برای ادامه وارد پنلت شو' },
 		auth_email: { en: 'Email', fa: 'ایمیل' },
 		auth_password: { en: 'Password', fa: 'رمز عبور' },
