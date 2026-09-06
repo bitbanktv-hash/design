@@ -1,8 +1,18 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.25.0 — Current
+v1.25.1 — Current
 ------------------
+- Fixed a real regression: the Tuition & Settlement page's aggregated
+  view had dropped the custom message textarea that the original
+  per-student Request Settlement flow had -- meaning there was no way
+  to write your own wording, only the fixed default text went out.
+  Restored it per student group, same fallback behavior as before
+  (your own text if you write something, the default message
+  otherwise). Verified both paths send the correct message.
+
+v1.25.0
+--------
 - New: the real public homepage, replacing the old minimal
   placeholder. Nav bar, a hero section with a headline and two CTAs,
   a search bar, a "Featured Teachers" section that pulls real,

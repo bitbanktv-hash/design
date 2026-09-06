@@ -67,7 +67,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.25.0</div>
+			<div class="sidebar__version">MahFLA v1.25.1</div>
 		</div>
 	</aside>
 
@@ -255,6 +255,15 @@
 			unsettled.forEach( function ( s ) { list.appendChild( renderSessionCheckRow( s, student, lang ) ); } );
 			group.appendChild( list );
 
+			var messageField = document.createElement( 'div' );
+			messageField.className = 'form-field';
+			messageField.style.marginTop = '14px';
+			messageField.style.marginBottom = '0';
+			messageField.innerHTML =
+				'<label>' + dict.settlement_message_label[ lang ] + '</label>' +
+				'<textarea class="settlement-group__message" rows="2" placeholder="' + escapeHtml( dict.settlement_message_default[ lang ] ) + '"></textarea>';
+			group.appendChild( messageField );
+
 			var actions = document.createElement( 'div' );
 			actions.className = 'settlement-group__actions';
 			actions.innerHTML =
@@ -288,7 +297,8 @@
 				if ( ! ids.length ) { return; }
 				var total = checked.reduce( function ( sum, cb ) { return sum + parseFloat( cb.getAttribute( 'data-amount' ) ); }, 0 );
 				var summaryText = checked.length + ' ' + dict.finance_sessions_word[ lang ] + ' · ' + window.mahtelaI18n.formatToman( total, lang );
-				var msg = escapeHtml( dict.settlement_message_default[ lang ] ) + '<br><br><strong>' + summaryText + '</strong>';
+				var customText = messageField.querySelector( '.settlement-group__message' ).value.trim() || dict.settlement_message_default[ lang ];
+				var msg = escapeHtml( customText ) + '<br><br><strong>' + summaryText + '</strong>';
 				window.mahtelaData.sendMessageTo( student.key, msg );
 				SESSIONS.forEach( function ( s ) { if ( ids.indexOf( s.id ) !== -1 ) { s.settlementRequested = true; } } );
 				window.mahtelaData.saveSessions( SESSIONS );
