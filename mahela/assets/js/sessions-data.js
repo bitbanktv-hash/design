@@ -212,4 +212,14 @@
 		saveAdminInbox: saveAdminInbox,
 		sendToAdminInbox: sendToAdminInbox
 	};
+
+	function updateAdminInboxBadge() {
+		var badge = document.getElementById( 'admin-inbox-badge' );
+		if ( ! badge ) { return; }
+		var unread = loadAdminInbox().filter( function ( e ) { return ! e.read; } ).length;
+		badge.textContent = unread;
+		badge.style.display = unread > 0 ? '' : 'none';
+	}
+	document.addEventListener( 'DOMContentLoaded', updateAdminInboxBadge );
+	document.addEventListener( 'mahtela:adminInboxChange', updateAdminInboxBadge );
 }() );

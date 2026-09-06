@@ -1,8 +1,28 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.26.0 — Current
+v1.27.0 — Current
 ------------------
+- New: the Admin Inbox, showing every message submitted through the
+  public Contact Us form (already being saved since last version, but
+  with nowhere to view it until now). Each entry expands to show the
+  full message, phone number if given, and which teacher it was about
+  if the visitor arrived from a teacher-specific link -- expanding
+  marks it read. An unread-count badge on the sidebar link updates
+  live. Added to every admin-facing page's sidebar, including the
+  admin-viewer mode on a student's record.
+  Two of the three purely-admin pages didn't have the shared data
+  script loaded at all before this, since they'd never needed it --
+  added it alongside this feature.
+- Verified end-to-end across the full real flow: submit the public
+  contact form (with a teacher context in the link), confirm it
+  appears unread with the correct badge count on the inbox page,
+  expand it and confirm it's marked read and persists that way,
+  delete it and confirm it's gone.
+- Full 20-page load audit run clean, including the new page.
+
+v1.26.0
+--------
 - The public site is now complete. Two new pages join the homepage:
   - Teachers directory (public-teachers.html): every published
     teacher, filterable by language, class type, and a name/specialty
