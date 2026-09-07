@@ -1,8 +1,39 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.29.1 — Current
+v1.30.0 — Current
 ------------------
+- Replaced the brand color system, per explicit request: the previous
+  role-based scheme (gold for teacher, pink for student, indigo for
+  admin) is gone, replaced with one unified deep forest green across
+  every role and every page, matching the reference site. Removed the
+  [data-role="teacher"/"admin"] color overrides entirely rather than
+  reassigning them to different green shades, since the reference
+  doesn't differentiate by role either.
+  Per-student gender-based accent colors (pink for girls, teal for
+  boys) are unrelated to this and are unchanged.
+- The harder, easy-to-miss part of a change like this: the previous
+  brand colors were bright pastels, so every "text/icon sitting on a
+  brand-colored background" spot (buttons, avatars, active sidebar
+  links, chat bubbles, the CTA banner) used a dark ink color for
+  contrast -- against a deep green, dark-on-dark would have been
+  nearly unreadable. Went through every one of these individually
+  (not just a global find-and-replace, since student-gender-accent
+  avatars use a similar-looking pattern but needed to stay as they
+  were) and introduced a new --on-brand token, set to white, used
+  specifically for these. Caught two of my own mistakes doing this --
+  a multi-line edit that accidentally merged two separate CSS rules
+  into one, and another that silently deleted several layout
+  properties -- both caught by re-checking the file immediately after
+  each edit rather than assuming the change landed cleanly.
+  Verified with a full sweep afterward: no remaining case anywhere in
+  the codebase (CSS or inline HTML styles) pairs a brand-colored
+  background with the old dark text color, and no hardcoded hex value
+  from the old gold/indigo palette remains.
+- Full 20-page load audit run clean.
+
+v1.29.1
+--------
 - Fixed a real bug reported in the header clock widget: Gregorian
   month names in Persian mode were being naively cut to 3 characters
   the same way English is (e.g. "Sep"), producing "سپت" for
