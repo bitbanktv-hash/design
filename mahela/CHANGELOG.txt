@@ -1,8 +1,30 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.28.0 — Current
+v1.29.0 — Current
 ------------------
+- New: two widgets on the teacher dashboard, matching the reference
+  site's richer overview. "Your Teaching Rhythm" is a real bar chart
+  of session counts across the current week (today's bar highlighted
+  distinctly), built from actual schedule data and updating live when
+  a session is added, moved, or cancelled -- not a static example.
+  "A Look at Progress" lists every student with their current average
+  skill score, in the same gender-based avatar style used everywhere
+  else in the app.
+  Verified end-to-end: adding real sessions for today correctly grows
+  and highlights today's bar without a page reload (reacts to the
+  same session-change event every other page already uses), and the
+  progress list correctly shows each student's own average.
+- This closes out the full feature-parity pass against the reference
+  site from this session: the schedule view toggle, the cross-student
+  settlement page, the teacher portfolio and blog, separated admin
+  sign-in, the complete public site (home, teachers, blog, contact),
+  the admin inbox, per-student currency, and now these dashboard
+  widgets.
+- Full 20-page load audit run clean.
+
+v1.28.0
+--------
 - New: per-student currency (Toman or US Dollar), matching how the
   portfolio builder already handled it. Add Student and Edit Details
   both now have a currency dropdown next to the price field. Every

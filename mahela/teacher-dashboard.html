@@ -67,7 +67,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.28.0</div>
+			<div class="sidebar__version">MahFLA v1.29.0</div>
 		</div>
 	</aside>
 
@@ -163,6 +163,20 @@
 					</div>
 				</a>
 			</div>
+
+			<div class="dash-widgets-grid">
+				<div class="card" style="padding:22px;">
+					<h3 style="font-size:14.5px; margin:0 0 2px;" data-i18n="dash_rhythm_title">Your Teaching Rhythm</h3>
+					<p style="font-size:12px; color:var(--ink-soft); margin:0 0 18px;" data-i18n="dash_rhythm_sub">Sessions across this week.</p>
+					<div class="rhythm-chart" id="rhythm-chart"></div>
+				</div>
+				<div class="card" style="padding:22px;">
+					<h3 style="font-size:14.5px; margin:0 0 2px;" data-i18n="dash_progress_title">A Look at Progress</h3>
+					<p style="font-size:12px; color:var(--ink-soft); margin:0 0 18px;" data-i18n="dash_progress_sub">Latest average skill assessment per student.</p>
+					<div id="progress-list"></div>
+					<p id="progress-empty" style="display:none; text-align:center; color:var(--ink-faint); padding:16px 0; margin:0; font-size:12.5px;" data-i18n="dash_progress_empty">No students yet.</p>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -228,6 +242,75 @@
 			function ( s ) { var st = studentsByKey[ s.studentKey ]; return st ? st.rate : 0; }
 		);
 		document.getElementById( 'kpi-unsettled-balance' ).textContent = window.mahtelaI18n.formatMixedCurrency( unsettledTotals, lang );
+
+		renderRhythmChart( sessions );
+		renderProgressList( myStudents );
+	}
+
+	var WEEKDAY_ABBR_FA = [ 'ی', 'د', 'س', 'چ', 'پ', 'ج', 'ش' ]; // Sun..Sat, matches Date.getDay()
+	var WEEKDAY_ABBR_EN = [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ];
+
+	function weekDatesForRhythm() {
+		var now = new Date();
+		var diffToSat = ( now.getDay() + 1 ) % 7;
+		var start = new Date( now.getFullYear(), now.getMonth(), now.getDate() - diffToSat );
+		var dates = [];
+		for ( var i = 0; i < 7; i += 1 ) {
+			var d = new Date( start.getFullYear(), start.getMonth(), start.getDate() + i );
+			dates.push( { iso: d.getFullYear() + '-' + String( d.getMonth() + 1 ).padStart( 2, '0' ) + '-' + String( d.getDate() ).padStart( 2, '0' ), weekday: d.getDay() } );
+		}
+		return dates;
+	}
+
+	function renderRhythmChart( sessions ) {
+		var lang = window.mahtelaI18n.currentLang();
+		var todayIso = new Date().toISOString().slice( 0, 10 );
+		var dates = weekDatesForRhythm();
+		var counts = dates.map( function ( d ) {
+			return sessions.filter( function ( s ) { return s.date === d.iso && s.status !== 'cancelled'; } ).length;
+		} );
+		var max = Math.max.apply( null, counts.concat( [ 1 ] ) );
+
+		var chart = document.getElementById( 'rhythm-chart' );
+		chart.innerHTML = '';
+		dates.forEach( function ( d, i ) {
+			var col = document.createElement( 'div' );
+			col.className = 'rhythm-chart__col';
+			var isToday = d.iso === todayIso;
+			var countText = lang === 'fa' ? window.mahtelaCalendar.toFaDigits( counts[ i ] ) : counts[ i ];
+			var label = lang === 'fa' ? WEEKDAY_ABBR_FA[ d.weekday ] : WEEKDAY_ABBR_EN[ d.weekday ];
+			col.innerHTML =
+				'<span class="rhythm-chart__count">' + ( counts[ i ] > 0 ? countText : '' ) + '</span>' +
+				'<div class="rhythm-chart__bar-wrap"><div class="rhythm-chart__bar' + ( isToday ? ' rhythm-chart__bar--today' : '' ) + '" style="height:' + Math.max( ( counts[ i ] / max ) * 100, counts[ i ] > 0 ? 8 : 0 ) + '%"></div></div>' +
+				'<span class="rhythm-chart__label">' + label + '</span>';
+			chart.appendChild( col );
+		} );
+	}
+
+	function renderProgressList( students ) {
+		var lang = window.mahtelaI18n.currentLang();
+		var list = document.getElementById( 'progress-list' );
+		list.innerHTML = '';
+
+		students.forEach( function ( s ) {
+			var avg = ( s.skills.listening + s.skills.speaking + s.skills.reading + s.skills.writing ) / 4;
+			var level = window.mahtelaRoster.levelInfo( s.level );
+			var row = document.createElement( 'div' );
+			row.className = 'progress-row';
+			row.setAttribute( 'data-gender', s.gender );
+			row.innerHTML =
+				'<span class="progress-row__avatar"></span>' +
+				'<div class="progress-row__info"><div class="progress-row__name"></div><div class="progress-row__level"></div></div>' +
+				'<span class="progress-row__score"></span>';
+			row.querySelector( '.progress-row__avatar' ).innerHTML = window.mahtelaRoster.avatarHTML( s, s.initials );
+			row.querySelector( '.progress-row__name' ).textContent = s.name;
+			row.querySelector( '.progress-row__level' ).textContent = level.label;
+			var scoreText = ( lang === 'fa' ? window.mahtelaCalendar.toFaDigits( avg.toFixed( 1 ) ) : avg.toFixed( 1 ) ) + ' / ' + ( lang === 'fa' ? window.mahtelaCalendar.toFaDigits( 9 ) : 9 );
+			row.querySelector( '.progress-row__score' ).textContent = scoreText;
+			list.appendChild( row );
+		} );
+
+		document.getElementById( 'progress-empty' ).style.display = students.length ? 'none' : 'block';
 	}
 
 	renderOverview();
