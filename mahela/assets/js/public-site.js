@@ -36,7 +36,7 @@ function renderPublicTeacherCard( t, lang, dict ) {
 	var priceLabel = p.priceUnit === 'usd' ? ( '$' + p.sessionPrice ) : window.mahtelaI18n.formatToman( p.sessionPrice, lang );
 
 	var card = document.createElement( 'a' );
-	card.href = 'login.html';
+	card.href = 'public-teacher-profile.html?teacher=' + encodeURIComponent( t.id );
 	card.className = 'card public-teacher-card';
 	card.innerHTML =
 		'<div class="public-teacher-card__head">' +

@@ -1,8 +1,35 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.30.0 — Current
+v1.31.0 — Current
 ------------------
+- New: a dedicated public profile page for every published teacher
+  (public-teacher-profile.html?teacher=id), matching a feature the
+  reference site has that this app was missing. Three tabs -- About
+  the Teacher, Resume & Specialties, Teacher's Blog -- an intro
+  header, online/in-person class cards, and a sticky pricing card
+  with a real Request a Class button that carries the teacher's name
+  into the contact form (reusing the ?teacher= support already built
+  for that form). Teacher cards on the homepage and the directory now
+  link here instead of straight to the login page.
+  Handles every edge case gracefully: an unknown teacher id, a
+  teacher who exists but hasn't published a portfolio, and no id at
+  all all correctly show a "not found" state with a link back to the
+  directory, rather than a broken or blank page.
+- Fixed a bug I introduced while building this and caught before it
+  shipped: an early version tried to set the price text by writing to
+  the price container's first child node, which would have
+  overwritten the "per session" subtext instead of setting a separate
+  price value. Replaced with an explicit, dedicated element for each.
+- Verified end-to-end: a real published teacher (with real portfolio
+  data) renders correctly across all three tabs including their real
+  blog post; all three "not found" cases behave correctly; and
+  clicking through from both the homepage and the directory lands on
+  the right teacher's profile.
+- Full 21-page load audit run clean, including the new page.
+
+v1.30.0
+--------
 - Replaced the brand color system, per explicit request: the previous
   role-based scheme (gold for teacher, pink for student, indigo for
   admin) is gone, replaced with one unified deep forest green across
