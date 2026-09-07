@@ -1,8 +1,36 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.31.0 — Current
+v1.31.1 — Current
 ------------------
+- Found the real reason the color change still looked "old" in
+  several places despite the previous pass: that pass only touched
+  the --brand token itself. It never touched the neutral palette --
+  background, card surface, borders, and all three text-color tiers
+  -- which were still the old purple/pink-tinted values from the
+  original brand (e.g. the border color was a pale pink-lavender,
+  the main text color a deep purple, dark mode's background a
+  near-black purple). Buttons and accents were correctly green, but
+  everything around them still carried the old undertone, which is
+  why an admin page's subtitle and a ghost-style button (like Edit
+  Details) could still look off-brand even though neither one
+  references --brand at all.
+  Replaced the entire neutral palette, light and dark mode both, with
+  true neutral tones that don't carry the old undertone -- dark mode
+  in particular had been even more heavily purple than light mode.
+  Also swept every hardcoded shadow and overlay color still written
+  as a literal purple RGB triplet (modal backdrops, an admin badge)
+  rather than a token, and updated those too.
+  Confirmed no hardcoded hex value from the old palette remains
+  anywhere in the codebase.
+- Couldn't get a direct visual render to confirm pixel-for-pixel
+  (headless Chrome isn't available in this environment and two
+  installation attempts both failed) -- please double check visually
+  once this deploys.
+- Full 21-page load audit run clean.
+
+v1.31.0
+--------
 - New: a dedicated public profile page for every published teacher
   (public-teacher-profile.html?teacher=id), matching a feature the
   reference site has that this app was missing. Three tabs -- About
