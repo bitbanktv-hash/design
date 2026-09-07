@@ -67,7 +67,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.27.0</div>
+			<div class="sidebar__version">MahFLA v1.28.0</div>
 		</div>
 	</aside>
 
@@ -191,12 +191,14 @@
 		var allChargeable = SESSIONS.filter( function ( s ) { return myKeys.indexOf( s.studentKey ) !== -1 && isChargeable( s ); } );
 		var unsettled = allChargeable.filter( function ( s ) { return ! s.settled; } );
 		var settled = allChargeable.filter( function ( s ) { return s.settled; } );
-		var outstandingTotal = unsettled.reduce( function ( sum, s ) { var st = STUDENTS[ s.studentKey ]; return sum + ( st ? st.rate : 0 ); }, 0 );
-		var receivedTotal = settled.reduce( function ( sum, s ) { var st = STUDENTS[ s.studentKey ]; return sum + ( st ? st.rate : 0 ); }, 0 );
+		var currencyOf = function ( s ) { var st = STUDENTS[ s.studentKey ]; return st ? ( st.currency || 'toman' ) : 'toman'; };
+		var amountOf = function ( s ) { var st = STUDENTS[ s.studentKey ]; return st ? st.rate : 0; };
+		var outstandingTotals = window.mahtelaI18n.sumByCurrency( unsettled, currencyOf, amountOf );
+		var receivedTotals = window.mahtelaI18n.sumByCurrency( settled, currencyOf, amountOf );
 
 		document.getElementById( 'settlement-chargeable-count' ).textContent = lang === 'fa' ? window.mahtelaCalendar.toFaDigits( allChargeable.length ) : allChargeable.length;
-		document.getElementById( 'settlement-received-total' ).textContent = window.mahtelaI18n.formatToman( receivedTotal, lang );
-		document.getElementById( 'settlement-outstanding-total' ).textContent = window.mahtelaI18n.formatToman( outstandingTotal, lang );
+		document.getElementById( 'settlement-received-total' ).textContent = window.mahtelaI18n.formatMixedCurrency( receivedTotals, lang );
+		document.getElementById( 'settlement-outstanding-total' ).textContent = window.mahtelaI18n.formatMixedCurrency( outstandingTotals, lang );
 	}
 
 	function renderSessionCheckRow( s, student, lang ) {
@@ -222,7 +224,7 @@
 			'<input type="checkbox" class="settle-checkbox" data-amount="' + student.rate + '" data-session-id="' + s.id + '" checked style="width:auto; margin-inline-end:6px;">' +
 			'<span class="session-row__date" data-date="' + s.date + '"><span class="session-row__date-day" data-date-part="day"></span><span class="session-row__date-month" data-date-part="month"></span></span>' +
 			'<span class="session-row__info"><span class="session-row__time">' + ( lang === 'fa' ? window.mahtelaCalendar.toFaDigits( s.time + ' – ' + endStr ) : s.time + ' – ' + endStr ) + '</span><span class="session-row__sub' + statusClass + '" data-date="' + s.date + '"><span data-date-part="weekday"></span> · ' + statusText + '</span></span>' +
-			'<span class="session-row__actions">' + requestedBadge + classTypeBadgeHTML( s.classType, lang ) + '<span data-currency="' + student.rate + '">—</span></span>';
+			'<span class="session-row__actions">' + requestedBadge + classTypeBadgeHTML( s.classType, lang ) + '<span data-currency="' + student.rate + '" data-currency-unit="' + ( student.currency || 'toman' ) + '">—</span></span>';
 		return label;
 	}
 
@@ -275,7 +277,7 @@
 			function updateGroupSummary() {
 				var checked = Array.prototype.filter.call( list.querySelectorAll( '.settle-checkbox' ), function ( cb ) { return cb.checked; } );
 				var total = checked.reduce( function ( sum, cb ) { return sum + parseFloat( cb.getAttribute( 'data-amount' ) ); }, 0 );
-				actions.querySelector( '.settlement-group__summary' ).textContent = checked.length + ' ' + dict.finance_sessions_word[ lang ] + ' · ' + window.mahtelaI18n.formatToman( total, lang );
+				actions.querySelector( '.settlement-group__summary' ).textContent = checked.length + ' ' + dict.finance_sessions_word[ lang ] + ' · ' + window.mahtelaI18n.formatCurrency( total, student.currency || 'toman', lang );
 				actions.querySelector( '[data-action="settle"]' ).disabled = checked.length === 0;
 				actions.querySelector( '[data-action="request"]' ).disabled = checked.length === 0;
 			}
@@ -296,7 +298,7 @@
 				var ids = checked.map( function ( cb ) { return cb.getAttribute( 'data-session-id' ); } );
 				if ( ! ids.length ) { return; }
 				var total = checked.reduce( function ( sum, cb ) { return sum + parseFloat( cb.getAttribute( 'data-amount' ) ); }, 0 );
-				var summaryText = checked.length + ' ' + dict.finance_sessions_word[ lang ] + ' · ' + window.mahtelaI18n.formatToman( total, lang );
+				var summaryText = checked.length + ' ' + dict.finance_sessions_word[ lang ] + ' · ' + window.mahtelaI18n.formatCurrency( total, student.currency || 'toman', lang );
 				var customText = messageField.querySelector( '.settlement-group__message' ).value.trim() || dict.settlement_message_default[ lang ];
 				var msg = escapeHtml( customText ) + '<br><br><strong>' + summaryText + '</strong>';
 				window.mahtelaData.sendMessageTo( student.key, msg );
@@ -328,7 +330,7 @@
 			row.className = 'settlement-row';
 			row.innerHTML =
 				'<span>' + escapeHtml( student ? student.name : '—' ) + ' · <span data-date="' + s.date + '" data-date-style="full"></span></span>' +
-				'<span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="' + ( student ? student.rate : 0 ) + '">—</span></span>';
+				'<span style="font-family:var(--font-mono); font-weight:700;"><span data-currency="' + ( student ? student.rate : 0 ) + '" data-currency-unit="' + ( student ? ( student.currency || 'toman' ) : 'toman' ) + '">—</span></span>';
 			list.appendChild( row );
 		} );
 		document.getElementById( 'settlement-history-empty' ).style.display = settled.length ? 'none' : 'block';

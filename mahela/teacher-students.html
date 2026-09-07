@@ -67,7 +67,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.27.0</div>
+			<div class="sidebar__version">MahFLA v1.28.0</div>
 		</div>
 	</aside>
 
@@ -168,8 +168,14 @@
 					<input id="teacher-students-field-session-duration" type="number" value="60" min="15" step="15">
 				</div>
 				<div class="form-field">
-					<label data-i18n="field_session_price" for="teacher-students-field-session-price">Price per Session (Toman)</label>
-					<input id="teacher-students-field-session-price" type="text" inputmode="numeric" class="currency-input" value="250000" dir="ltr">
+					<label data-i18n="field_session_price" for="teacher-students-field-session-price">Price per Session</label>
+					<div style="display:flex; gap:8px;">
+						<input id="teacher-students-field-session-price" type="text" inputmode="numeric" class="currency-input" value="250000" dir="ltr" style="flex:1;">
+						<select id="teacher-students-field-currency" style="flex:0 0 92px;">
+							<option value="toman" data-i18n="currency_toman">Toman</option>
+							<option value="usd" data-i18n="currency_usd">USD</option>
+						</select>
+					</div>
 				</div>
 			</div>
 			<div class="form-actions">
@@ -261,6 +267,7 @@
 			gender: document.getElementById( 'teacher-students-field-gender' ).value,
 			level: document.getElementById( 'teacher-students-field-level' ).value,
 			rate: parseInt( document.getElementById( 'teacher-students-field-session-price' ).value.replace( /[^0-9]/g, '' ), 10 ) || 0,
+			currency: document.getElementById( 'teacher-students-field-currency' ).value,
 			duration: parseInt( document.getElementById( 'teacher-students-field-session-duration' ).value, 10 ) || 60,
 			since: new Date().toISOString().slice( 0, 10 ),
 			skills: { listening: 0, speaking: 0, reading: 0, writing: 0 },

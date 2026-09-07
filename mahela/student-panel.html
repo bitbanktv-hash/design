@@ -74,7 +74,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.27.0</div>
+			<div class="sidebar__version">MahFLA v1.28.0</div>
 		</div>
 	</aside>
 
@@ -388,6 +388,7 @@
 
 	/* ---------- Balance tab ---------- */
 	var ELENA_RATE = 250000;
+	var ELENA_CURRENCY = 'toman';
 
 	function isChargeable( s ) {
 		return s.status === 'held' || ( s.status === 'cancelled' && s.chargeApplied === true );
@@ -401,7 +402,7 @@
 		document.getElementById( 'panel-sessions-held' ).textContent = lang === 'fa'
 			? String( unsettled.length ).replace( /[0-9]/g, function ( d ) { return '۰۱۲۳۴۵۶۷۸۹'[ d ]; } )
 			: unsettled.length;
-		document.getElementById( 'panel-total-due' ).textContent = window.mahtelaI18n.formatToman( unsettled.length * ELENA_RATE, lang );
+		document.getElementById( 'panel-total-due' ).textContent = window.mahtelaI18n.formatCurrency( unsettled.length * ELENA_RATE, ELENA_CURRENCY, lang );
 		window.mahtelaCalendar.applyScheduleDates();
 	}
 

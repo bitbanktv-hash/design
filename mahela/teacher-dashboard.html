@@ -67,7 +67,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.27.0</div>
+			<div class="sidebar__version">MahFLA v1.28.0</div>
 		</div>
 	</aside>
 
@@ -221,10 +221,13 @@
 
 		var studentsByKey = {};
 		myStudents.forEach( function ( s ) { studentsByKey[ s.key ] = s; } );
-		var unsettledTotal = sessions
-			.filter( function ( s ) { return isChargeable( s ) && ! s.settled; } )
-			.reduce( function ( sum, s ) { return sum + ( studentsByKey[ s.studentKey ] ? studentsByKey[ s.studentKey ].rate : 0 ); }, 0 );
-		document.getElementById( 'kpi-unsettled-balance' ).textContent = window.mahtelaI18n.formatToman( unsettledTotal, lang );
+		var unsettledSessions = sessions.filter( function ( s ) { return isChargeable( s ) && ! s.settled; } );
+		var unsettledTotals = window.mahtelaI18n.sumByCurrency(
+			unsettledSessions,
+			function ( s ) { var st = studentsByKey[ s.studentKey ]; return st ? ( st.currency || 'toman' ) : 'toman'; },
+			function ( s ) { var st = studentsByKey[ s.studentKey ]; return st ? st.rate : 0; }
+		);
+		document.getElementById( 'kpi-unsettled-balance' ).textContent = window.mahtelaI18n.formatMixedCurrency( unsettledTotals, lang );
 	}
 
 	renderOverview();

@@ -354,7 +354,7 @@
 		account_gender_female: { en: 'Female', fa: 'زن/دختر' },
 		account_gender_male: { en: 'Male', fa: 'مرد/پسر' },
 		field_session_duration: { en: 'Session Duration (minutes)', fa: 'مدت هر جلسه (دقیقه)' },
-		field_session_price: { en: 'Price per Session (Toman)', fa: 'هزینه‌ی هر جلسه (تومان)' },
+		field_session_price: { en: 'Price per Session', fa: 'هزینه‌ی هر جلسه' },
 		btn_save: { en: 'Save', fa: 'ذخیره' },
 		btn_cancel: { en: 'Cancel', fa: 'انصراف' },
 
@@ -493,13 +493,62 @@
 		return formatted + ' ' + unit;
 	}
 
+	/**
+	 * Generic version of formatToman covering both supported currency
+	 * units. Defaults to Toman for any unrecognized/missing unit, so
+	 * every pre-existing formatToman() call site keeps working exactly
+	 * as before without needing to pass a unit at all.
+	 */
+	function formatCurrency( amount, unit, lang ) {
+		if ( unit === 'usd' ) {
+			var locale = lang === 'fa' ? 'fa-IR' : 'en-US';
+			var formatted = new Intl.NumberFormat( locale, { maximumFractionDigits: 2 } ).format( amount );
+			return lang === 'fa' ? formatted + ' دلار' : '$' + formatted;
+		}
+		return formatToman( amount, lang );
+	}
+
 	function applyCurrencies( lang ) {
 		document.querySelectorAll( '[data-currency]' ).forEach( function ( el ) {
 			var amount = parseFloat( el.getAttribute( 'data-currency' ) );
+			var unit = el.getAttribute( 'data-currency-unit' ) || 'toman';
 			if ( ! isNaN( amount ) ) {
-				el.textContent = formatToman( amount, lang );
+				el.textContent = formatCurrency( amount, unit, lang );
 			}
 		} );
+	}
+
+	/**
+	 * Sums amounts across items that may be priced in different
+	 * currencies (e.g. students, some Toman some USD) -- adding the raw
+	 * numbers together would be meaningless across units, so this keeps
+	 * a running total per currency instead of one combined number.
+	 * getCurrency/getAmount are called with each item.
+	 */
+	function sumByCurrency( items, getCurrency, getAmount ) {
+		var totals = { toman: 0, usd: 0 };
+		items.forEach( function ( item ) {
+			var unit = getCurrency( item ) === 'usd' ? 'usd' : 'toman';
+			totals[ unit ] += getAmount( item ) || 0;
+		} );
+		return totals;
+	}
+
+	/**
+	 * Formats a { toman, usd } total from sumByCurrency. If only one
+	 * currency actually has a nonzero amount, this looks identical to
+	 * the plain single-currency format (no visible change for the
+	 * common case) -- only shows both, joined, when a teacher genuinely
+	 * has students priced in both currencies.
+	 */
+	function formatMixedCurrency( totals, lang ) {
+		var hasToman = totals.toman !== 0;
+		var hasUsd = totals.usd !== 0;
+		if ( hasToman && hasUsd ) {
+			return formatCurrency( totals.toman, 'toman', lang ) + ' + ' + formatCurrency( totals.usd, 'usd', lang );
+		}
+		if ( hasUsd ) { return formatCurrency( totals.usd, 'usd', lang ); }
+		return formatCurrency( totals.toman, 'toman', lang );
 	}
 
 	/**
@@ -564,7 +613,7 @@
 		applyTranslations( lang );
 	}
 
-	window.mahtelaI18n = { dict: DICT, apply: applyTranslations, setLang: setLang, currentLang: currentLang, formatToman: formatToman, applyNumbers: applyPlainNumbers, applyCurrencies: applyCurrencies };
+	window.mahtelaI18n = { dict: DICT, apply: applyTranslations, setLang: setLang, currentLang: currentLang, formatToman: formatToman, formatCurrency: formatCurrency, sumByCurrency: sumByCurrency, formatMixedCurrency: formatMixedCurrency, applyNumbers: applyPlainNumbers, applyCurrencies: applyCurrencies };
 
 	document.addEventListener( 'DOMContentLoaded', function () {
 		applyTranslations( currentLang() );

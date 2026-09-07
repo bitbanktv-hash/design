@@ -1,8 +1,32 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.27.0 — Current
+v1.28.0 — Current
 ------------------
+- New: per-student currency (Toman or US Dollar), matching how the
+  portfolio builder already handled it. Add Student and Edit Details
+  both now have a currency dropdown next to the price field. Every
+  place a student's rate is shown -- the student page, the finance
+  tab, the per-student and cross-student settlement pages, the
+  teacher dashboard's unsettled-tuition KPI, the student's own
+  balance -- now correctly displays in that student's own currency
+  instead of always assuming Toman.
+  The harder part: totals that combine multiple students (the
+  dashboard KPI, the settlement page's two summary cards) now
+  correctly handle a teacher having students in both currencies at
+  once. Adding a Toman amount and a Dollar amount together would be
+  meaningless, so these now show both, separately, only when a
+  teacher genuinely has both -- otherwise they look exactly like
+  before. Verified this specifically: switched one student to Dollar
+  pricing while another stayed in Toman, then confirmed the
+  aggregated settlement page correctly showed both totals side by
+  side, while each individual student's own request-settlement
+  message still correctly used only their own currency, not the
+  mixed total.
+- Full 20-page load audit run clean.
+
+v1.27.0
+--------
 - New: the Admin Inbox, showing every message submitted through the
   public Contact Us form (already being saved since last version, but
   with nowhere to view it until now). Each entry expands to show the

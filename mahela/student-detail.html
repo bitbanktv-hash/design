@@ -119,7 +119,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.27.0</div>
+			<div class="sidebar__version">MahFLA v1.28.0</div>
 		</div>
 	</aside>
 
@@ -536,7 +536,7 @@
 			</div>
 			<div class="form-grid">
 				<div class="form-field"><label data-i18n="field_session_duration" for="edit-duration-input">Session Duration (minutes)</label><input type="number" id="edit-duration-input" value="60"></div>
-				<div class="form-field"><label data-i18n="field_session_price" for="edit-price-input">Price per Session (Toman)</label><input type="text" inputmode="numeric" class="currency-input" id="edit-price-input" value="250000" dir="ltr"></div>
+				<div class="form-field"><label data-i18n="field_session_price" for="edit-price-input">Price per Session</label><div style="display:flex; gap:8px;"><input type="text" inputmode="numeric" class="currency-input" id="edit-price-input" value="250000" dir="ltr" style="flex:1;"><select id="edit-currency-select" style="flex:0 0 92px;"><option value="toman" data-i18n="currency_toman">Toman</option><option value="usd" data-i18n="currency_usd">USD</option></select></div></div>
 			</div>
 			<div class="form-actions">
 				<button type="button" class="btn btn--ghost" data-modal-close data-i18n="btn_cancel">Cancel</button>
@@ -619,7 +619,7 @@
 
 		var rateEl = document.getElementById( 'student-rate-value' );
 		rateEl.setAttribute( 'data-currency', s.rate );
-		rateEl.textContent = window.mahtelaI18n.formatToman( s.rate, window.mahtelaI18n.currentLang() );
+		rateEl.textContent = window.mahtelaI18n.formatCurrency( s.rate, s.currency || 'toman', window.mahtelaI18n.currentLang() );
 
 		document.getElementById( 'student-page-body' ).setAttribute( 'data-gender', s.gender );
 
@@ -633,6 +633,7 @@
 		document.getElementById( 'edit-gender-select' ).value = s.gender;
 		document.getElementById( 'edit-duration-input' ).value = s.duration;
 		document.getElementById( 'edit-price-input' ).value = new Intl.NumberFormat( 'en-US' ).format( s.rate );
+		document.getElementById( 'edit-currency-select' ).value = s.currency || 'toman';
 
 		[ 'listening', 'speaking', 'reading', 'writing' ].forEach( function ( key ) {
 			document.getElementById( 'student-detail-skills-' + key ).value = s.skills[ key ];
@@ -664,6 +665,7 @@
 		s.gender = document.getElementById( 'edit-gender-select' ).value;
 		s.duration = parseInt( document.getElementById( 'edit-duration-input' ).value, 10 ) || s.duration;
 		s.rate = parseInt( document.getElementById( 'edit-price-input' ).value.replace( /[^0-9]/g, '' ), 10 ) || s.rate;
+		s.currency = document.getElementById( 'edit-currency-select' ).value;
 		window.mahtelaRoster.saveStudents( students );
 		document.getElementById( 'modal-edit-student' ).classList.remove( 'is-open' );
 		document.body.style.overflow = '';
@@ -928,7 +930,7 @@
 		var unsettled = studentSessions().filter( function ( s ) { return isChargeable( s ) && ! s.settled; } );
 
 		document.getElementById( 'finance-sessions-since' ).textContent = unsettled.length;
-		document.getElementById( 'finance-amount-due' ).textContent = window.mahtelaI18n.formatToman( unsettled.length * student.rate, lang );
+		document.getElementById( 'finance-amount-due' ).textContent = window.mahtelaI18n.formatCurrency( unsettled.length * student.rate, student.currency || 'toman', lang );
 
 		var list = document.getElementById( 'unsettled-session-list' );
 		var emptyState = document.getElementById( 'unsettled-empty-state' );
@@ -957,7 +959,7 @@
 				'<input type="checkbox" class="settle-checkbox" data-amount="' + student.rate + '" data-session-id="' + s.id + '" checked style="width:auto; margin-inline-end:6px;">' +
 				'<span class="session-row__date" data-date="' + s.date + '"><span class="session-row__date-day" data-date-part="day"></span><span class="session-row__date-month" data-date-part="month"></span></span>' +
 				'<span class="session-row__info"><span class="session-row__time">' + ( lang === 'fa' ? window.mahtelaCalendar.toFaDigits( s.time + ' – ' + endStr ) : s.time + ' – ' + endStr ) + '</span><span class="session-row__sub' + statusClass + '" data-date="' + s.date + '"><span data-date-part="weekday"></span> · ' + statusText + '</span></span>' +
-				'<span class="session-row__actions">' + requestedBadge + classTypeBadgeHTML( s.classType, lang ) + '<span data-currency="' + student.rate + '">—</span></span>';
+				'<span class="session-row__actions">' + requestedBadge + classTypeBadgeHTML( s.classType, lang ) + '<span data-currency="' + student.rate + '" data-currency-unit="' + ( student.currency || 'toman' ) + '">—</span></span>';
 			list.appendChild( label );
 		} );
 
@@ -975,11 +977,13 @@
 		var checked = Array.prototype.filter.call( checkboxes, function ( cb ) { return cb.checked; } );
 		var total = checked.reduce( function ( sum, cb ) { return sum + parseFloat( cb.getAttribute( 'data-amount' ) ); }, 0 );
 		var lang = window.mahtelaI18n.currentLang();
+		var student = STUDENTS[ currentStudentKey() ];
+		var currencyUnit = student ? ( student.currency || 'toman' ) : 'toman';
 
 		var countEl = document.getElementById( 'settle-selected-count' );
 		if ( ! countEl ) { return; }
 		countEl.textContent = checked.length;
-		document.getElementById( 'settle-selected-total' ).textContent = window.mahtelaI18n.formatToman( total, lang );
+		document.getElementById( 'settle-selected-total' ).textContent = window.mahtelaI18n.formatCurrency( total, currencyUnit, lang );
 
 		var selectAll = document.getElementById( 'settle-select-all' );
 		selectAll.checked = checkboxes.length > 0 && checked.length === checkboxes.length;
@@ -988,7 +992,7 @@
 
 		var summaryLine = document.getElementById( 'settlement-summary-line' );
 		var sessionsWord = window.mahtelaI18n.dict.finance_sessions_word[ lang ];
-		summaryLine.textContent = checked.length + ' ' + sessionsWord + ' · ' + window.mahtelaI18n.formatToman( total, lang );
+		summaryLine.textContent = checked.length + ' ' + sessionsWord + ' · ' + window.mahtelaI18n.formatCurrency( total, currencyUnit, lang );
 		document.getElementById( 'request-settlement-btn' ).disabled = checked.length === 0;
 	}
 
@@ -1014,10 +1018,11 @@
 			mahtelaToast( window.mahtelaI18n.dict.settlement_select_first[ lang ] );
 			return;
 		}
+		var student = STUDENTS[ currentStudentKey() ];
 		var total = Array.prototype.reduce.call( checked, function ( sum, cb ) { return sum + parseFloat( cb.getAttribute( 'data-amount' ) ); }, 0 );
 		var customText = document.getElementById( 'settlement-message' ).value.trim() || window.mahtelaI18n.dict.settlement_message_default[ lang ];
 		var sessionsWord = window.mahtelaI18n.dict.finance_sessions_word[ lang ];
-		var summaryText = checked.length + ' ' + sessionsWord + ' · ' + window.mahtelaI18n.formatToman( total, lang );
+		var summaryText = checked.length + ' ' + sessionsWord + ' · ' + window.mahtelaI18n.formatCurrency( total, student ? ( student.currency || 'toman' ) : 'toman', lang );
 		var fullMessage = escapeHtml( customText ) + '<br><br><strong>' + summaryText + '</strong>';
 
 		window.mahtelaData.sendMessageTo( currentStudentKey(), fullMessage );
