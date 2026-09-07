@@ -631,7 +631,7 @@
 		}
 		return {
 			day: lang === 'fa' ? toFaDigits( p.d ) : String( p.d ),
-			month: lang === 'fa' ? GREG_MONTHS_FA[ p.m - 1 ].slice( 0, 3 ) : GREG_MONTHS_EN[ p.m - 1 ].slice( 0, 3 ),
+			month: lang === 'fa' ? GREG_MONTHS_FA[ p.m - 1 ] : GREG_MONTHS_EN[ p.m - 1 ].slice( 0, 3 ),
 			year: lang === 'fa' ? toFaDigits( p.y ) : String( p.y ),
 			weekday: lang === 'fa' ? WEEKDAYS_FA[ weekdayIdx ] : WEEKDAYS_EN_ABBR[ weekdayIdx ],
 			weekdayFull: lang === 'fa' ? WEEKDAYS_FA[ weekdayIdx ] : WEEKDAYS_EN_FULL[ weekdayIdx ]

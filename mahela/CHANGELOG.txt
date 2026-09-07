@@ -1,8 +1,20 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.29.0 — Current
+v1.29.1 — Current
 ------------------
+- Fixed a real bug reported in the header clock widget: Gregorian
+  month names in Persian mode were being naively cut to 3 characters
+  the same way English is (e.g. "Sep"), producing "سپت" for
+  September -- but Persian has no established 3-letter month
+  abbreviation the way English does, so this just looked wrong
+  ("سپت" isn't a recognizable word). Persian now always shows the
+  full month name here ("سپتامبر"); English is unaffected, still
+  correctly abbreviated.
+- Full 20-page load audit run clean.
+
+v1.29.0
+--------
 - New: two widgets on the teacher dashboard, matching the reference
   site's richer overview. "Your Teaching Rhythm" is a real bar chart
   of session counts across the current week (today's bar highlighted
