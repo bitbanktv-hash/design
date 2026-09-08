@@ -1,8 +1,39 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.32.1 — Current
+v1.33.0 — Current
 ------------------
+- Merged the Portfolio & Blog page into Settings, per explicit
+  request: having two separate pages for a teacher's own profile
+  didn't make sense. Settings (teacher role) now has three tabs --
+  Account, Public Portfolio, Blog -- with everything that used to
+  live on the separate page moved over intact: the full portfolio
+  form (intro, languages, pricing, specialties, publish toggle) and
+  the blog post list. The tabs only appear for the teacher role;
+  student and admin settings are unchanged. Supports deep-linking to
+  a specific tab (settings.html?role=teacher&tab=portfolio), used by
+  the "Build My Portfolio" links on the public site and by the blog
+  editor's back/cancel/save-redirect links, all updated to point
+  here.
+  Kept the separate "Teaching Profile" (specialization + short bio)
+  fields on the Account tab rather than folding them into Portfolio
+  -- despite the similar name, they're genuinely different: that bio
+  is shown to a teacher's own students regardless of whether the
+  teacher has published a public portfolio at all, so collapsing them
+  would have actually lost a distinction that matters.
+  teacher-portfolio.html is deleted; its sidebar link removed from
+  every teacher-facing page.
+- Verified the full real flow end-to-end: the public "Build My
+  Portfolio" banner correctly lands on the Portfolio tab; saving the
+  portfolio form and the separate Teaching Profile form both still
+  persist correctly; the "Set photo" link inside the Portfolio tab
+  correctly switches to Account instead of navigating away; writing
+  and saving a new post in the blog editor correctly returns to the
+  Blog tab and the post appears in the list.
+- Full 21-page load audit run clean.
+
+v1.32.1
+--------
 - Found a real bug the color pass had missed: the teacher's own
   avatar, shown to a student in the welcome header and in chat
   bubbles, was hardcoded to the old pink rather than using the brand
