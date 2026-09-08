@@ -1,8 +1,45 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.35.1 — Current
+v1.36.0 — Current
 ------------------
+- Responsive audit across the whole app, first of a broader pass.
+  Found and fixed the single biggest issue: the mobile sidebar's
+  open/close JS logic had existed the whole time (toggling an
+  "is-open" class), but the CSS to actually hide the sidebar
+  off-screen by default and slide it in when open was completely
+  missing -- meaning on every phone-width screen, on every internal
+  page (every teacher, student, and admin view), the sidebar sat
+  permanently visible, overlapping the page content, regardless of
+  the toggle button. Added the missing slide-in behavior, correctly
+  mirrored for RTL vs LTR since the sidebar can be anchored to either
+  edge depending on language.
+  While testing that fix, found a second, related bug it had been
+  quietly hiding: the backdrop element carried the same
+  data-sidebar-toggle attribute as the actual hamburger button, so a
+  backdrop click ran both "toggle" and "always close" logic back to
+  back -- harmless by coincidence in the one path a real user could
+  reach, but genuinely broken if triggered another way. Removed the
+  redundant attribute across all thirteen pages that had it.
+- Filled in several gaps in existing responsive coverage that had no
+  mobile breakpoint at all: two-column form rows (used throughout --
+  Settings, Add Student, Add Teacher, the contact form, session
+  duration/price pairs) now stack on narrow screens instead of
+  staying cramped side-by-side; the dashboard's 4-KPI row had a
+  2-column fallback but nothing narrower for actual phone widths, now
+  fixed; the top bar now wraps instead of risking overflow on very
+  narrow screens.
+- Verified directly rather than assumed: simulated the full open,
+  backdrop-close, reopen, toggle-close cycle end-to-end and confirmed
+  the sidebar and backdrop's state track correctly at every step.
+- This is a foundational pass on the most broadly shared layout
+  pieces, not a claim that every single screen has been checked
+  pixel-by-pixel -- flag anything that still looks off on a specific
+  page and it'll get a direct look.
+- Full 21-page load audit run clean.
+
+v1.35.1
+--------
 - Design pass on Settings' Profile tab, per explicit request. Three
   concrete fixes rather than a vague "make it nicer":
   - Photo and Personal Details were two separate cards; merged into
