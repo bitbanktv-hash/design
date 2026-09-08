@@ -37,6 +37,10 @@
 	@media (max-width: 960px) {
 		#settings-profile-columns.is-split { grid-template-columns: 1fr; }
 	}
+	#blog-columns {
+		display: grid; grid-template-columns: 1.7fr 1fr; gap: 20px; align-items: start; max-width: 1180px;
+	}
+	@media (max-width: 860px) { #blog-columns { grid-template-columns: 1fr; } }
 	.crop-stage {
 		position: relative; width: 100%; max-width: 340px; margin: 0 auto;
 		background: #111; border-radius: var(--radius-md); overflow: hidden;
@@ -105,7 +109,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.37.0</div>
+			<div class="sidebar__version">MahFLA v1.38.0</div>
 		</div>
 	</aside>
 
@@ -145,7 +149,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.37.0</div>
+			<div class="sidebar__version">MahFLA v1.38.0</div>
 		</div>
 	</aside>
 
@@ -188,7 +192,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.37.0</div>
+			<div class="sidebar__version">MahFLA v1.38.0</div>
 		</div>
 	</aside>
 
@@ -410,13 +414,22 @@
 			</div>
 
 			<div id="settings-panel-blog" style="display:none;">
-				<div class="card" style="padding:24px; max-width:760px;">
-					<div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
-						<h3 style="font-size:15px; margin:0;" data-i18n="portfolio_blog_title">Your Posts</h3>
-						<a href="teacher-blog-editor.html" class="btn btn--primary btn--small" data-i18n="portfolio_new_post">+ New Post</a>
+				<div id="blog-columns">
+					<div class="card" style="padding:24px;">
+						<div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
+							<h3 style="font-size:15px; margin:0;" data-i18n="portfolio_blog_title">Your Posts</h3>
+							<a href="teacher-blog-editor.html" class="btn btn--primary btn--small" data-i18n="portfolio_new_post">+ New Post</a>
+						</div>
+						<div id="blog-post-list"></div>
+						<p id="blog-empty-state" style="display:none; text-align:center; color:var(--ink-faint); padding:24px 0; margin:0;" data-i18n="portfolio_no_posts">You haven't written any posts yet.</p>
 					</div>
-					<div id="blog-post-list"></div>
-					<p id="blog-empty-state" style="display:none; text-align:center; color:var(--ink-faint); padding:24px 0; margin:0;" data-i18n="portfolio_no_posts">You haven't written any posts yet.</p>
+
+					<div class="card" style="padding:20px;">
+						<h3 style="font-size:14px; margin:0 0 4px;" data-i18n="blog_archive_title">Archive</h3>
+						<p style="font-size:12px; color:var(--ink-faint); margin:0 0 16px;" data-i18n="blog_archive_sub">Archived posts are hidden everywhere -- restore or delete anytime.</p>
+						<div id="blog-archive-list"></div>
+						<p id="blog-archive-empty" style="text-align:center; color:var(--ink-faint); padding:16px 0; margin:0; font-size:12.5px;" data-i18n="blog_archive_empty">No archived posts.</p>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -824,12 +837,12 @@
 	function renderBlogList() {
 		var listEl = document.getElementById( 'blog-post-list' );
 		if ( ! listEl ) { return; }
-		var posts = myBlogPosts().slice().sort( function ( a, b ) { return b.createdAt.localeCompare( a.createdAt ); } );
+		var lang = window.mahtelaI18n.currentLang();
+		var dict = window.mahtelaI18n.dict;
+		var posts = myBlogPosts().filter( function ( p ) { return ! p.archived; } ).sort( function ( a, b ) { return b.createdAt.localeCompare( a.createdAt ); } );
 		listEl.innerHTML = '';
 
 		posts.forEach( function ( post ) {
-			var lang = window.mahtelaI18n.currentLang();
-			var dict = window.mahtelaI18n.dict;
 			var isPublished = post.published !== false;
 			var row = document.createElement( 'div' );
 			row.className = 'settlement-row';
@@ -838,16 +851,72 @@
 				'<span style="display:flex; gap:8px;">' +
 					( isPublished ? '<a href="public-blog.html?post=' + encodeURIComponent( post.id ) + '" target="_blank" rel="noopener" class="btn btn--ghost btn--small">' + dict.blog_list_view[ lang ] + '</a>' : '' ) +
 					'<a href="teacher-blog-editor.html?post=' + encodeURIComponent( post.id ) + '" class="btn btn--ghost btn--small"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg></a>' +
+					'<button type="button" class="btn btn--ghost btn--small" data-action="archive" title="' + dict.blog_action_archive[ lang ] + '"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9M10 14h4"/></svg></button>' +
 					'<button type="button" class="btn btn--ghost btn--small" data-action="delete"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg></button>' +
 				'</span>';
 			row.querySelector( 'strong' ).textContent = post.title;
 			row.querySelector( '.badge' ).textContent = isPublished ? dict.portfolio_status_published[ lang ] : dict.portfolio_status_draft[ lang ];
+			row.querySelector( '[data-action="archive"]' ).addEventListener( 'click', function () { archiveBlogPost( post.id ); } );
 			row.querySelector( '[data-action="delete"]' ).addEventListener( 'click', function () { deleteBlogPost( post.id ); } );
 			listEl.appendChild( row );
 		} );
 
 		document.getElementById( 'blog-empty-state' ).style.display = posts.length ? 'none' : 'block';
 		window.mahtelaCalendar.applyScheduleDates();
+	}
+
+	function renderArchiveList() {
+		var listEl = document.getElementById( 'blog-archive-list' );
+		if ( ! listEl ) { return; }
+		var lang = window.mahtelaI18n.currentLang();
+		var dict = window.mahtelaI18n.dict;
+		var posts = myBlogPosts().filter( function ( p ) { return !! p.archived; } ).sort( function ( a, b ) { return b.createdAt.localeCompare( a.createdAt ); } );
+		listEl.innerHTML = '';
+
+		posts.forEach( function ( post ) {
+			var row = document.createElement( 'div' );
+			row.style.cssText = 'padding:10px 0; border-bottom:1px dashed var(--border);';
+			row.innerHTML =
+				'<div style="font-size:12.5px; font-weight:700; margin-bottom:2px;"></div>' +
+				'<div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">' +
+					'<span data-date="' + post.createdAt + '" data-date-style="full" style="font-size:11px; color:var(--ink-faint);"></span>' +
+					'<span style="display:flex; gap:6px;">' +
+						'<button type="button" class="btn btn--ghost btn--small" data-action="restore" title="' + dict.blog_action_restore[ lang ] + '"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10h10a5 5 0 0 1 0 10H8M3 10l4-4M3 10l4 4"/></svg></button>' +
+						'<button type="button" class="btn btn--ghost btn--small" data-action="delete"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg></button>' +
+					'</span>' +
+				'</div>';
+			row.querySelector( 'div' ).textContent = post.title;
+			row.querySelector( '[data-action="restore"]' ).addEventListener( 'click', function () { restoreBlogPost( post.id ); } );
+			row.querySelector( '[data-action="delete"]' ).addEventListener( 'click', function () { deleteBlogPost( post.id ); } );
+			listEl.appendChild( row );
+		} );
+
+		document.getElementById( 'blog-archive-empty' ).style.display = posts.length ? 'none' : 'block';
+		window.mahtelaCalendar.applyScheduleDates();
+	}
+
+	function archiveBlogPost( id ) {
+		var teachers = window.mahtelaRoster.loadTeachers();
+		var teacher = teachers[ CURRENT_TEACHER_ID ];
+		if ( ! teacher || ! teacher.blogPosts ) { return; }
+		var post = teacher.blogPosts.filter( function ( p ) { return p.id === id; } )[ 0 ];
+		if ( ! post ) { return; }
+		post.archived = true;
+		window.mahtelaRoster.saveTeachers( teachers );
+		renderBlogList();
+		renderArchiveList();
+	}
+
+	function restoreBlogPost( id ) {
+		var teachers = window.mahtelaRoster.loadTeachers();
+		var teacher = teachers[ CURRENT_TEACHER_ID ];
+		if ( ! teacher || ! teacher.blogPosts ) { return; }
+		var post = teacher.blogPosts.filter( function ( p ) { return p.id === id; } )[ 0 ];
+		if ( ! post ) { return; }
+		post.archived = false;
+		window.mahtelaRoster.saveTeachers( teachers );
+		renderBlogList();
+		renderArchiveList();
 	}
 
 	function deleteBlogPost( id ) {
@@ -857,12 +926,14 @@
 		teacher.blogPosts = teacher.blogPosts.filter( function ( p ) { return p.id !== id; } );
 		window.mahtelaRoster.saveTeachers( teachers );
 		renderBlogList();
+		renderArchiveList();
 	}
 
 	renderBlogList();
-	document.addEventListener( 'mahtela:langchange', renderBlogList );
-	document.addEventListener( 'mahtela:calendarchange', renderBlogList );
-	document.addEventListener( 'mahtela:teacherschange', renderBlogList );
+	renderArchiveList();
+	document.addEventListener( 'mahtela:langchange', function () { renderBlogList(); renderArchiveList(); } );
+	document.addEventListener( 'mahtela:calendarchange', function () { renderBlogList(); renderArchiveList(); } );
+	document.addEventListener( 'mahtela:teacherschange', function () { renderBlogList(); renderArchiveList(); } );
 </script>
 </body>
 </html>

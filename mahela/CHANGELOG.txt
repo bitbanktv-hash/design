@@ -1,8 +1,33 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.37.0 — Current
+v1.38.0 — Current
 ------------------
+- New: a full archive system for blog posts, per explicit request.
+  The Blog tab is now two columns -- the main post list on the right,
+  a new Archive column on the left (same DOM-order pattern as the
+  Profile tab's split, so it places correctly in RTL without
+  direction-specific overrides), stacking to one column on narrower
+  screens.
+  Every post in the main list now has an Archive action alongside
+  Edit and Delete. Archiving doesn't touch a post's draft/published
+  state -- it's a separate, independent flag -- but archived status
+  overrides published for visibility: an archived post is hidden from
+  the main list, the homepage, the public blog, and the teacher's own
+  public profile, even if it's still marked published underneath.
+  The archive column has full capabilities as asked: Restore (moves
+  a post back to the main list with its prior draft/published state
+  intact) and permanent Delete, both directly from the archived row.
+- Verified the complete lifecycle end-to-end in one pass: archived a
+  published post and confirmed it disappeared from the main list, the
+  homepage, and the teacher's public profile simultaneously; restored
+  it and confirmed it reappeared in the main list with the archive
+  correctly empty again; archived it a second time and deleted it
+  directly from the archive, confirming permanent removal.
+- Full 21-page load audit run clean.
+
+v1.37.0
+--------
 - Rearranged Settings' Profile tab into two columns, per explicit
   request: Portfolio on the right, Photo/Personal Details/Password on
   the left. Portfolio comes first in the underlying markup and CSS
