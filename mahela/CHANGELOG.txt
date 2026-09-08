@@ -1,8 +1,49 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.31.1 — Current
+v1.32.0 — Current
 ------------------
+- Fixed a real restriction: the session-duration fields on both the
+  portfolio form and the Add Student form had step="15", so the
+  browser's native validation silently rejected anything that wasn't
+  a multiple of 15 (e.g. 55 was rejected, only 45 or 60 accepted).
+  Removed on both forms -- a teacher can now set any duration.
+- Rebuilt the blog post editor as a full dedicated page
+  (teacher-blog-editor.html) instead of a popup modal, with a real
+  rich-text toolbar: bold, italic, underline, headings, bullet and
+  numbered lists, blockquotes, undo/redo, link insertion via a small
+  popover instead of a browser prompt(), and image insertion.
+  Images are embedded directly into the post as data URLs since
+  there's no real file host yet (capped at 2MB so localStorage
+  doesn't fill up) -- the note on the page is explicit that this is
+  a stand-in for real uploads once hosting exists, chosen so the
+  writing experience itself won't need to change later.
+  Removed the old modal and its now-dead code entirely.
+- Post bodies are rich HTML now instead of plain text, which touches
+  every place a post is displayed: the single-post view now renders
+  as HTML instead of escaped text, and every card that shows a
+  preview snippet (the homepage, the public blog listing) now strips
+  tags to plain text before truncating -- truncating raw HTML by
+  character count risked cutting mid-tag and leaving broken markup
+  in the snippet. Also fixed the stripped text running two words
+  together at block-element boundaries (e.g. a heading followed
+  directly by a paragraph).
+- Caught a real mistake made while restructuring the portfolio page's
+  HTML for this: an early version of a large content splice
+  accidentally consumed the i18n.js script tag along with the content
+  being replaced, since it sat exactly on the boundary line. Found
+  and fixed by testing immediately after the splice rather than
+  assuming it landed cleanly.
+- Verified end-to-end: created a post with real formatting (heading,
+  bold text, a list) through the new editor, confirmed it saved with
+  the formatting intact, reloaded it for editing and confirmed the
+  content came back exactly, and confirmed it displays correctly --
+  full formatting on the single-post page, clean plain-text snippet
+  everywhere else.
+- Full 22-page load audit run clean, including the new page.
+
+v1.31.1
+--------
 - Found the real reason the color change still looked "old" in
   several places despite the previous pass: that pass only touched
   the --brand token itself. It never touched the neutral palette --

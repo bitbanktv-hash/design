@@ -67,7 +67,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.31.1</div>
+			<div class="sidebar__version">MahFLA v1.32.0</div>
 		</div>
 	</aside>
 
@@ -173,7 +173,7 @@
 						<div class="form-grid">
 							<div class="form-field">
 								<label for="portfolio-session-duration" data-i18n="portfolio_session_duration">Session Duration (minutes)</label>
-								<input id="portfolio-session-duration" type="number" min="15" step="15" value="60">
+								<input id="portfolio-session-duration" type="number" min="5" value="60">
 							</div>
 							<div class="form-field">
 								<label for="portfolio-session-price"><span class="required-mark">*</span> <span data-i18n="portfolio_session_price">Price per Session</span></label>
@@ -214,7 +214,7 @@
 				<div class="card" style="padding:24px;">
 					<div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
 						<h3 style="font-size:15px; margin:0;" data-i18n="portfolio_blog_title">Your Posts</h3>
-						<button type="button" class="btn btn--primary btn--small" id="blog-new-post-btn" data-i18n="portfolio_new_post">+ New Post</button>
+						<a href="teacher-blog-editor.html" class="btn btn--primary btn--small" data-i18n="portfolio_new_post">+ New Post</a>
 					</div>
 					<div id="blog-post-list"></div>
 					<p id="blog-empty-state" style="display:none; text-align:center; color:var(--ink-faint); padding:24px 0; margin:0;" data-i18n="portfolio_no_posts">You haven't written any posts yet.</p>
@@ -224,30 +224,6 @@
 	</div>
 </div>
 
-<!-- Blog post editor modal -->
-<div class="modal-overlay" id="modal-blog-post">
-	<div class="modal-box">
-		<div class="modal-box__head">
-			<h2 class="modal-box__title" id="blog-modal-title" data-i18n="portfolio_new_post_title">New Post</h2>
-			<button type="button" class="modal-box__close" data-modal-close aria-label="Close">&times;</button>
-		</div>
-		<form id="blog-post-form">
-			<input type="hidden" id="blog-post-id">
-			<div class="form-field">
-				<label for="blog-post-title"><span class="required-mark">*</span> <span data-i18n="portfolio_post_title">Title</span></label>
-				<input id="blog-post-title" type="text" required>
-			</div>
-			<div class="form-field" style="margin-bottom:0;">
-				<label for="blog-post-body"><span class="required-mark">*</span> <span data-i18n="portfolio_post_body">Content</span></label>
-				<textarea id="blog-post-body" rows="6" required></textarea>
-			</div>
-			<div class="form-actions">
-				<button type="button" class="btn btn--ghost" data-modal-close data-i18n="btn_cancel">Cancel</button>
-				<button type="submit" class="btn btn--primary" data-i18n="btn_save">Save</button>
-			</div>
-		</form>
-	</div>
-</div>
 
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/theme.js"></script>
@@ -382,28 +358,16 @@
 			row.innerHTML =
 				'<span><strong></strong> · <span data-date="' + post.createdAt + '" data-date-style="full"></span></span>' +
 				'<span style="display:flex; gap:8px;">' +
-					'<button type="button" class="btn btn--ghost btn--small" data-action="edit"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg></button>' +
+					'<a href="teacher-blog-editor.html?post=' + encodeURIComponent( post.id ) + '" class="btn btn--ghost btn--small"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg></a>' +
 					'<button type="button" class="btn btn--ghost btn--small" data-action="delete"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg></button>' +
 				'</span>';
 			row.querySelector( 'strong' ).textContent = post.title;
-			row.querySelector( '[data-action="edit"]' ).addEventListener( 'click', function () { openBlogModal( post ); } );
 			row.querySelector( '[data-action="delete"]' ).addEventListener( 'click', function () { deleteBlogPost( post.id ); } );
 			list.appendChild( row );
 		} );
 
 		document.getElementById( 'blog-empty-state' ).style.display = posts.length ? 'none' : 'block';
 		window.mahtelaCalendar.applyScheduleDates();
-	}
-
-	function openBlogModal( post ) {
-		var lang = window.mahtelaI18n.currentLang();
-		var dict = window.mahtelaI18n.dict;
-		document.getElementById( 'blog-modal-title' ).textContent = post ? dict.portfolio_edit_post_title[ lang ] : dict.portfolio_new_post_title[ lang ];
-		document.getElementById( 'blog-post-id' ).value = post ? post.id : '';
-		document.getElementById( 'blog-post-title' ).value = post ? post.title : '';
-		document.getElementById( 'blog-post-body' ).value = post ? post.body : '';
-		document.getElementById( 'modal-blog-post' ).classList.add( 'is-open' );
-		document.body.style.overflow = 'hidden';
 	}
 
 	function deleteBlogPost( id ) {
@@ -414,34 +378,6 @@
 		window.mahtelaRoster.saveTeachers( teachers );
 		renderBlogList();
 	}
-
-	document.getElementById( 'blog-new-post-btn' ).addEventListener( 'click', function () { openBlogModal( null ); } );
-
-	document.getElementById( 'blog-post-form' ).addEventListener( 'submit', function ( e ) {
-		e.preventDefault();
-		var teachers = window.mahtelaRoster.loadTeachers();
-		var teacher = teachers[ CURRENT_TEACHER_ID ];
-		if ( ! teacher ) { return; }
-		teacher.blogPosts = teacher.blogPosts || [];
-
-		var id = document.getElementById( 'blog-post-id' ).value;
-		var title = document.getElementById( 'blog-post-title' ).value.trim();
-		var body = document.getElementById( 'blog-post-body' ).value.trim();
-		if ( ! title || ! body ) { return; }
-
-		if ( id ) {
-			var existing = teacher.blogPosts.filter( function ( p ) { return p.id === id; } )[ 0 ];
-			if ( existing ) { existing.title = title; existing.body = body; }
-		} else {
-			teacher.blogPosts.push( { id: 'post' + Date.now(), title: title, body: body, createdAt: new Date().toISOString().slice( 0, 10 ) } );
-		}
-		window.mahtelaRoster.saveTeachers( teachers );
-
-		document.getElementById( 'modal-blog-post' ).classList.remove( 'is-open' );
-		document.body.style.overflow = '';
-		mahtelaToast( window.mahtelaI18n.dict.portfolio_post_saved_toast[ window.mahtelaI18n.currentLang() ] );
-		renderBlogList();
-	} );
 
 	renderBlogList();
 	document.addEventListener( 'mahtela:langchange', renderBlogList );

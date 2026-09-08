@@ -9,6 +9,19 @@ function escapeHtml( s ) {
 	return d.innerHTML;
 }
 
+/**
+ * Blog post bodies are rich HTML (from the blog editor's contenteditable
+ * surface). Card previews need a plain-text excerpt -- truncating the raw
+ * HTML by character count would risk cutting mid-tag and leaving broken
+ * markup in the snippet, so this strips tags first.
+ */
+function stripHtmlForSnippet( html ) {
+	var withBreaks = html.replace( /<\/(p|h1|h2|h3|h4|li|blockquote|div|br)>/gi, ' ' ).replace( /<br\s*\/?>/gi, ' ' );
+	var div = document.createElement( 'div' );
+	div.innerHTML = withBreaks;
+	return ( div.textContent || '' ).replace( /\s+/g, ' ' ).trim();
+}
+
 var LANGUAGE_NAMES = { en: 'English', fr: 'French', de: 'German', ar: 'Arabic', tr: 'Turkish', es: 'Spanish', fa: 'Persian', it: 'Italian' };
 
 function publishedTeachers() {
@@ -66,7 +79,8 @@ function renderPublicBlogCard( item, lang, linkOverride ) {
 	var card = document.createElement( 'a' );
 	card.href = linkOverride || ( 'public-blog.html?post=' + item.post.id );
 	card.className = 'card public-blog-card';
-	var snippet = item.post.body.length > 90 ? item.post.body.slice( 0, 90 ) + '…' : item.post.body;
+	var plainText = stripHtmlForSnippet( item.post.body );
+	var snippet = plainText.length > 90 ? plainText.slice( 0, 90 ) + '…' : plainText;
 	card.innerHTML =
 		'<h3 class="public-blog-card__title"></h3>' +
 		'<p class="public-blog-card__snippet"></p>' +

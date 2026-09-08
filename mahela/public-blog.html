@@ -120,7 +120,7 @@
 		document.getElementById( 'post-author-name' ).textContent = item.teacher.name;
 		document.getElementById( 'post-date' ).setAttribute( 'data-date', item.post.createdAt );
 		document.getElementById( 'post-date' ).setAttribute( 'data-date-style', 'full' );
-		document.getElementById( 'post-body' ).textContent = item.post.body;
+		document.getElementById( 'post-body' ).innerHTML = item.post.body;
 		window.mahtelaCalendar.applyScheduleDates();
 	}
 
