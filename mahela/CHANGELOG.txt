@@ -1,8 +1,26 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.36.0 — Current
+v1.37.0 — Current
 ------------------
+- Rearranged Settings' Profile tab into two columns, per explicit
+  request: Portfolio on the right, Photo/Personal Details/Password on
+  the left. Portfolio comes first in the underlying markup and CSS
+  Grid places DOM-first items on the right side in RTL layouts (the
+  app's default, Persian), which is exactly the placement asked for
+  without needing any direction-specific overrides.
+  Only applies to the teacher role, since student and admin accounts
+  don't have a portfolio to split against -- their Account section
+  stays exactly as it was, single column, unaffected. Stacks back to
+  one column on narrower screens.
+- Verified directly: the split class only appears for the teacher
+  role with portfolio correctly first in DOM order; student's account
+  panel is confirmed unaffected; both the Portfolio and Personal
+  Details forms still save correctly after the restructuring.
+- Full 21-page load audit run clean.
+
+v1.36.0
+--------
 - Responsive audit across the whole app, first of a broader pass.
   Found and fixed the single biggest issue: the mobile sidebar's
   open/close JS logic had existed the whole time (toggling an
