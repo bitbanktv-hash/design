@@ -36,7 +36,7 @@ function allBlogPosts() {
 	var posts = [];
 	Object.keys( teachers ).forEach( function ( key ) {
 		var t = teachers[ key ];
-		( t.blogPosts || [] ).forEach( function ( post ) { posts.push( { post: post, teacher: t } ); } );
+		( t.blogPosts || [] ).filter( function ( post ) { return post.published !== false; } ).forEach( function ( post ) { posts.push( { post: post, teacher: t } ); } );
 	} );
 	posts.sort( function ( a, b ) { return b.post.createdAt.localeCompare( a.post.createdAt ); } );
 	return posts;

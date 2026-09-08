@@ -213,7 +213,7 @@
 		document.getElementById( 'profile-resume-certificates' ).textContent = p.certificates || dict.profile_resume_empty[ lang ];
 		document.getElementById( 'profile-resume-education' ).textContent = p.education || dict.profile_resume_empty[ lang ];
 
-		var posts = ( t.blogPosts || [] ).slice().sort( function ( a, b ) { return b.createdAt.localeCompare( a.createdAt ); } );
+		var posts = ( t.blogPosts || [] ).filter( function ( post ) { return post.published !== false; } ).sort( function ( a, b ) { return b.createdAt.localeCompare( a.createdAt ); } );
 		var blogList = document.getElementById( 'profile-blog-list' );
 		blogList.innerHTML = '';
 		posts.forEach( function ( post ) {

@@ -63,7 +63,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.34.0</div>
+			<div class="sidebar__version">MahFLA v1.35.0</div>
 		</div>
 	</aside>
 
@@ -139,8 +139,17 @@
 					<p class="richtext-image-note" data-i18n="blogedit_image_note">Images are embedded directly into the post -- once real hosting is connected, this can be swapped for actual file uploads without changing the writing experience.</p>
 				</div>
 
+				<div class="form-field" style="margin-bottom:0;">
+					<label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer; font-weight:600;">
+						<input type="checkbox" id="blogedit-published" style="width:auto; margin-top:3px;">
+						<span data-i18n="blogedit_publish_label">Publish this post</span>
+					</label>
+					<p style="font-size:12px; color:var(--ink-faint); margin:8px 0 0 30px;" data-i18n="blogedit_publish_note">Leave unchecked to save as a draft -- only you can see drafts. Check this to make the post visible on your public profile and the site blog.</p>
+				</div>
+
 				<div class="form-actions" style="margin-top:20px;">
 					<a href="settings.html?role=teacher&amp;tab=blog" class="btn btn--ghost" data-i18n="btn_cancel">Cancel</a>
+					<a href="#" target="_blank" rel="noopener" class="btn btn--ghost" id="blogedit-view-link" style="display:none;" data-i18n="blogedit_view_post">View Post →</a>
 					<button type="button" class="btn btn--primary" id="blogedit-save-btn" data-i18n="btn_save">Save</button>
 				</div>
 			</div>
@@ -274,8 +283,14 @@
 		document.getElementById( 'blog-post-id' ).value = post.id;
 		document.getElementById( 'blog-post-title' ).value = post.title;
 		surface.innerHTML = post.body;
+		document.getElementById( 'blogedit-published' ).checked = post.published !== false;
 		var lang = window.mahtelaI18n.currentLang();
 		document.getElementById( 'blogedit-heading' ).textContent = window.mahtelaI18n.dict.portfolio_edit_post_title[ lang ];
+		if ( post.published !== false ) {
+			var viewLink = document.getElementById( 'blogedit-view-link' );
+			viewLink.href = 'public-blog.html?post=' + encodeURIComponent( post.id );
+			viewLink.style.display = '';
+		}
 	}() );
 
 	document.getElementById( 'blogedit-save-btn' ).addEventListener( 'click', function () {
@@ -295,11 +310,12 @@
 		teacher.blogPosts = teacher.blogPosts || [];
 
 		var id = document.getElementById( 'blog-post-id' ).value;
+		var published = document.getElementById( 'blogedit-published' ).checked;
 		if ( id ) {
 			var existing = teacher.blogPosts.filter( function ( p ) { return p.id === id; } )[ 0 ];
-			if ( existing ) { existing.title = title; existing.body = body; }
+			if ( existing ) { existing.title = title; existing.body = body; existing.published = published; }
 		} else {
-			teacher.blogPosts.unshift( { id: 'post' + Date.now(), title: title, body: body, createdAt: new Date().toISOString().slice( 0, 10 ) } );
+			teacher.blogPosts.unshift( { id: 'post' + Date.now(), title: title, body: body, createdAt: new Date().toISOString().slice( 0, 10 ), published: published } );
 		}
 		window.mahtelaRoster.saveTeachers( teachers );
 		window.location.href = 'settings.html?role=teacher&tab=blog';

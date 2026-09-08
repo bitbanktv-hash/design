@@ -1,8 +1,36 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.34.0 — Current
+v1.35.0 — Current
 ------------------
+- New: blog posts now have a real draft/published state, matching
+  the portfolio's own pattern -- a "Publish this post" checkbox in
+  the editor (unchecked, i.e. draft, by default for new posts).
+  Drafts are visible only to the teacher, in their own Settings Blog
+  list; every public-facing spot (the homepage, the public blog
+  listing, a teacher's public profile blog tab) now filters them out.
+  A direct link to a draft's URL correctly falls back to "not found"
+  rather than leaking the content.
+- New: a "View" button next to each published post in Settings' Blog
+  list, and a matching "View Post" link inside the editor itself when
+  editing an already-published post -- both open the live post
+  directly in a new tab. Drafts don't get this button, since there's
+  nothing public to view yet.
+  Caught a real bug while building the list-row version of this:
+  first attempt tried to reuse the editor's "View Post →" label by
+  stripping the arrow with a literal " →" string match -- which
+  silently failed in Persian, since that language uses "←" instead.
+  Added a dedicated short label instead of patching the string match.
+- Verified end-to-end in both directions: a draft post saves
+  correctly, is absent everywhere public, shows correctly in the
+  teacher's own list with no view button, and a direct link to it
+  shows not-found. A published post appears on the homepage, shows a
+  working View link/button in both the list and the editor, pointing
+  at the correct URL and opening in a new tab.
+- Full 21-page load audit run clean.
+
+v1.34.0
+--------
 - Consolidated further, per explicit request: photo and personal
   details now live on the same "Profile" tab as the public portfolio
   form, rather than a separate "Account" tab. Down to two tabs for
