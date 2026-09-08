@@ -30,7 +30,7 @@
 		transition: background-color .15s ease;
 	}
 	.teacher-strip:hover { background: var(--border); }
-	.teacher-strip__avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--c-pink); color: var(--c-ink); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; overflow: hidden; }
+	.teacher-strip__avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--brand); color: var(--on-brand); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; overflow: hidden; }
 	.teacher-strip__avatar img { width: 100%; height: 100%; object-fit: cover; }
 </style>
 </head>
@@ -40,13 +40,13 @@
 	<div class="sidebar-backdrop" data-sidebar-toggle></div>
 
 	<aside class="sidebar">
-		<div class="sidebar__brand">
+		<a class="sidebar__brand" href="index.html">
 			<span class="sidebar__logo">M</span>
 			<div class="sidebar__brand-text">
 				<span class="sidebar__brand-name" data-i18n="brand_name">MahFLA</span>
 				<span class="sidebar__brand-tagline" data-i18n="brand_tagline">Mahta Foreign Language Academy</span>
 			</div>
-		</div>
+		</a>
 		<nav class="sidebar__nav">
 			<a href="student-panel.html" class="sidebar__link is-active">
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="12" width="8" height="9" rx="2"/><rect x="3" y="14" width="8" height="7" rx="2"/></svg>
@@ -74,7 +74,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.32.0</div>
+			<div class="sidebar__version">MahFLA v1.32.1</div>
 		</div>
 	</aside>
 
@@ -427,7 +427,7 @@
 			var isMine = m.dir === 'in';
 			var bubble = document.createElement( 'div' );
 			bubble.className = 'message-bubble message-bubble--' + ( isMine ? 'out' : 'in' );
-			var teacherAvatar = '<span class="message-bubble__avatar" style="background:var(--c-pink); color:var(--c-ink);">JD</span>';
+			var teacherAvatar = '<span class="message-bubble__avatar" style="background:var(--brand); color:var(--on-brand);">JD</span>';
 			var mineAvatar = '<span class="message-bubble__avatar" style="background:var(--student-accent); color:var(--c-ink);">' + convo.initials + '</span>';
 			bubble.innerHTML = ( isMine ? '' : teacherAvatar ) +
 				'<div class="message-bubble__content"><div class="message-bubble__text">' + m.html + '</div><span class="message-bubble__time">' + m.time + '</span></div>' +

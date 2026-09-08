@@ -1,8 +1,40 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.32.0 — Current
+v1.32.1 — Current
 ------------------
+- Found a real bug the color pass had missed: the teacher's own
+  avatar, shown to a student in the welcome header and in chat
+  bubbles, was hardcoded to the old pink rather than using the brand
+  color -- it looked like it belonged to student gender-coloring but
+  actually represented the teacher, so it should always be brand
+  green. Fixed both spots.
+  Same root issue on the admin's Teachers table: each teacher's
+  avatar cycled through a fixed set of colors (pink, teal, orange...)
+  for visual variety, which now reads as inconsistent against every
+  other teacher-avatar spot in the app that correctly uses the brand
+  color. Switched to brand color there too.
+  Also caught the last two decorative leftovers: the "MahFLA"
+  wordmark's gradient on all three auth pages (login, admin login,
+  forgot password) was still pink-to-teal, and one small accent
+  circle in the homepage's hero illustration was still teal while
+  every other shape in the same illustration was already on-brand.
+  Both fixed.
+- Fixed a real bug in the Assessment History section (a student's
+  profile, Skills tab): three example rows showed scores like 78, 85,
+  62 -- reading as out of 100 -- while every other skill score in the
+  app (the dashboard's progress list, the skill bars on this same
+  page) uses a 0-9 scale. Converted to match (e.g. 78 -> 7.8). Also
+  fixed an inconsistency within the section itself: only the first of
+  the three rows had per-skill coloring: the other two were
+  uncolored. All three now use the same coloring consistently.
+- New: the sidebar logo/brand name at the top of every internal page
+  (teacher, student, and admin panels) is now a real link to the
+  public homepage -- it was previously just static, unclickable text.
+- Full 22-page load audit run clean.
+
+v1.32.0
+--------
 - Fixed a real restriction: the session-duration fields on both the
   portfolio form and the Add Student form had step="15", so the
   browser's native validation silently rejected anything that wasn't
