@@ -23,6 +23,12 @@
 	.photo-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 	.settings-section-title { font-size: 16px; margin-bottom: 4px; }
 	.settings-section-sub { font-size: 13px; margin-bottom: 20px; }
+	.settings-divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+	.settings-group-label {
+		display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+		color: var(--brand-strong, var(--brand)); margin: 26px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+	}
+	.settings-group-label:first-of-type { margin-top: 0; }
 	.crop-stage {
 		position: relative; width: 100%; max-width: 340px; margin: 0 auto;
 		background: #111; border-radius: var(--radius-md); overflow: hidden;
@@ -91,7 +97,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.35.0</div>
+			<div class="sidebar__version">MahFLA v1.35.1</div>
 		</div>
 	</aside>
 
@@ -131,7 +137,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.35.0</div>
+			<div class="sidebar__version">MahFLA v1.35.1</div>
 		</div>
 	</aside>
 
@@ -174,7 +180,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.35.0</div>
+			<div class="sidebar__version">MahFLA v1.35.1</div>
 		</div>
 	</aside>
 
@@ -215,7 +221,7 @@
 			</div>
 
 			<div id="settings-panel-account">
-			<div class="card" style="padding:28px; margin-bottom:20px; max-width:640px;">
+			<div class="card" style="padding:28px; margin-bottom:20px; max-width:760px;">
 				<h2 class="settings-section-title" data-i18n="settings_photo_title">Profile Photo</h2>
 				<div class="photo-row" style="margin-top:18px;">
 					<span class="photo-preview" id="photo-preview">JD</span>
@@ -227,9 +233,9 @@
 				</div>
 				<p class="photo-error" id="photo-error"></p>
 				<p style="font-size:11.5px; color:var(--ink-faint); margin-top:10px;" data-i18n="settings_photo_standard">JPEG, PNG or WEBP · up to 5MB · at least 200×200px.</p>
-			</div>
 
-			<div class="card" style="padding:28px; margin-bottom:20px; max-width:640px;">
+				<hr class="settings-divider">
+
 				<h2 class="settings-section-title" data-i18n="settings_details_title">Personal Details</h2>
 				<form id="details-form" style="margin-top:18px;">
 					<div class="form-field">
@@ -262,8 +268,7 @@
 				</form>
 			</div>
 
-
-			<div class="card" style="padding:28px; max-width:640px;">
+			<div class="card" style="padding:28px; max-width:760px;">
 				<h2 class="settings-section-title" data-i18n="settings_password_title">Change Password</h2>
 				<div id="password-alert"></div>
 				<form id="password-form" style="margin-top:18px;">
@@ -301,6 +306,7 @@
 					</div>
 
 					<form id="portfolio-form">
+						<span class="settings-group-label" data-i18n="settings_group_basic">Basic Info</span>
 						<div class="form-grid">
 							<div class="form-field">
 								<label for="portfolio-display-name"><span class="required-mark">*</span> <span data-i18n="portfolio_display_name">Display Name</span></label>
@@ -315,6 +321,8 @@
 							<label for="portfolio-about" data-i18n="portfolio_about">About Me &amp; Teaching Style</label>
 							<textarea id="portfolio-about" rows="4" data-i18n-ph="portfolio_about_ph" placeholder="Describe your teaching method, experience, and who your classes are for…"></textarea>
 						</div>
+
+						<span class="settings-group-label" data-i18n="settings_group_format">Languages &amp; Format</span>
 						<div class="form-field">
 							<label><span class="required-mark">*</span> <span data-i18n="portfolio_languages">Teaching Languages</span></label>
 							<div class="checkbox-chip-group" id="portfolio-languages-group">
@@ -335,6 +343,7 @@
 								<label class="checkbox-chip"><input type="checkbox" value="in-person"><span data-i18n="class_type_in_person">In-person</span></label>
 							</div>
 						</div>
+						<span class="settings-group-label" data-i18n="settings_group_pricing">Pricing &amp; Availability</span>
 						<div class="form-grid">
 							<div class="form-field">
 								<label for="portfolio-price-unit" data-i18n="portfolio_price_unit">Price Unit</label>
@@ -359,6 +368,7 @@
 								<span class="form-field__hint" data-i18n="portfolio_price_hint">If you change the price unit, re-enter the amount -- it isn't converted automatically.</span>
 							</div>
 						</div>
+						<span class="settings-group-label" data-i18n="settings_group_credentials">Credentials</span>
 						<div class="form-field">
 							<label for="portfolio-specialties" data-i18n="portfolio_specialties">Specialties</label>
 							<input id="portfolio-specialties" type="text" data-i18n-ph="portfolio_specialties_ph" placeholder="e.g. Conversation, IELTS, Business English">
@@ -374,6 +384,7 @@
 								<textarea id="portfolio-education" rows="3"></textarea>
 							</div>
 						</div>
+						<span class="settings-group-label" data-i18n="settings_group_visibility">Visibility</span>
 						<div class="form-field" style="margin-bottom:0;">
 							<label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer; font-weight:600;">
 								<input type="checkbox" id="portfolio-published" style="width:auto; margin-top:3px;">

@@ -1,8 +1,32 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.35.0 — Current
+v1.35.1 — Current
 ------------------
+- Design pass on Settings' Profile tab, per explicit request. Three
+  concrete fixes rather than a vague "make it nicer":
+  - Photo and Personal Details were two separate cards; merged into
+    one, with a divider between the photo and the detail fields,
+    since they're really one "who you are" section, not two.
+  - Every card in the tab now shares one consistent width (760px) --
+    previously Photo/Details/Password sat at 640px while Portfolio
+    sat at 760px, so the page visibly widened partway down.
+  - The portfolio form is long (thirteen fields across five
+    different concerns), and had no visual grouping at all -- one
+    undifferentiated flow from name to publish toggle. Broke it into
+    five labeled sections (Basic Info, Languages & Format, Pricing &
+    Availability, Credentials, Visibility) using a small uppercase
+    divider-label style, so the form reads as a sequence of short
+    decisions instead of one long one.
+- Verified the restructuring didn't break anything it touched: the
+  photo upload widget is still correctly wired inside the merged
+  card, both the Personal Details and Portfolio forms still save
+  correctly, and all five new section labels render with correct
+  Persian translations.
+- Full 21-page load audit run clean.
+
+v1.35.0
+--------
 - New: blog posts now have a real draft/published state, matching
   the portfolio's own pattern -- a "Publish this post" checkbox in
   the editor (unchecked, i.e. draft, by default for new posts).
