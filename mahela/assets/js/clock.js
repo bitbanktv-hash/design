@@ -524,7 +524,6 @@
 	var WEEKDAYS_EN_FULL = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ];
 	var WEEKDAYS_FA = [ 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه', 'شنبه' ];
 	var FA_DIGITS = { '0': '۰', '1': '۱', '2': '۲', '3': '۳', '4': '۴', '5': '۵', '6': '۶', '7': '۷', '8': '۸', '9': '۹' };
-	var CALENDAR_STORAGE_KEY = 'mahtela-calendar';
 
 	function toFaDigits( str ) {
 		return String( str ).replace( /[0-9]/g, function ( d ) { return FA_DIGITS[ d ]; } );
@@ -533,34 +532,15 @@
 	function pad( n ) { return n < 10 ? '0' + n : '' + n; }
 
 	/**
-	 * Calendar preference is independent of UI language: a Persian-language
-	 * user can still prefer the Gregorian calendar, and an English-language
-	 * user can prefer Jalali. Unset (no explicit choice made yet) falls
-	 * back to the natural pairing -- Jalali for fa, Gregorian for en --
-	 * which is also what makes every schedule date on the site correctly
-	 * switch to Shamsi the moment someone switches the UI to Persian,
-	 * without forcing that choice permanently.
+	 * Calendar always follows UI language, with no override anywhere in
+	 * the app: Persian is always Jalali, any other language is always
+	 * Gregorian. (Previously this read a stored per-user preference that
+	 * could decouple the two -- that override was the actual source of
+	 * a real bug: Gregorian dates rendering even while the UI language
+	 * was Persian. Removed rather than just patched.)
 	 */
-	function getCalendarPref() {
-		var v = localStorage.getItem( CALENDAR_STORAGE_KEY );
-		return ( v === 'jalali' || v === 'gregorian' ) ? v : null;
-	}
-
 	function resolveCalendar( lang ) {
-		return getCalendarPref() || ( lang === 'fa' ? 'jalali' : 'gregorian' );
-	}
-
-	function setCalendarPref( value ) {
-		if ( value === 'auto' ) {
-			localStorage.removeItem( CALENDAR_STORAGE_KEY );
-		} else if ( value === 'jalali' || value === 'gregorian' ) {
-			localStorage.setItem( CALENDAR_STORAGE_KEY, value );
-		} else {
-			return;
-		}
-		updateClock();
-		applyScheduleDates();
-		document.dispatchEvent( new CustomEvent( 'mahtela:calendarchange', { detail: { calendar: value } } ) );
+		return lang === 'fa' ? 'jalali' : 'gregorian';
 	}
 
 	function updateClock() {
@@ -719,9 +699,7 @@
 
 	window.mahtelaClock = { update: updateClock, gregorianToJalali: gregorianToJalali };
 	window.mahtelaCalendar = {
-		getPreference: getCalendarPref,
 		resolve: resolveCalendar,
-		setPreference: setCalendarPref,
 		formatScheduleDate: formatScheduleDate,
 		formatFullDate: formatFullDate,
 		formatDualDate: formatDualDate,

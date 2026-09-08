@@ -1,8 +1,32 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.33.0 — Current
+v1.33.1 — Current
 ------------------
+- Fixed a real bug reported with a screenshot: the Settlement History
+  section was showing dates like "August 12, 2026" (Gregorian, just
+  with the month name in Persian words) while the UI was in Persian
+  -- it should have shown Jalali. Traced this to its actual root
+  cause rather than patching the symptom: the app had a "calendar
+  type" preference in Settings, independent of language, that a
+  Persian-language user could set to Gregorian (or an English user to
+  Jalali). Reproduced the exact bug by setting that preference to
+  Gregorian and confirming it produced the identical output from the
+  screenshot.
+  Per explicit instruction ("always and everywhere"), removed that
+  override entirely rather than leaving it as an edge case to
+  maintain: the calendar now strictly follows the UI language with no
+  way to decouple them, anywhere in the app. Removed the "Calendar"
+  card from Settings along with the preference-storage functions
+  behind it.
+  Verified the fix directly against the reported bug: with the exact
+  stale preference value still sitting in storage, Persian now
+  unconditionally renders Jalali and English unconditionally renders
+  Gregorian.
+- Full 21-page load audit run clean.
+
+v1.33.0
+--------
 - Merged the Portfolio & Blog page into Settings, per explicit
   request: having two separate pages for a teacher's own profile
   didn't make sense. Settings (teacher role) now has three tabs --

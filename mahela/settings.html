@@ -91,7 +91,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.33.0</div>
+			<div class="sidebar__version">MahFLA v1.33.1</div>
 		</div>
 	</aside>
 
@@ -131,7 +131,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.33.0</div>
+			<div class="sidebar__version">MahFLA v1.33.1</div>
 		</div>
 	</aside>
 
@@ -174,7 +174,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.33.0</div>
+			<div class="sidebar__version">MahFLA v1.33.1</div>
 		</div>
 	</aside>
 
@@ -277,24 +277,6 @@
 					</div>
 					<div class="form-actions">
 						<button type="submit" class="btn btn--primary" data-i18n="settings_save_teaching_profile">Save Teaching Profile</button>
-					</div>
-				</form>
-			</div>
-
-			<div class="card" style="padding:28px; margin-bottom:20px; max-width:640px;">
-				<h2 class="settings-section-title" data-i18n="settings_calendar_title">Calendar</h2>
-				<p class="page-head__sub" style="margin-top:4px; margin-bottom:18px;" data-i18n="settings_calendar_sub">Choose which calendar dates are shown in, independent of your language.</p>
-				<form id="calendar-form">
-					<div class="form-field" style="margin-bottom:0;">
-						<label data-i18n="settings_calendar_type" for="field-calendar">Calendar type</label>
-						<select id="field-calendar">
-							<option value="auto" data-i18n="calendar_auto">Automatic (follows language)</option>
-							<option value="gregorian" data-i18n="calendar_gregorian">Gregorian</option>
-							<option value="jalali" data-i18n="calendar_jalali">Jalali (Shamsi)</option>
-						</select>
-					</div>
-					<div class="form-actions">
-						<button type="submit" class="btn btn--primary" data-i18n="settings_save_calendar">Save Calendar</button>
 					</div>
 				</form>
 			</div>
@@ -544,19 +526,6 @@
 	var cropZoom = document.getElementById( 'crop-zoom' );
 
 	renderProfile();
-
-	function renderCalendarField() {
-		document.getElementById( 'field-calendar' ).value = window.mahtelaCalendar.getPreference() || 'auto';
-	}
-	renderCalendarField();
-	document.addEventListener( 'mahtela:langchange', renderCalendarField );
-
-	document.getElementById( 'calendar-form' ).addEventListener( 'submit', function ( e ) {
-		e.preventDefault();
-		window.mahtelaCalendar.setPreference( document.getElementById( 'field-calendar' ).value );
-		var lang = window.mahtelaI18n.currentLang();
-		mahtelaToast( window.mahtelaI18n.dict.settings_calendar_saved[ lang ] );
-	} );
 
 	/**
 	 * Profile photo: validate -> crop -> persist. The crop UI shows the
