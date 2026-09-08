@@ -91,7 +91,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.33.1</div>
+			<div class="sidebar__version">MahFLA v1.34.0</div>
 		</div>
 	</aside>
 
@@ -131,7 +131,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.33.1</div>
+			<div class="sidebar__version">MahFLA v1.34.0</div>
 		</div>
 	</aside>
 
@@ -174,7 +174,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.33.1</div>
+			<div class="sidebar__version">MahFLA v1.34.0</div>
 		</div>
 	</aside>
 
@@ -210,8 +210,7 @@
 			</div>
 
 			<div class="seg-control" id="settings-tab-toggle" role="radiogroup" aria-label="Settings section" style="margin-bottom:20px; display:none;">
-				<button type="button" class="seg-control__btn" role="radio" data-tab="account" aria-checked="true" data-i18n="settings_tab_account">Account</button>
-				<button type="button" class="seg-control__btn" role="radio" data-tab="portfolio" aria-checked="false" data-i18n="settings_tab_portfolio">Public Portfolio</button>
+				<button type="button" class="seg-control__btn" role="radio" data-tab="profile" aria-checked="true" data-i18n="settings_tab_profile">Profile</button>
 				<button type="button" class="seg-control__btn" role="radio" data-tab="blog" aria-checked="false" data-i18n="settings_tab_blog">Blog</button>
 			</div>
 
@@ -263,23 +262,6 @@
 				</form>
 			</div>
 
-			<div class="card" id="teaching-profile-card" style="padding:28px; margin-bottom:20px; max-width:640px; display:none;">
-				<h2 class="settings-section-title" data-i18n="settings_teaching_profile_title">Teaching Profile</h2>
-				<p class="page-head__sub" style="margin-top:4px; margin-bottom:18px;" data-i18n="settings_teaching_profile_sub">Shown to your students on their own panel.</p>
-				<form id="teaching-profile-form" style="margin-top:0;">
-					<div class="form-field">
-						<label data-i18n="settings_specialization" for="field-specialization">Specialization / Language Taught</label>
-						<input type="text" id="field-specialization" placeholder="e.g. English, Spanish" data-clear-on-focus>
-					</div>
-					<div class="form-field" style="margin-bottom:0;">
-						<label data-i18n="settings_bio" for="field-bio">Short Bio</label>
-						<textarea id="field-bio" rows="4" data-i18n-ph="settings_bio_ph" placeholder="Tell students a bit about your teaching background and style."></textarea>
-					</div>
-					<div class="form-actions">
-						<button type="submit" class="btn btn--primary" data-i18n="settings_save_teaching_profile">Save Teaching Profile</button>
-					</div>
-				</form>
-			</div>
 
 			<div class="card" style="padding:28px; max-width:640px;">
 				<h2 class="settings-section-title" data-i18n="settings_password_title">Change Password</h2>
@@ -315,8 +297,7 @@
 					<p style="font-size:12.5px; color:var(--ink-soft); margin:6px 0 16px;" data-i18n="portfolio_visibility_note">Only what you save and publish here is shown in the public teacher list.</p>
 
 					<div class="form-notice form-notice--info" style="margin-bottom:20px;">
-						<span data-i18n="portfolio_photo_note">Your profile photo comes from Account Settings. To publish, complete your name, intro, teaching languages, class type, and price.</span>
-						<a href="#" data-tab-link="account" data-i18n="portfolio_photo_link">Set photo</a>
+						<span data-i18n="portfolio_photo_note">Your profile photo above is used here too. To publish, complete your name, intro, teaching languages, class type, and price.</span>
 					</div>
 
 					<form id="portfolio-form">
@@ -480,19 +461,10 @@
 		document.getElementById( 'field-phone' ).value = user.phone;
 		document.getElementById( 'field-gender' ).value = user.gender;
 
-		document.getElementById( 'teaching-profile-card' ).style.display = role === 'teacher' ? 'block' : 'none';
-		if ( role === 'teacher' ) {
-			var teacher = window.mahtelaRoster.loadTeachers()[ CURRENT_TEACHER_ID ];
-			if ( teacher ) {
-				document.getElementById( 'field-specialization' ).value = teacher.specialization || '';
-				document.getElementById( 'field-bio' ).value = teacher.bio || '';
-			}
-		}
-
 		document.getElementById( 'settings-tab-toggle' ).style.display = role === 'teacher' ? '' : 'none';
 		if ( role === 'teacher' ) {
 			var requestedTab = new URLSearchParams( window.location.search ).get( 'tab' );
-			activateSettingsTab( [ 'account', 'portfolio', 'blog' ].indexOf( requestedTab ) !== -1 ? requestedTab : 'account' );
+			activateSettingsTab( [ 'profile', 'blog' ].indexOf( requestedTab ) !== -1 ? requestedTab : 'profile' );
 		}
 	}
 
@@ -502,19 +474,13 @@
 			b.classList.toggle( 'is-active', isMatch );
 			b.setAttribute( 'aria-checked', isMatch ? 'true' : 'false' );
 		} );
-		document.getElementById( 'settings-panel-account' ).style.display = tab === 'account' ? '' : 'none';
-		document.getElementById( 'settings-panel-portfolio' ).style.display = tab === 'portfolio' ? '' : 'none';
+		document.getElementById( 'settings-panel-account' ).style.display = tab === 'profile' ? '' : 'none';
+		document.getElementById( 'settings-panel-portfolio' ).style.display = tab === 'profile' ? '' : 'none';
 		document.getElementById( 'settings-panel-blog' ).style.display = tab === 'blog' ? '' : 'none';
 	}
 
 	document.querySelectorAll( '#settings-tab-toggle .seg-control__btn' ).forEach( function ( btn ) {
 		btn.addEventListener( 'click', function () { activateSettingsTab( btn.getAttribute( 'data-tab' ) ); } );
-	} );
-	document.querySelectorAll( '[data-tab-link]' ).forEach( function ( link ) {
-		link.addEventListener( 'click', function ( e ) {
-			e.preventDefault();
-			activateSettingsTab( link.getAttribute( 'data-tab-link' ) );
-		} );
 	} );
 
 	var photoInput = document.getElementById( 'photo-input' );
@@ -728,17 +694,6 @@
 		e.preventDefault();
 		if ( ! window.mahtelaValidate.validateForm( e.target ) ) { return; }
 		mahtelaToast( 'Profile details saved.' );
-	} );
-
-	document.getElementById( 'teaching-profile-form' ).addEventListener( 'submit', function ( e ) {
-		e.preventDefault();
-		var teachers = window.mahtelaRoster.loadTeachers();
-		var teacher = teachers[ CURRENT_TEACHER_ID ];
-		if ( ! teacher ) { return; }
-		teacher.specialization = document.getElementById( 'field-specialization' ).value.trim();
-		teacher.bio = document.getElementById( 'field-bio' ).value.trim();
-		window.mahtelaRoster.saveTeachers( teachers );
-		mahtelaToast( window.mahtelaI18n.dict.settings_teaching_profile_saved[ window.mahtelaI18n.currentLang() ] );
 	} );
 
 	document.getElementById( 'password-form' ).addEventListener( 'submit', function ( e ) {

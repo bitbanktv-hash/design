@@ -1,8 +1,35 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.33.1 — Current
+v1.34.0 — Current
 ------------------
+- Consolidated further, per explicit request: photo and personal
+  details now live on the same "Profile" tab as the public portfolio
+  form, rather than a separate "Account" tab. Down to two tabs for
+  the teacher role -- Profile, Blog -- from three.
+- Removed the separate "Teaching Profile" (specialization + short
+  bio) card entirely. It genuinely duplicated the portfolio's intro
+  title and about-me fields, and there's no longer a reason to
+  maintain two versions of the same self-description in two places.
+- The student-facing teacher profile -- the card that opens when a
+  student taps their teacher's name on their own panel -- now reads
+  its headline and bio directly from the teacher's portfolio
+  (introTitle / aboutMe) instead of the removed fields. Falls back
+  gracefully to a dash if a teacher hasn't filled out a portfolio at
+  all yet, verified directly.
+  Left the admin's own "Edit Teacher" fields untouched -- out of
+  scope here, and admin oversight of a teacher's record is a
+  different concern from what a teacher publishes about themselves.
+- Updated every external link that pointed at the old "portfolio" tab
+  name (the public site's "Build My Portfolio" banners) to the new
+  "profile" tab.
+- Verified end-to-end: Personal Details and the Portfolio form both
+  save correctly while shown together on the same tab; the Blog tab
+  still switches away from both correctly.
+- Full 21-page load audit run clean.
+
+v1.33.1
+--------
 - Fixed a real bug reported with a screenshot: the Settlement History
   section was showing dates like "August 12, 2026" (Gregorian, just
   with the month name in Persian words) while the UI was in Persian

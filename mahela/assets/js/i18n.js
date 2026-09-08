@@ -238,6 +238,7 @@
 		settings_calendar_saved: { en: 'Calendar preference saved.', fa: 'تنظیم تقویم ذخیره شد.' },
 		settings_password_title: { en: 'Change Password', fa: 'تغییر رمز عبور' },
 		settings_tab_account: { en: 'Account', fa: 'حساب کاربری' },
+		settings_tab_profile: { en: 'Profile', fa: 'پروفایل' },
 		settings_tab_portfolio: { en: 'Public Portfolio', fa: 'پرتفولیوی عمومی' },
 		settings_tab_blog: { en: 'Blog', fa: 'بلاگ' },
 		settings_current_password: { en: 'Current Password', fa: 'رمز عبور فعلی' },
