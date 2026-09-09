@@ -100,14 +100,14 @@
 			<div class="sidebar__user" id="sidebar-user-teacher">
 				<span class="sidebar__avatar" id="sidebar-avatar" style="background: var(--brand); color:var(--on-brand);">JD</span>
 				<div class="sidebar__user-info">
-					<span class="sidebar__user-name">Jane Doe</span>
+					<span class="sidebar__user-name" id="sidebar-name">Jane Doe</span>
 					<span class="sidebar__user-role">English Teacher</span>
 				</div>
 			</div>
 			<div class="sidebar__user" id="sidebar-user-admin" style="display:none;">
-				<span class="sidebar__avatar" style="background: var(--c-ink); color:#fff;">SA</span>
+				<span class="sidebar__avatar" id="sidebar-avatar-admin" style="background: var(--c-ink); color:#fff;">SA</span>
 				<div class="sidebar__user-info">
-					<span class="sidebar__user-name">Site Admin</span>
+					<span class="sidebar__user-name" id="sidebar-name-admin">Site Admin</span>
 					<span class="sidebar__user-role" data-i18n="admin_super_admin">Super Admin</span>
 				</div>
 			</div>
@@ -115,7 +115,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.40.0</div>
+			<div class="sidebar__version">MahFLA v1.41.0</div>
 		</div>
 	</aside>
 
@@ -560,13 +560,24 @@
 	var STUDENTS = window.mahtelaRoster.loadStudents();
 
 	function renderSidebarAvatar() {
-		var el = document.getElementById( 'sidebar-avatar' );
-		if ( ! el ) { return; }
 		var teacher = window.mahtelaRoster.loadTeachers()[ 'jane' ];
-		el.innerHTML = window.mahtelaRoster.avatarHTML( teacher, 'JD' );
+		if ( teacher ) {
+			var el = document.getElementById( 'sidebar-avatar' );
+			if ( el ) { el.innerHTML = window.mahtelaRoster.avatarHTML( teacher, window.mahtelaRoster.initials( teacher.name ) ); }
+			var nameEl = document.getElementById( 'sidebar-name' );
+			if ( nameEl ) { nameEl.textContent = teacher.name; }
+		}
+		var admin = window.mahtelaRoster.loadAdminProfile();
+		if ( admin ) {
+			var adminEl = document.getElementById( 'sidebar-avatar-admin' );
+			if ( adminEl ) { adminEl.innerHTML = window.mahtelaRoster.avatarHTML( admin, window.mahtelaRoster.initials( admin.name ) ); }
+			var adminNameEl = document.getElementById( 'sidebar-name-admin' );
+			if ( adminNameEl ) { adminNameEl.textContent = admin.name; }
+		}
 	}
 	renderSidebarAvatar();
 	document.addEventListener( 'mahtela:teacherschange', renderSidebarAvatar );
+	document.addEventListener( 'mahtela:adminprofilechange', renderSidebarAvatar );
 	var SESSIONS = window.mahtelaData.loadSessions();
 
 	/**

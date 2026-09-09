@@ -49,9 +49,9 @@
 		</nav>
 		<div class="sidebar__footer">
 			<div class="sidebar__user">
-				<span class="sidebar__avatar" style="background: var(--c-ink); color:#fff;">SA</span>
+				<span class="sidebar__avatar" id="sidebar-avatar-admin" style="background: var(--c-ink); color:#fff;">SA</span>
 				<div class="sidebar__user-info">
-					<span class="sidebar__user-name">Site Admin</span>
+					<span class="sidebar__user-name" id="sidebar-name-admin">Site Admin</span>
 					<span class="sidebar__user-role" data-i18n="admin_super_admin">Super Admin</span>
 				</div>
 			</div>
@@ -59,7 +59,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.40.0</div>
+			<div class="sidebar__version">MahFLA v1.41.0</div>
 		</div>
 	</aside>
 
@@ -151,6 +151,17 @@
 <script src="assets/js/sessions-data.js"></script>
 <script src="assets/js/app.js"></script>
 <script>
+
+	function renderSidebarAdminIdentity() {
+		var admin = window.mahtelaRoster.loadAdminProfile();
+		if ( ! admin ) { return; }
+		var el = document.getElementById( 'sidebar-avatar-admin' );
+		if ( el ) { el.innerHTML = window.mahtelaRoster.avatarHTML( admin, window.mahtelaRoster.initials( admin.name ) ); }
+		var nameEl = document.getElementById( 'sidebar-name-admin' );
+		if ( nameEl ) { nameEl.textContent = admin.name; }
+	}
+	renderSidebarAdminIdentity();
+	document.addEventListener( 'mahtela:adminprofilechange', renderSidebarAdminIdentity );
 	function initials( name ) {
 		return name.split( ' ' ).map( function ( p ) { return p[ 0 ]; } ).join( '' ).slice( 0, 2 ).toUpperCase();
 	}

@@ -1,8 +1,45 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.40.0 — Current
+v1.41.0 — Current
 ------------------
+- Fixed a real bug reported with screenshots: a teacher's name and
+  photo showed correctly right after saving in Settings, but reverted
+  to "Jane Doe" the moment you left that page for anywhere else, and
+  Messages showed neither the new photo nor the corrected name at
+  all. The previous fix only made Settings' own sidebar dynamic --
+  every other page (Dashboard, Students, Schedule, Settlement, the
+  blog editor, Messages) still had the name as static HTML, never
+  once bound to the real teacher record. Fixed properly this time:
+  extended the sidebar-avatar refresh already present on those pages
+  to also update the name text, from real data, and to compute
+  initials dynamically instead of an inherited hardcoded "JD".
+- Found and fixed the actual cause of the Messages-specific half of
+  the report while investigating: a teacher's own outgoing chat
+  bubbles had a literal "JD" string hardcoded into the avatar markup
+  -- not reading the teacher record at all, in either name or photo.
+  Fixed to use the same real-data avatar rendering as everywhere
+  else, and upgraded the student's side of the same bubbles to show a
+  photo too rather than initials only, for consistency.
+  Caught one more issue while touching this: the chat bubble avatar
+  circle had no overflow:hidden, so a photo (only possible here now)
+  wouldn't actually have clipped to the circular shape. Fixed
+  alongside it rather than shipping a visible corner-case.
+- Applied the identical fix preemptively to the admin and student
+  sidebars too (four admin pages, the student's own panel), even
+  though this report was specifically about a teacher -- it was
+  exactly the same static-HTML pattern, just never yet reported for
+  those roles.
+- Verified end-to-end rather than by inspection: renamed the teacher
+  and set a photo, then loaded every affected page fresh and
+  confirmed both updated correctly, including reading the chat bubble
+  markup directly to confirm a real image tag renders instead of the
+  old hardcoded text. Repeated the same check for a renamed admin and
+  a renamed student.
+- Full 21-page load audit run clean.
+
+v1.40.0
+--------
 - New: a Cover Image field for blog posts, separate from the inline
   images the rich-text editor already supported within a post's body.
   This is the thumbnail shown on blog cards -- previously every card
