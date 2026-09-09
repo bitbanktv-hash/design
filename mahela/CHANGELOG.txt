@@ -1,8 +1,37 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.42.0 — Current
+v1.42.1 — Current
 ------------------
+- Fixed a real bug reported with screenshots: Settings' sidebar was
+  missing the Admin Inbox link entirely for the admin role, present
+  on every other admin page -- Settings had simply never had it added
+  when the Inbox feature was built, and was also missing the script
+  that loads and drives its unread-count badge. Both added, matching
+  every other admin page exactly.
+- Fixed a second, more serious bug from the same report: admin's
+  Settings page was completely blank below the header, with none of
+  the photo, personal details, or password fields showing at all
+  (student had the identical problem, just not yet noticed). Root
+  cause: when Photo, Personal Details, and Password were merged into
+  the same panel as the teacher's portfolio a few versions back, that
+  panel's default HTML state was display:none, and the only code that
+  ever made it visible only ran for the teacher role. Every field was
+  correctly populated with real data underneath -- the whole section
+  was just invisible. Fixed by making the panel visible by default
+  for every role; the teacher-only Profile/Blog tab switch still
+  works exactly as before.
+- Verified directly rather than by inspection: confirmed the panel's
+  actual computed visibility for all three roles (not just that the
+  fields had the right values, which was true before too and masked
+  how serious this was), re-confirmed the teacher's tab switching
+  still toggles correctly in both directions, and completed a real
+  save of both profile details and a password change as admin to
+  confirm the fix makes the page fully usable, not just visible.
+- Full 21-page load audit run clean.
+
+v1.42.0
+--------
 - New: a "View My Public Profile" link in Settings' Profile tab,
   right next to the Published/Draft status badge, so a teacher can
   see their own live page on the site without leaving the app or
