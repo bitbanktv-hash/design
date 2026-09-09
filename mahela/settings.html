@@ -29,14 +29,6 @@
 		color: var(--brand-strong, var(--brand)); margin: 26px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
 	}
 	.settings-group-label:first-of-type { margin-top: 0; }
-	#settings-profile-columns.is-split {
-		display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start;
-		max-width: 1180px;
-	}
-	#settings-profile-columns.is-split .card { max-width: none; }
-	@media (max-width: 960px) {
-		#settings-profile-columns.is-split { grid-template-columns: 1fr; }
-	}
 	#blog-columns {
 		display: grid; grid-template-columns: 1.7fr 1fr; gap: 20px; align-items: start; max-width: 1180px;
 	}
@@ -101,7 +93,7 @@
 			<div class="sidebar__user">
 				<span class="sidebar__avatar" id="sidebar-avatar-teacher" style="background: var(--brand); color:var(--on-brand);">JD</span>
 				<div class="sidebar__user-info">
-					<span class="sidebar__user-name">Jane Doe</span>
+					<span class="sidebar__user-name" id="sidebar-name-teacher">Jane Doe</span>
 					<span class="sidebar__user-role">English Teacher</span>
 				</div>
 			</div>
@@ -109,7 +101,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.38.0</div>
+			<div class="sidebar__version">MahFLA v1.39.0</div>
 		</div>
 	</aside>
 
@@ -141,7 +133,7 @@
 			<div class="sidebar__user">
 				<span class="sidebar__avatar" id="sidebar-avatar-student" style="background: var(--brand); color:var(--on-brand);">EK</span>
 				<div class="sidebar__user-info">
-					<span class="sidebar__user-name">Elena Kim</span>
+					<span class="sidebar__user-name" id="sidebar-name-student">Elena Kim</span>
 					<span class="sidebar__user-role" data-i18n="auth_role_student">Student</span>
 				</div>
 			</div>
@@ -149,7 +141,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.38.0</div>
+			<div class="sidebar__version">MahFLA v1.39.0</div>
 		</div>
 	</aside>
 
@@ -184,7 +176,7 @@
 			<div class="sidebar__user">
 				<span class="sidebar__avatar" id="sidebar-avatar-admin" style="background: var(--c-ink); color:#fff;">SA</span>
 				<div class="sidebar__user-info">
-					<span class="sidebar__user-name">Site Admin</span>
+					<span class="sidebar__user-name" id="sidebar-name-admin">Site Admin</span>
 					<span class="sidebar__user-role" data-i18n="admin_super_admin">Super Admin</span>
 				</div>
 			</div>
@@ -192,7 +184,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.38.0</div>
+			<div class="sidebar__version">MahFLA v1.39.0</div>
 		</div>
 	</aside>
 
@@ -232,187 +224,167 @@
 				<button type="button" class="seg-control__btn" role="radio" data-tab="blog" aria-checked="false" data-i18n="settings_tab_blog">Blog</button>
 			</div>
 
-			<div id="settings-profile-columns">
 			<div id="settings-panel-portfolio" style="display:none;">
-				<div class="card" style="padding:24px; margin-bottom:20px; max-width:760px;">
+				<div class="card" style="padding:28px; max-width:820px;">
 					<div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:4px;">
-						<h3 style="font-size:15px; margin:0;" data-i18n="portfolio_card_title">Teacher Portfolio</h3>
-						<span class="badge" id="portfolio-status-badge">—</span>
+						<h2 class="settings-section-title" style="margin-bottom:0;" data-i18n="settings_profile_title">Your Profile</h2>
+						<span class="badge" id="portfolio-status-badge" style="display:none;">—</span>
 					</div>
-					<p style="font-size:12.5px; color:var(--ink-soft); margin:6px 0 16px;" data-i18n="portfolio_visibility_note">Only what you save and publish here is shown in the public teacher list.</p>
+					<p class="page-head__sub" style="margin:6px 0 20px;" id="settings-profile-sub" data-i18n="settings_profile_sub">Manage your photo, details, and public portfolio in one place.</p>
 
-					<div class="form-notice form-notice--info" style="margin-bottom:20px;">
-						<span data-i18n="portfolio_photo_note">Your profile photo above is used here too. To publish, complete your name, intro, teaching languages, class type, and price.</span>
-					</div>
+					<form id="profile-form">
+						<div class="photo-row">
+							<span class="photo-preview" id="photo-preview">JD</span>
+							<div class="photo-actions">
+								<button type="button" class="btn btn--ghost btn--small" id="photo-upload-btn" data-i18n="settings_upload_photo">Upload Photo</button>
+								<button type="button" class="btn btn--danger-ghost btn--small" id="photo-remove-btn" data-i18n="settings_remove_photo">Remove</button>
+								<input type="file" id="photo-input" accept="image/*" style="display:none;">
+							</div>
+						</div>
+						<p class="photo-error" id="photo-error"></p>
+						<p style="font-size:11.5px; color:var(--ink-faint); margin-top:10px; margin-bottom:22px;" data-i18n="settings_photo_standard">JPEG, PNG or WEBP · up to 5MB · at least 200×200px.</p>
 
-					<form id="portfolio-form">
-						<span class="settings-group-label" data-i18n="settings_group_basic">Basic Info</span>
+						<span class="settings-group-label" style="margin-top:0;" data-i18n="settings_group_basic">Basic Info</span>
 						<div class="form-grid">
 							<div class="form-field">
-								<label for="portfolio-display-name"><span class="required-mark">*</span> <span data-i18n="portfolio_display_name">Display Name</span></label>
-								<input id="portfolio-display-name" type="text" required>
+								<label data-i18n="settings_full_name" for="field-full-name">Full Name</label>
+								<input type="text" id="field-full-name" value="Jane Doe" data-clear-on-focus>
 							</div>
-							<div class="form-field">
+							<div class="form-field" id="intro-title-field">
 								<label for="portfolio-intro-title" data-i18n="portfolio_intro_title">Intro Title</label>
 								<input id="portfolio-intro-title" type="text" data-i18n-ph="portfolio_intro_title_ph" placeholder="e.g. English Teacher, 8 years of experience">
 							</div>
 						</div>
-						<div class="form-field">
+						<div class="form-field" id="about-me-field">
 							<label for="portfolio-about" data-i18n="portfolio_about">About Me &amp; Teaching Style</label>
 							<textarea id="portfolio-about" rows="4" data-i18n-ph="portfolio_about_ph" placeholder="Describe your teaching method, experience, and who your classes are for…"></textarea>
 						</div>
 
-						<span class="settings-group-label" data-i18n="settings_group_format">Languages &amp; Format</span>
-						<div class="form-field">
-							<label><span class="required-mark">*</span> <span data-i18n="portfolio_languages">Teaching Languages</span></label>
-							<div class="checkbox-chip-group" id="portfolio-languages-group">
-								<label class="checkbox-chip"><input type="checkbox" value="en"><span data-i18n="portfolio_lang_en">English</span></label>
-								<label class="checkbox-chip"><input type="checkbox" value="fr"><span data-i18n="portfolio_lang_fr">French</span></label>
-								<label class="checkbox-chip"><input type="checkbox" value="de"><span data-i18n="portfolio_lang_de">German</span></label>
-								<label class="checkbox-chip"><input type="checkbox" value="ar"><span data-i18n="portfolio_lang_ar">Arabic</span></label>
-								<label class="checkbox-chip"><input type="checkbox" value="tr"><span data-i18n="portfolio_lang_tr">Turkish</span></label>
-								<label class="checkbox-chip"><input type="checkbox" value="es"><span data-i18n="portfolio_lang_es">Spanish</span></label>
-								<label class="checkbox-chip"><input type="checkbox" value="fa"><span data-i18n="portfolio_lang_fa">Persian</span></label>
-								<label class="checkbox-chip"><input type="checkbox" value="it"><span data-i18n="portfolio_lang_it">Italian</span></label>
-							</div>
-						</div>
-						<div class="form-field">
-							<label><span class="required-mark">*</span> <span data-i18n="portfolio_class_type">Class Type</span></label>
-							<div class="checkbox-chip-group" id="portfolio-classtype-group">
-								<label class="checkbox-chip"><input type="checkbox" value="online"><span data-i18n="class_type_online">Online</span></label>
-								<label class="checkbox-chip"><input type="checkbox" value="in-person"><span data-i18n="class_type_in_person">In-person</span></label>
-							</div>
-						</div>
-						<span class="settings-group-label" data-i18n="settings_group_pricing">Pricing &amp; Availability</span>
+						<span class="settings-group-label" data-i18n="settings_group_contact">Contact Info</span>
 						<div class="form-grid">
 							<div class="form-field">
-								<label for="portfolio-price-unit" data-i18n="portfolio_price_unit">Price Unit</label>
-								<select id="portfolio-price-unit">
-									<option value="toman" data-i18n="currency_toman">Toman</option>
-									<option value="usd" data-i18n="currency_usd">US Dollar</option>
-								</select>
+								<label data-i18n="settings_email" for="field-email"><span class="required-mark" aria-hidden="true">*</span> Email</label>
+								<input type="email" id="field-email" data-validate="email" value="jane@mahela.com" data-clear-on-focus required>
+								<span class="form-field__error" data-i18n="validate_email_error">Enter a valid email address.</span>
 							</div>
 							<div class="form-field">
-								<label for="portfolio-years-experience" data-i18n="portfolio_years_experience">Years of Teaching Experience</label>
-								<input id="portfolio-years-experience" type="number" min="0" step="1" value="0">
+								<label data-i18n="settings_phone" for="field-phone"><span class="required-mark" aria-hidden="true">*</span> Mobile Number</label>
+								<input type="tel" id="field-phone" data-validate="phone" value="+98 912 000 0000" dir="ltr" data-clear-on-focus required>
+								<span class="form-field__error" data-i18n="validate_phone_error">Enter a valid mobile number.</span>
 							</div>
 						</div>
-						<div class="form-grid">
-							<div class="form-field">
-								<label for="portfolio-session-duration" data-i18n="portfolio_session_duration">Session Duration (minutes)</label>
-								<input id="portfolio-session-duration" type="number" min="5" value="60">
-							</div>
-							<div class="form-field">
-								<label for="portfolio-session-price"><span class="required-mark">*</span> <span data-i18n="portfolio_session_price">Price per Session</span></label>
-								<input id="portfolio-session-price" type="text" inputmode="numeric" class="currency-input" dir="ltr" value="250000" required>
-								<span class="form-field__hint" data-i18n="portfolio_price_hint">If you change the price unit, re-enter the amount -- it isn't converted automatically.</span>
-							</div>
-						</div>
-						<span class="settings-group-label" data-i18n="settings_group_credentials">Credentials</span>
+						<div class="form-notice form-notice--info" style="margin-top:-6px; margin-bottom:18px;" data-i18n="settings_contact_required_hint">Email and mobile number are required and used for notifications and contact — please keep them accurate and up to date.</div>
 						<div class="form-field">
-							<label for="portfolio-specialties" data-i18n="portfolio_specialties">Specialties</label>
-							<input id="portfolio-specialties" type="text" data-i18n-ph="portfolio_specialties_ph" placeholder="e.g. Conversation, IELTS, Business English">
-							<span class="form-field__hint" data-i18n="portfolio_specialties_hint">Separate specialties with a comma.</span>
+							<label data-i18n="settings_gender" for="field-gender">Gender</label>
+							<select id="field-gender">
+								<option value="female" data-i18n="account_gender_female">Female</option>
+								<option value="male" data-i18n="account_gender_male">Male</option>
+							</select>
 						</div>
-						<div class="form-grid">
+
+						<div id="portfolio-only-fields">
+							<span class="settings-group-label" data-i18n="settings_group_format">Languages &amp; Format</span>
 							<div class="form-field">
-								<label for="portfolio-certificates" data-i18n="portfolio_certificates">Certificates &amp; Achievements</label>
-								<textarea id="portfolio-certificates" rows="3"></textarea>
+								<label><span class="required-mark">*</span> <span data-i18n="portfolio_languages">Teaching Languages</span></label>
+								<div class="checkbox-chip-group" id="portfolio-languages-group">
+									<label class="checkbox-chip"><input type="checkbox" value="en"><span data-i18n="portfolio_lang_en">English</span></label>
+									<label class="checkbox-chip"><input type="checkbox" value="fr"><span data-i18n="portfolio_lang_fr">French</span></label>
+									<label class="checkbox-chip"><input type="checkbox" value="de"><span data-i18n="portfolio_lang_de">German</span></label>
+									<label class="checkbox-chip"><input type="checkbox" value="ar"><span data-i18n="portfolio_lang_ar">Arabic</span></label>
+									<label class="checkbox-chip"><input type="checkbox" value="tr"><span data-i18n="portfolio_lang_tr">Turkish</span></label>
+									<label class="checkbox-chip"><input type="checkbox" value="es"><span data-i18n="portfolio_lang_es">Spanish</span></label>
+									<label class="checkbox-chip"><input type="checkbox" value="fa"><span data-i18n="portfolio_lang_fa">Persian</span></label>
+									<label class="checkbox-chip"><input type="checkbox" value="it"><span data-i18n="portfolio_lang_it">Italian</span></label>
+								</div>
 							</div>
 							<div class="form-field">
-								<label for="portfolio-education" data-i18n="portfolio_education">Education</label>
-								<textarea id="portfolio-education" rows="3"></textarea>
+								<label><span class="required-mark">*</span> <span data-i18n="portfolio_class_type">Class Type</span></label>
+								<div class="checkbox-chip-group" id="portfolio-classtype-group">
+									<label class="checkbox-chip"><input type="checkbox" value="online"><span data-i18n="class_type_online">Online</span></label>
+									<label class="checkbox-chip"><input type="checkbox" value="in-person"><span data-i18n="class_type_in_person">In-person</span></label>
+								</div>
+							</div>
+							<span class="settings-group-label" data-i18n="settings_group_pricing">Pricing &amp; Availability</span>
+							<div class="form-grid">
+								<div class="form-field">
+									<label for="portfolio-price-unit" data-i18n="portfolio_price_unit">Price Unit</label>
+									<select id="portfolio-price-unit">
+										<option value="toman" data-i18n="currency_toman">Toman</option>
+										<option value="usd" data-i18n="currency_usd">US Dollar</option>
+									</select>
+								</div>
+								<div class="form-field">
+									<label for="portfolio-years-experience" data-i18n="portfolio_years_experience">Years of Teaching Experience</label>
+									<input id="portfolio-years-experience" type="number" min="0" step="1" value="0">
+								</div>
+							</div>
+							<div class="form-grid">
+								<div class="form-field">
+									<label for="portfolio-session-duration" data-i18n="portfolio_session_duration">Session Duration (minutes)</label>
+									<input id="portfolio-session-duration" type="number" min="5" value="60">
+								</div>
+								<div class="form-field">
+									<label for="portfolio-session-price"><span class="required-mark">*</span> <span data-i18n="portfolio_session_price">Price per Session</span></label>
+									<input id="portfolio-session-price" type="text" inputmode="numeric" class="currency-input" dir="ltr" value="250000" required>
+									<span class="form-field__hint" data-i18n="portfolio_price_hint">If you change the price unit, re-enter the amount -- it isn't converted automatically.</span>
+								</div>
+							</div>
+							<span class="settings-group-label" data-i18n="settings_group_credentials">Credentials</span>
+							<div class="form-field">
+								<label for="portfolio-specialties" data-i18n="portfolio_specialties">Specialties</label>
+								<input id="portfolio-specialties" type="text" data-i18n-ph="portfolio_specialties_ph" placeholder="e.g. Conversation, IELTS, Business English">
+								<span class="form-field__hint" data-i18n="portfolio_specialties_hint">Separate specialties with a comma.</span>
+							</div>
+							<div class="form-grid">
+								<div class="form-field">
+									<label for="portfolio-certificates" data-i18n="portfolio_certificates">Certificates &amp; Achievements</label>
+									<textarea id="portfolio-certificates" rows="3"></textarea>
+								</div>
+								<div class="form-field">
+									<label for="portfolio-education" data-i18n="portfolio_education">Education</label>
+									<textarea id="portfolio-education" rows="3"></textarea>
+								</div>
+							</div>
+							<span class="settings-group-label" data-i18n="settings_group_visibility">Visibility</span>
+							<div class="form-field" style="margin-bottom:0;">
+								<label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer; font-weight:600;">
+									<input type="checkbox" id="portfolio-published" style="width:auto; margin-top:3px;">
+									<span data-i18n="portfolio_publish_label">Show my portfolio in the public teacher list</span>
+								</label>
+								<p style="font-size:12px; color:var(--ink-faint); margin:8px 0 0 30px;" data-i18n="portfolio_publish_note">Once saved with this checked, your intro, account photo, class price, and published posts become visible to visitors. Student information and private financial details are never shown.</p>
 							</div>
 						</div>
-						<span class="settings-group-label" data-i18n="settings_group_visibility">Visibility</span>
-						<div class="form-field" style="margin-bottom:0;">
-							<label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer; font-weight:600;">
-								<input type="checkbox" id="portfolio-published" style="width:auto; margin-top:3px;">
-								<span data-i18n="portfolio_publish_label">Show my portfolio in the public teacher list</span>
-							</label>
-							<p style="font-size:12px; color:var(--ink-faint); margin:8px 0 0 30px;" data-i18n="portfolio_publish_note">Once saved with this checked, your intro, account photo, class price, and published posts become visible to visitors. Student information and private financial details are never shown.</p>
-						</div>
+
 						<div class="form-actions" style="margin-top:20px;">
-							<button type="submit" class="btn btn--primary" data-i18n="portfolio_save_draft">Save Draft</button>
+							<button type="submit" class="btn btn--primary" id="profile-save-btn" data-i18n="settings_save_details">Save Details</button>
+						</div>
+					</form>
+				</div>
+
+				<div class="card" style="padding:28px; max-width:820px; margin-top:20px;">
+					<h2 class="settings-section-title" data-i18n="settings_password_title">Change Password</h2>
+					<div id="password-alert"></div>
+					<form id="password-form" style="margin-top:18px;">
+						<div class="form-field">
+							<label data-i18n="settings_current_password" for="field-current-password">Current Password</label>
+							<input type="password" id="field-current-password" placeholder="••••••••" required>
+						</div>
+						<div class="form-grid">
+							<div class="form-field">
+								<label data-i18n="settings_new_password" for="field-new-password">New Password</label>
+								<input type="password" id="field-new-password" placeholder="••••••••" required>
+							</div>
+							<div class="form-field">
+								<label data-i18n="settings_confirm_password" for="field-confirm-password">Confirm New Password</label>
+								<input type="password" id="field-confirm-password" placeholder="••••••••" required>
+							</div>
+						</div>
+						<div class="form-actions">
+							<button type="submit" class="btn btn--primary" data-i18n="settings_save_password">Update Password</button>
 						</div>
 					</form>
 				</div>
 			</div>
-
-			<div id="settings-panel-account">
-			<div class="card" style="padding:28px; margin-bottom:20px; max-width:760px;">
-				<h2 class="settings-section-title" data-i18n="settings_photo_title">Profile Photo</h2>
-				<div class="photo-row" style="margin-top:18px;">
-					<span class="photo-preview" id="photo-preview">JD</span>
-					<div class="photo-actions">
-						<button type="button" class="btn btn--ghost btn--small" id="photo-upload-btn" data-i18n="settings_upload_photo">Upload Photo</button>
-						<button type="button" class="btn btn--danger-ghost btn--small" id="photo-remove-btn" data-i18n="settings_remove_photo">Remove</button>
-						<input type="file" id="photo-input" accept="image/*" style="display:none;">
-					</div>
-				</div>
-				<p class="photo-error" id="photo-error"></p>
-				<p style="font-size:11.5px; color:var(--ink-faint); margin-top:10px;" data-i18n="settings_photo_standard">JPEG, PNG or WEBP · up to 5MB · at least 200×200px.</p>
-
-				<hr class="settings-divider">
-
-				<h2 class="settings-section-title" data-i18n="settings_details_title">Personal Details</h2>
-				<form id="details-form" style="margin-top:18px;">
-					<div class="form-field">
-						<label data-i18n="settings_full_name" for="field-full-name">Full Name</label>
-						<input type="text" id="field-full-name" value="Jane Doe" data-clear-on-focus>
-					</div>
-					<div class="form-grid">
-						<div class="form-field">
-							<label data-i18n="settings_email" for="field-email"><span class="required-mark" aria-hidden="true">*</span> Email</label>
-							<input type="email" id="field-email" data-validate="email" value="jane@mahela.com" data-clear-on-focus required>
-							<span class="form-field__error" data-i18n="validate_email_error">Enter a valid email address.</span>
-						</div>
-						<div class="form-field">
-							<label data-i18n="settings_phone" for="field-phone"><span class="required-mark" aria-hidden="true">*</span> Mobile Number</label>
-							<input type="tel" id="field-phone" data-validate="phone" value="+98 912 000 0000" dir="ltr" data-clear-on-focus required>
-							<span class="form-field__error" data-i18n="validate_phone_error">Enter a valid mobile number.</span>
-						</div>
-					</div>
-					<div class="form-notice form-notice--info" style="margin-top:-6px; margin-bottom:18px;" data-i18n="settings_contact_required_hint">Email and mobile number are required and used for notifications and contact — please keep them accurate and up to date.</div>
-					<div class="form-field" style="margin-bottom:0;">
-						<label data-i18n="settings_gender" for="field-gender">Gender</label>
-						<select id="field-gender">
-							<option value="female" data-i18n="account_gender_female">Female</option>
-							<option value="male" data-i18n="account_gender_male">Male</option>
-						</select>
-					</div>
-					<div class="form-actions">
-						<button type="submit" class="btn btn--primary" data-i18n="settings_save_details">Save Details</button>
-					</div>
-				</form>
-			</div>
-
-			<div class="card" style="padding:28px; max-width:760px;">
-				<h2 class="settings-section-title" data-i18n="settings_password_title">Change Password</h2>
-				<div id="password-alert"></div>
-				<form id="password-form" style="margin-top:18px;">
-					<div class="form-field">
-						<label data-i18n="settings_current_password" for="field-current-password">Current Password</label>
-						<input type="password" id="field-current-password" placeholder="••••••••" required>
-					</div>
-					<div class="form-grid">
-						<div class="form-field">
-							<label data-i18n="settings_new_password" for="field-new-password">New Password</label>
-							<input type="password" id="field-new-password" placeholder="••••••••" required>
-						</div>
-						<div class="form-field">
-							<label data-i18n="settings_confirm_password" for="field-confirm-password">Confirm New Password</label>
-							<input type="password" id="field-confirm-password" placeholder="••••••••" required>
-						</div>
-					</div>
-					<div class="form-actions">
-						<button type="submit" class="btn btn--primary" data-i18n="settings_save_password">Update Password</button>
-					</div>
-				</form>
-			</div>
-			</div>
-			</div>
-
 			<div id="settings-panel-blog" style="display:none;">
 				<div id="blog-columns">
 					<div class="card" style="padding:24px;">
@@ -472,15 +444,61 @@
 		return ( r === 'student' || r === 'admin' ) ? r : 'teacher';
 	}
 
-	var USERS = {
-		teacher: { name: 'Jane Doe', initials: 'JD', email: 'jane@mahela.com', phone: '+98 912 000 0000', gender: 'female' },
-		student: { name: 'Elena Kim', initials: 'EK', email: 'elena@example.com', phone: '+98 912 111 1111', gender: 'female' },
-		admin: { name: 'Site Admin', initials: 'SA', email: 'admin@mahela.com', phone: '+98 912 222 2222', gender: 'female' }
-	};
+	function currentUserData() {
+		var role = currentRole();
+		if ( role === 'teacher' ) { return window.mahtelaRoster.loadTeachers()[ CURRENT_TEACHER_ID ]; }
+		if ( role === 'student' ) { return window.mahtelaRoster.loadStudents()[ 'elena' ]; }
+		return window.mahtelaRoster.loadAdminProfile();
+	}
+
+	function saveCurrentUserData( fields ) {
+		var role = currentRole();
+		if ( role === 'teacher' ) {
+			var teachers = window.mahtelaRoster.loadTeachers();
+			var teacher = teachers[ CURRENT_TEACHER_ID ];
+			if ( ! teacher ) { return; }
+			teacher.name = fields.name;
+			teacher.email = fields.email;
+			teacher.phone = fields.phone;
+			teacher.gender = fields.gender;
+			// Display Name and Full Name are the same field now (no more
+			// duplicate input) -- keep the portfolio's own copy in sync too,
+			// since public-facing pages read displayName specifically.
+			if ( teacher.portfolio ) { teacher.portfolio.displayName = fields.name; }
+			window.mahtelaRoster.saveTeachers( teachers );
+			return;
+		}
+		if ( role === 'student' ) {
+			var students = window.mahtelaRoster.loadStudents();
+			var student = students.elena;
+			if ( ! student ) { return; }
+			student.name = fields.name;
+			student.email = fields.email;
+			student.phone = fields.phone;
+			student.gender = fields.gender;
+			window.mahtelaRoster.saveStudents( students );
+			return;
+		}
+		var admin = window.mahtelaRoster.loadAdminProfile();
+		admin.name = fields.name;
+		admin.email = fields.email;
+		admin.phone = fields.phone;
+		admin.gender = fields.gender;
+		window.mahtelaRoster.saveAdminProfile( admin );
+	}
+
+	function updateSidebarUserDisplay() {
+		var role = currentRole();
+		var user = currentUserData();
+		if ( ! user ) { return; }
+		var nameEl = document.getElementById( 'sidebar-name-' + role );
+		if ( nameEl ) { nameEl.textContent = user.name; }
+	}
 
 	function renderProfile() {
 		var role = currentRole();
-		var user = USERS[ role ];
+		var user = currentUserData();
+		if ( ! user ) { return; }
 
 		document.documentElement.setAttribute( 'data-role', role );
 
@@ -490,14 +508,22 @@
 		document.getElementById( 'profile-gender-scope' ).setAttribute( 'data-gender', user.gender );
 
 		renderPhotoPreview();
+		updateSidebarUserDisplay();
 		document.getElementById( 'field-full-name' ).value = user.name;
 		document.getElementById( 'field-email' ).value = user.email;
 		document.getElementById( 'field-phone' ).value = user.phone;
 		document.getElementById( 'field-gender' ).value = user.gender;
 
-		document.getElementById( 'settings-tab-toggle' ).style.display = role === 'teacher' ? '' : 'none';
-		document.getElementById( 'settings-profile-columns' ).classList.toggle( 'is-split', role === 'teacher' );
-		if ( role === 'teacher' ) {
+		var isTeacher = role === 'teacher';
+		document.getElementById( 'intro-title-field' ).style.display = isTeacher ? '' : 'none';
+		document.getElementById( 'about-me-field' ).style.display = isTeacher ? '' : 'none';
+		document.getElementById( 'portfolio-only-fields' ).style.display = isTeacher ? '' : 'none';
+		document.getElementById( 'portfolio-status-badge' ).style.display = isTeacher ? '' : 'none';
+		document.getElementById( 'settings-profile-sub' ).textContent = window.mahtelaI18n.dict[ isTeacher ? 'settings_profile_sub' : 'settings_profile_sub_basic' ][ window.mahtelaI18n.currentLang() ];
+		document.getElementById( 'profile-save-btn' ).textContent = window.mahtelaI18n.dict[ isTeacher ? 'portfolio_save_draft' : 'settings_save_details' ][ window.mahtelaI18n.currentLang() ];
+
+		document.getElementById( 'settings-tab-toggle' ).style.display = isTeacher ? '' : 'none';
+		if ( isTeacher ) {
 			var requestedTab = new URLSearchParams( window.location.search ).get( 'tab' );
 			activateSettingsTab( [ 'profile', 'blog' ].indexOf( requestedTab ) !== -1 ? requestedTab : 'profile' );
 		}
@@ -509,7 +535,6 @@
 			b.classList.toggle( 'is-active', isMatch );
 			b.setAttribute( 'aria-checked', isMatch ? 'true' : 'false' );
 		} );
-		document.getElementById( 'settings-panel-account' ).style.display = tab === 'profile' ? '' : 'none';
 		document.getElementById( 'settings-panel-portfolio' ).style.display = tab === 'profile' ? '' : 'none';
 		document.getElementById( 'settings-panel-blog' ).style.display = tab === 'blog' ? '' : 'none';
 	}
@@ -588,12 +613,14 @@
 
 	function renderPhotoPreview() {
 		var role = currentRole();
+		var user = currentUserData();
+		var initials = user ? window.mahtelaRoster.initials( user.name ) : '';
 		var photo = getPersistedPhoto( role );
-		photoPreview.innerHTML = photo ? '<img src="' + photo + '" alt="">' : USERS[ role ].initials;
+		photoPreview.innerHTML = photo ? '<img src="' + photo + '" alt="">' : initials;
 
 		var sidebarAvatarEl = document.getElementById( 'sidebar-avatar-' + role );
 		if ( sidebarAvatarEl ) {
-			sidebarAvatarEl.innerHTML = photo ? '<img src="' + photo + '" alt="" style="width:100%; height:100%; object-fit:cover;">' : USERS[ role ].initials;
+			sidebarAvatarEl.innerHTML = photo ? '<img src="' + photo + '" alt="" style="width:100%; height:100%; object-fit:cover;">' : initials;
 		}
 	}
 
@@ -725,12 +752,6 @@
 		document.getElementById( 'profile-gender-scope' ).setAttribute( 'data-gender', e.target.value );
 	} );
 
-	document.getElementById( 'details-form' ).addEventListener( 'submit', function ( e ) {
-		e.preventDefault();
-		if ( ! window.mahtelaValidate.validateForm( e.target ) ) { return; }
-		mahtelaToast( 'Profile details saved.' );
-	} );
-
 	document.getElementById( 'password-form' ).addEventListener( 'submit', function ( e ) {
 		e.preventDefault();
 		var newPw = document.getElementById( 'field-new-password' ).value;
@@ -774,7 +795,6 @@
 		if ( ! teacher ) { return; }
 		var p = teacher.portfolio || defaultPortfolio( teacher );
 
-		document.getElementById( 'portfolio-display-name' ).value = p.displayName || teacher.name;
 		document.getElementById( 'portfolio-intro-title' ).value = p.introTitle || '';
 		document.getElementById( 'portfolio-about' ).value = p.aboutMe || '';
 		document.querySelectorAll( '#portfolio-languages-group input' ).forEach( function ( cb ) {
@@ -794,36 +814,59 @@
 		renderPortfolioStatusBadge( !! p.published );
 	}
 
-	document.getElementById( 'portfolio-form' ).addEventListener( 'submit', function ( e ) {
+	document.getElementById( 'profile-form' ).addEventListener( 'submit', function ( e ) {
 		e.preventDefault();
-		var teachers = window.mahtelaRoster.loadTeachers();
-		var teacher = teachers[ CURRENT_TEACHER_ID ];
-		if ( ! teacher ) { return; }
+		if ( ! window.mahtelaValidate.validateForm( e.target ) ) { return; }
 
-		var languages = Array.prototype.filter.call( document.querySelectorAll( '#portfolio-languages-group input' ), function ( cb ) { return cb.checked; } ).map( function ( cb ) { return cb.value; } );
-		var classTypes = Array.prototype.filter.call( document.querySelectorAll( '#portfolio-classtype-group input' ), function ( cb ) { return cb.checked; } ).map( function ( cb ) { return cb.value; } );
+		var role = currentRole();
+		var lang = window.mahtelaI18n.currentLang();
 
-		teacher.portfolio = {
-			displayName: document.getElementById( 'portfolio-display-name' ).value.trim(),
-			introTitle: document.getElementById( 'portfolio-intro-title' ).value.trim(),
-			aboutMe: document.getElementById( 'portfolio-about' ).value.trim(),
-			languages: languages,
-			classTypes: classTypes,
-			priceUnit: document.getElementById( 'portfolio-price-unit' ).value,
-			yearsExperience: parseInt( document.getElementById( 'portfolio-years-experience' ).value, 10 ) || 0,
-			sessionDuration: parseInt( document.getElementById( 'portfolio-session-duration' ).value, 10 ) || 60,
-			sessionPrice: parseInt( document.getElementById( 'portfolio-session-price' ).value.replace( /[^0-9]/g, '' ), 10 ) || 0,
-			specialties: document.getElementById( 'portfolio-specialties' ).value.trim(),
-			certificates: document.getElementById( 'portfolio-certificates' ).value.trim(),
-			education: document.getElementById( 'portfolio-education' ).value.trim(),
-			published: document.getElementById( 'portfolio-published' ).checked
-		};
-		window.mahtelaRoster.saveTeachers( teachers );
-		renderPortfolioStatusBadge( teacher.portfolio.published );
-		mahtelaToast( window.mahtelaI18n.dict.portfolio_saved_toast[ window.mahtelaI18n.currentLang() ] );
+		// Read every field from the DOM up front, before any save call --
+		// saving triggers a "data changed" event that re-populates these
+		// same portfolio fields from storage, which would otherwise wipe
+		// out the not-yet-saved new values before this handler gets to
+		// them.
+		var nameValue = document.getElementById( 'field-full-name' ).value.trim();
+		var emailValue = document.getElementById( 'field-email' ).value.trim();
+		var phoneValue = document.getElementById( 'field-phone' ).value.trim();
+		var genderValue = document.getElementById( 'field-gender' ).value;
+
+		var portfolioValues = null;
+		if ( role === 'teacher' ) {
+			portfolioValues = {
+				introTitle: document.getElementById( 'portfolio-intro-title' ).value.trim(),
+				aboutMe: document.getElementById( 'portfolio-about' ).value.trim(),
+				languages: Array.prototype.filter.call( document.querySelectorAll( '#portfolio-languages-group input' ), function ( cb ) { return cb.checked; } ).map( function ( cb ) { return cb.value; } ),
+				classTypes: Array.prototype.filter.call( document.querySelectorAll( '#portfolio-classtype-group input' ), function ( cb ) { return cb.checked; } ).map( function ( cb ) { return cb.value; } ),
+				priceUnit: document.getElementById( 'portfolio-price-unit' ).value,
+				yearsExperience: parseInt( document.getElementById( 'portfolio-years-experience' ).value, 10 ) || 0,
+				sessionDuration: parseInt( document.getElementById( 'portfolio-session-duration' ).value, 10 ) || 60,
+				sessionPrice: parseInt( document.getElementById( 'portfolio-session-price' ).value.replace( /[^0-9]/g, '' ), 10 ) || 0,
+				specialties: document.getElementById( 'portfolio-specialties' ).value.trim(),
+				certificates: document.getElementById( 'portfolio-certificates' ).value.trim(),
+				education: document.getElementById( 'portfolio-education' ).value.trim(),
+				published: document.getElementById( 'portfolio-published' ).checked
+			};
+		}
+
+		saveCurrentUserData( { name: nameValue, email: emailValue, phone: phoneValue, gender: genderValue } );
+
+		if ( role === 'teacher' ) {
+			var teachers = window.mahtelaRoster.loadTeachers();
+			var teacher = teachers[ CURRENT_TEACHER_ID ];
+			if ( teacher ) {
+				portfolioValues.displayName = teacher.name;
+				teacher.portfolio = portfolioValues;
+				window.mahtelaRoster.saveTeachers( teachers );
+				renderPortfolioStatusBadge( teacher.portfolio.published );
+			}
+		}
+
+		updateSidebarUserDisplay();
+		mahtelaToast( window.mahtelaI18n.dict[ role === 'teacher' ? 'portfolio_saved_toast' : 'settings_details_saved' ][ lang ] );
 	} );
 
-	if ( document.getElementById( 'portfolio-form' ) ) {
+	if ( currentRole() === 'teacher' ) {
 		loadPortfolioForm();
 		document.addEventListener( 'mahtela:teacherschange', loadPortfolioForm );
 	}

@@ -88,6 +88,24 @@
 		return LEVELS[ levelCode ] || LEVELS.A1;
 	}
 
+	var ADMIN_PROFILE_KEY = 'mahtela-admin-profile';
+	var DEFAULT_ADMIN_PROFILE = { name: 'Site Admin', email: 'admin@mahela.com', phone: '+98 912 222 2222', gender: 'female', photo: null };
+
+	function loadAdminProfile() {
+		try {
+			var raw = localStorage.getItem( ADMIN_PROFILE_KEY );
+			if ( raw ) { return JSON.parse( raw ); }
+		} catch ( e ) { /* fall through to seed */ }
+		var seeded = JSON.parse( JSON.stringify( DEFAULT_ADMIN_PROFILE ) );
+		localStorage.setItem( ADMIN_PROFILE_KEY, JSON.stringify( seeded ) );
+		return seeded;
+	}
+
+	function saveAdminProfile( profile ) {
+		localStorage.setItem( ADMIN_PROFILE_KEY, JSON.stringify( profile ) );
+		document.dispatchEvent( new CustomEvent( 'mahtela:adminprofilechange' ) );
+	}
+
 	function initials( name ) {
 		return name.split( ' ' ).map( function ( p ) { return p[ 0 ]; } ).join( '' ).slice( 0, 2 ).toUpperCase();
 	}
@@ -120,6 +138,8 @@
 		saveStudents: saveStudents,
 		loadTeachers: loadTeachers,
 		saveTeachers: saveTeachers,
+		loadAdminProfile: loadAdminProfile,
+		saveAdminProfile: saveAdminProfile,
 		levelInfo: levelInfo,
 		levels: LEVELS,
 		initials: initials,

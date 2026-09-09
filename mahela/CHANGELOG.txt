@@ -1,8 +1,52 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.38.0 — Current
+v1.39.0 — Current
 ------------------
+- Found and fixed the real root cause of a reported bug: changing and
+  saving a name in Settings never updated the sidebar and reverted on
+  reload. The entire "Personal Details" section (name, email, phone,
+  gender, for all three roles) had been reading from and "saving" to
+  a hardcoded, static JavaScript object the whole time -- completely
+  disconnected from the app's real, persistent data model. The Save
+  button showed a success toast but never actually wrote anything
+  anywhere. This also meant the sidebar's name text had always been
+  static HTML, never bound to real data at all (only the avatar
+  circle was).
+  Fixed properly rather than patched: added a real data store for the
+  admin profile (which never existed at all before -- the app had no
+  persistent admin record), wired Personal Details to load from and
+  save to each role's actual record, and made the sidebar's name text
+  update live the moment a save succeeds.
+- Merged the Profile tab into one section, per explicit request:
+  photo, personal details, and the public portfolio no longer live in
+  separate cards -- they're one continuous form with one Save button.
+  Removed a genuine duplicate in the process: "Full Name" and the
+  portfolio's separate "Display Name" field were two inputs for the
+  same thing: now it's one field, kept in sync with the portfolio
+  data underneath. Portfolio-specific sections (intro, languages,
+  pricing, credentials, publish) only appear for the teacher role;
+  student and admin still get photo, name, contact info, and password
+  without any portfolio clutter. Password stays its own separate
+  form, since it isn't profile content.
+- Caught a subtle bug of my own while testing this merge: saving the
+  combined form triggered a "data changed" event partway through
+  (from the name/contact save completing first), which re-populated
+  the still-unsaved portfolio fields from old storage before the
+  handler got to read them for the portfolio save -- silently
+  reverting them. Fixed by reading every field from the DOM up front
+  before any save call runs, rather than assuming the DOM stays
+  untouched mid-handler.
+- Verified thoroughly rather than assumed fixed: the exact reported
+  scenario end-to-end (rename, confirm sidebar updates immediately,
+  reload, confirm the name persists) for all three roles; a combined
+  save (name change + portfolio changes together) persisting
+  correctly in one submit; and the specific race-condition scenario
+  that exposed the second bug, re-tested after the fix.
+- Full 21-page load audit run clean.
+
+v1.38.0
+--------
 - New: a full archive system for blog posts, per explicit request.
   The Blog tab is now two columns -- the main post list on the right,
   a new Archive column on the left (same DOM-order pattern as the
