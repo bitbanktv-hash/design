@@ -253,6 +253,7 @@
 		settings_group_basic: { en: 'Basic Info', fa: 'اطلاعات پایه' },
 		settings_group_contact: { en: 'Contact Info', fa: 'اطلاعات تماس' },
 		settings_profile_title: { en: 'Your Profile', fa: 'پروفایل شما' },
+		settings_view_public_profile: { en: 'View My Public Profile →', fa: 'مشاهده‌ی پروفایل عمومی من ←' },
 		settings_profile_sub: { en: 'Manage your photo, details, and public portfolio in one place.', fa: 'عکس، اطلاعات، و پرتفولیوی عمومی‌ات را یکجا مدیریت کن.' },
 		settings_profile_sub_basic: { en: 'Manage your photo, personal details, and password.', fa: 'عکس، اطلاعات شخصی، و رمز عبورت را مدیریت کن.' },
 		settings_details_saved: { en: 'Profile details saved.', fa: 'اطلاعات پروفایل ذخیره شد.' },

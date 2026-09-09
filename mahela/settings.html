@@ -99,7 +99,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.41.0</div>
+			<div class="sidebar__version">MahFLA v1.42.0</div>
 		</div>
 	</aside>
 
@@ -139,7 +139,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.41.0</div>
+			<div class="sidebar__version">MahFLA v1.42.0</div>
 		</div>
 	</aside>
 
@@ -182,7 +182,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.41.0</div>
+			<div class="sidebar__version">MahFLA v1.42.0</div>
 		</div>
 	</aside>
 
@@ -226,7 +226,10 @@
 				<div class="card" style="padding:28px; max-width:820px;">
 					<div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:4px;">
 						<h2 class="settings-section-title" style="margin-bottom:0;" data-i18n="settings_profile_title">Your Profile</h2>
-						<span class="badge" id="portfolio-status-badge" style="display:none;">—</span>
+						<div style="display:flex; align-items:center; gap:10px;">
+							<span class="badge" id="portfolio-status-badge" style="display:none;">—</span>
+							<a href="#" target="_blank" rel="noopener" class="btn btn--ghost btn--small" id="view-public-profile-link" style="display:none;" data-i18n="settings_view_public_profile">View My Public Profile →</a>
+						</div>
 					</div>
 					<p class="page-head__sub" style="margin:6px 0 20px;" id="settings-profile-sub" data-i18n="settings_profile_sub">Manage your photo, details, and public portfolio in one place.</p>
 
@@ -534,6 +537,13 @@
 		document.getElementById( 'about-me-field' ).style.display = isTeacher ? '' : 'none';
 		document.getElementById( 'portfolio-only-fields' ).style.display = isTeacher ? '' : 'none';
 		document.getElementById( 'portfolio-status-badge' ).style.display = isTeacher ? '' : 'none';
+		var viewProfileLink = document.getElementById( 'view-public-profile-link' );
+		if ( isTeacher ) {
+			viewProfileLink.href = 'public-teacher-profile.html?teacher=' + encodeURIComponent( CURRENT_TEACHER_ID );
+			viewProfileLink.style.display = '';
+		} else {
+			viewProfileLink.style.display = 'none';
+		}
 		document.getElementById( 'settings-profile-sub' ).textContent = window.mahtelaI18n.dict[ isTeacher ? 'settings_profile_sub' : 'settings_profile_sub_basic' ][ window.mahtelaI18n.currentLang() ];
 		document.getElementById( 'profile-save-btn' ).textContent = window.mahtelaI18n.dict[ isTeacher ? 'portfolio_save_draft' : 'settings_save_details' ][ window.mahtelaI18n.currentLang() ];
 
