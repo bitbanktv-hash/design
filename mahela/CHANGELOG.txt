@@ -1,8 +1,30 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.42.1 — Current
+v1.42.2 — Current
 ------------------
+- Site-wide audit of every place a monetary amount is displayed, per
+  explicit request, to confirm thousand-separators are applied
+  everywhere -- Toman, Rial, and Dollar alike.
+  Found the shared formatToman/formatCurrency functions, the
+  data-currency attribute pattern used throughout, and the live
+  formatting on price input fields were all already correct (all
+  already go through Intl.NumberFormat). Found and fixed the one
+  genuine gap: a teacher's USD session price on their public profile
+  page and on their card in the public directory/homepage bypassed
+  formatCurrency entirely, concatenating a raw number after "$" --
+  $12500 instead of $12,500. Fixed both to use the same shared,
+  already-correct function Toman prices were already using.
+- Verified directly with a large USD value (not the small seed value,
+  which was too small to make the bug visible) in both English and
+  Persian, on both the single-teacher page and the directory card.
+- This confirms small fixes like this one get versioned as a patch
+  bump under the current version number rather than a new version
+  title, per explicit instruction going forward.
+- Full 21-page load audit run clean.
+
+v1.42.1
+--------
 - Fixed a real bug reported with screenshots: Settings' sidebar was
   missing the Admin Inbox link entirely for the admin role, present
   on every other admin page -- Settings had simply never had it added

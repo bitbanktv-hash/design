@@ -46,7 +46,7 @@ function renderPublicTeacherCard( t, lang, dict ) {
 	var p = t.portfolio;
 	var langLabel = ( p.languages || [] ).map( function ( code ) { return LANGUAGE_NAMES[ code ] || code; } ).join( ', ' );
 	var classTypeLabel = ( p.classTypes || [] ).map( function ( ct ) { return ct === 'online' ? dict.class_type_online[ lang ] : dict.class_type_in_person[ lang ]; } ).join( ' · ' );
-	var priceLabel = p.priceUnit === 'usd' ? ( '$' + p.sessionPrice ) : window.mahtelaI18n.formatToman( p.sessionPrice, lang );
+	var priceLabel = window.mahtelaI18n.formatCurrency( p.sessionPrice, p.priceUnit, lang );
 
 	var card = document.createElement( 'a' );
 	card.href = 'public-teacher-profile.html?teacher=' + encodeURIComponent( t.id );
