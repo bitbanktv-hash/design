@@ -44,8 +44,6 @@
 		position: absolute; border: 2px solid #fff; box-shadow: 0 0 0 9999px rgba(0,0,0,0.55);
 		border-radius: 50%; cursor: move;
 	}
-	.photo-error { color: #C0453F; font-size: 12.5px; margin-top: 8px; display: none; }
-	.photo-error.is-visible { display: block; }
 </style>
 </head>
 <body>
@@ -101,7 +99,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.39.0</div>
+			<div class="sidebar__version">MahFLA v1.40.0</div>
 		</div>
 	</aside>
 
@@ -141,7 +139,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.39.0</div>
+			<div class="sidebar__version">MahFLA v1.40.0</div>
 		</div>
 	</aside>
 
@@ -184,7 +182,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.39.0</div>
+			<div class="sidebar__version">MahFLA v1.40.0</div>
 		</div>
 	</aside>
 
@@ -276,10 +274,7 @@
 						<div class="form-notice form-notice--info" style="margin-top:-6px; margin-bottom:18px;" data-i18n="settings_contact_required_hint">Email and mobile number are required and used for notifications and contact — please keep them accurate and up to date.</div>
 						<div class="form-field">
 							<label data-i18n="settings_gender" for="field-gender">Gender</label>
-							<select id="field-gender">
-								<option value="female" data-i18n="account_gender_female">Female</option>
-								<option value="male" data-i18n="account_gender_male">Male</option>
-							</select>
+							<select id="field-gender"></select>
 						</div>
 
 						<div id="portfolio-only-fields">
@@ -495,6 +490,26 @@
 		if ( nameEl ) { nameEl.textContent = user.name; }
 	}
 
+	function populateGenderOptions( role, selectedValue ) {
+		var genderSelect = document.getElementById( 'field-gender' );
+		var lang = window.mahtelaI18n.currentLang();
+		var dict = window.mahtelaI18n.dict;
+		var genderOptions = role === 'teacher'
+			? [ [ 'female', dict.gender_teacher_female[ lang ] ], [ 'male', dict.gender_teacher_male[ lang ] ], [ 'other', dict.gender_teacher_other[ lang ] ] ]
+			: [ [ 'female', dict.account_gender_female[ lang ] ], [ 'male', dict.account_gender_male[ lang ] ] ];
+		genderSelect.innerHTML = '';
+		genderOptions.forEach( function ( pair ) {
+			var opt = document.createElement( 'option' );
+			opt.value = pair[ 0 ];
+			opt.textContent = pair[ 1 ];
+			genderSelect.appendChild( opt );
+		} );
+		genderSelect.value = selectedValue;
+	}
+	document.addEventListener( 'mahtela:langchange', function () {
+		populateGenderOptions( currentRole(), document.getElementById( 'field-gender' ).value );
+	} );
+
 	function renderProfile() {
 		var role = currentRole();
 		var user = currentUserData();
@@ -512,7 +527,7 @@
 		document.getElementById( 'field-full-name' ).value = user.name;
 		document.getElementById( 'field-email' ).value = user.email;
 		document.getElementById( 'field-phone' ).value = user.phone;
-		document.getElementById( 'field-gender' ).value = user.gender;
+		populateGenderOptions( role, user.gender );
 
 		var isTeacher = role === 'teacher';
 		document.getElementById( 'intro-title-field' ).style.display = isTeacher ? '' : 'none';

@@ -82,9 +82,11 @@ function renderPublicBlogCard( item, lang, linkOverride ) {
 	var plainText = stripHtmlForSnippet( item.post.body );
 	var snippet = plainText.length > 90 ? plainText.slice( 0, 90 ) + '…' : plainText;
 	card.innerHTML =
+		( item.post.coverImage ? '<div class="public-blog-card__cover"><img src="" alt=""></div>' : '' ) +
 		'<h3 class="public-blog-card__title"></h3>' +
 		'<p class="public-blog-card__snippet"></p>' +
 		'<div class="public-blog-card__author"><span class="public-blog-card__author-avatar"></span><span></span></div>';
+	if ( item.post.coverImage ) { card.querySelector( '.public-blog-card__cover img' ).src = item.post.coverImage; }
 	card.querySelector( '.public-blog-card__title' ).textContent = item.post.title;
 	card.querySelector( '.public-blog-card__snippet' ).textContent = snippet;
 	card.querySelector( '.public-blog-card__author-avatar' ).innerHTML = window.mahtelaRoster.avatarHTML( { photo: item.teacher.photo, name: item.teacher.name }, window.mahtelaRoster.initials( item.teacher.name ) );

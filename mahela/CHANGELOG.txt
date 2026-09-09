@@ -1,8 +1,30 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.39.0 — Current
+v1.40.0 — Current
 ------------------
+- New: a Cover Image field for blog posts, separate from the inline
+  images the rich-text editor already supported within a post's body.
+  This is the thumbnail shown on blog cards -- previously every card
+  on the homepage, the public blog listing, and a single post's own
+  page was text-only, with no visual at all. Upload widget in the
+  editor with its own size/type validation (up to 3MB); shows edge to
+  edge at the top of blog cards site-wide and at the top of a single
+  post's own page. A post without a cover image renders exactly as
+  before -- no gap, no broken layout, verified directly.
+- New: teachers get a third gender option -- Male, Female, Other --
+  distinct from students, per explicit request. Confirmed first that
+  nothing else in the app reads a teacher's gender for any visual or
+  functional purpose (unlike a student's, which drives the
+  pink/teal accent-color system throughout), so this was safe to add
+  without side effects. Also gave teachers cleaner labels ("Male",
+  not "Male/Boy") rather than reusing the student-oriented phrasing
+  verbatim, since "Boy" doesn't fit an adult teacher. Options rebuild
+  correctly on a language switch mid-session, in both directions.
+- Full 21-page load audit run clean.
+
+v1.39.0
+--------
 - Found and fixed the real root cause of a reported bug: changing and
   saving a name in Settings never updated the sidebar and reverted on
   reload. The entire "Personal Details" section (name, email, phone,

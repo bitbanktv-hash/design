@@ -63,7 +63,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.39.0</div>
+			<div class="sidebar__version">MahFLA v1.40.0</div>
 		</div>
 	</aside>
 
@@ -105,6 +105,20 @@
 				<div class="form-field">
 					<label for="blog-post-title"><span class="required-mark">*</span> <span data-i18n="portfolio_post_title">Title</span></label>
 					<input id="blog-post-title" type="text" data-i18n-ph="blogedit_title_ph" placeholder="Give your post a clear title">
+				</div>
+
+				<div class="form-field">
+					<label data-i18n="blogedit_cover_image">Cover Image</label>
+					<div class="blogedit-cover-row">
+						<div class="blogedit-cover-preview" id="cover-preview"></div>
+						<div class="photo-actions">
+							<button type="button" class="btn btn--ghost btn--small" id="cover-upload-btn" data-i18n="blogedit_cover_upload">Upload Cover Image</button>
+							<button type="button" class="btn btn--danger-ghost btn--small" id="cover-remove-btn" data-i18n="settings_remove_photo">Remove</button>
+							<input type="file" id="cover-input" accept="image/*" style="display:none;">
+						</div>
+					</div>
+					<p class="photo-error" id="cover-error"></p>
+					<p style="font-size:11.5px; color:var(--ink-faint); margin-top:8px;" data-i18n="blogedit_cover_note">Shown on blog cards across the site · JPEG, PNG or WEBP · up to 3MB.</p>
 				</div>
 
 				<div class="form-field" style="margin-bottom:6px;">
@@ -274,6 +288,51 @@
 		return teachers[ CURRENT_TEACHER_ID ];
 	}
 
+	/* ---------- Cover image ---------- */
+	var MAX_COVER_BYTES = 3 * 1024 * 1024; // 3MB
+	var currentCoverImage = null;
+	var coverPreview = document.getElementById( 'cover-preview' );
+	var coverError = document.getElementById( 'cover-error' );
+	var COVER_EMPTY_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>';
+
+	function renderCoverPreview() {
+		coverPreview.innerHTML = currentCoverImage ? '<img src="' + currentCoverImage + '" alt="">' : COVER_EMPTY_ICON;
+	}
+	renderCoverPreview();
+
+	document.getElementById( 'cover-upload-btn' ).addEventListener( 'click', function () {
+		document.getElementById( 'cover-input' ).click();
+	} );
+	document.getElementById( 'cover-remove-btn' ).addEventListener( 'click', function () {
+		currentCoverImage = null;
+		renderCoverPreview();
+	} );
+	document.getElementById( 'cover-input' ).addEventListener( 'change', function ( e ) {
+		var lang = window.mahtelaI18n.currentLang();
+		coverError.classList.remove( 'is-visible' );
+		var file = e.target.files && e.target.files[ 0 ];
+		if ( ! file ) { return; }
+		if ( ! /^image\/(jpeg|png|webp)$/.test( file.type ) ) {
+			coverError.textContent = window.mahtelaI18n.dict.photo_error_type[ lang ];
+			coverError.classList.add( 'is-visible' );
+			e.target.value = '';
+			return;
+		}
+		if ( file.size > MAX_COVER_BYTES ) {
+			coverError.textContent = window.mahtelaI18n.dict.blogedit_cover_too_large[ lang ];
+			coverError.classList.add( 'is-visible' );
+			e.target.value = '';
+			return;
+		}
+		var reader = new FileReader();
+		reader.onload = function () {
+			currentCoverImage = reader.result;
+			renderCoverPreview();
+		};
+		reader.readAsDataURL( file );
+		e.target.value = '';
+	} );
+
 	( function loadForEdit() {
 		var id = getPostId();
 		if ( ! id ) { return; }
@@ -283,6 +342,8 @@
 		document.getElementById( 'blog-post-id' ).value = post.id;
 		document.getElementById( 'blog-post-title' ).value = post.title;
 		surface.innerHTML = post.body;
+		currentCoverImage = post.coverImage || null;
+		renderCoverPreview();
 		document.getElementById( 'blogedit-published' ).checked = post.published !== false;
 		var lang = window.mahtelaI18n.currentLang();
 		document.getElementById( 'blogedit-heading' ).textContent = window.mahtelaI18n.dict.portfolio_edit_post_title[ lang ];
@@ -313,9 +374,9 @@
 		var published = document.getElementById( 'blogedit-published' ).checked;
 		if ( id ) {
 			var existing = teacher.blogPosts.filter( function ( p ) { return p.id === id; } )[ 0 ];
-			if ( existing ) { existing.title = title; existing.body = body; existing.published = published; }
+			if ( existing ) { existing.title = title; existing.body = body; existing.published = published; existing.coverImage = currentCoverImage; }
 		} else {
-			teacher.blogPosts.unshift( { id: 'post' + Date.now(), title: title, body: body, createdAt: new Date().toISOString().slice( 0, 10 ), published: published } );
+			teacher.blogPosts.unshift( { id: 'post' + Date.now(), title: title, body: body, createdAt: new Date().toISOString().slice( 0, 10 ), published: published, coverImage: currentCoverImage } );
 		}
 		window.mahtelaRoster.saveTeachers( teachers );
 		window.location.href = 'settings.html?role=teacher&tab=blog';

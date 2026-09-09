@@ -59,6 +59,7 @@
 	<div class="public-blog-post">
 		<a href="public-blog.html" class="public-section__link" style="display:inline-block; margin-bottom:20px;" data-i18n="blog_back_to_all">← All posts</a>
 		<h1 class="public-blog-post__title" id="post-title"></h1>
+		<div class="public-blog-post__cover" id="post-cover" style="display:none;"><img id="post-cover-img" src="" alt=""></div>
 		<div class="public-blog-post__author">
 			<span class="public-teacher-card__avatar" id="post-author-avatar" style="width:38px; height:38px;"></span>
 			<div>
@@ -116,6 +117,13 @@
 	function renderPostView( item ) {
 		var lang = window.mahtelaI18n.currentLang();
 		document.getElementById( 'post-title' ).textContent = item.post.title;
+		var coverEl = document.getElementById( 'post-cover' );
+		if ( item.post.coverImage ) {
+			document.getElementById( 'post-cover-img' ).src = item.post.coverImage;
+			coverEl.style.display = '';
+		} else {
+			coverEl.style.display = 'none';
+		}
 		document.getElementById( 'post-author-avatar' ).innerHTML = window.mahtelaRoster.avatarHTML( { photo: item.teacher.photo, name: item.teacher.name }, window.mahtelaRoster.initials( item.teacher.name ) );
 		document.getElementById( 'post-author-name' ).textContent = item.teacher.name;
 		document.getElementById( 'post-date' ).setAttribute( 'data-date', item.post.createdAt );
