@@ -92,13 +92,34 @@
 	var DEFAULT_ADMIN_PROFILE = { name: 'Site Admin', email: 'admin@mahela.com', phone: '+98 912 222 2222', gender: 'female', photo: null };
 
 	function loadAdminProfile() {
+		var profile;
 		try {
 			var raw = localStorage.getItem( ADMIN_PROFILE_KEY );
-			if ( raw ) { return JSON.parse( raw ); }
+			if ( raw ) { profile = JSON.parse( raw ); }
 		} catch ( e ) { /* fall through to seed */ }
-		var seeded = JSON.parse( JSON.stringify( DEFAULT_ADMIN_PROFILE ) );
-		localStorage.setItem( ADMIN_PROFILE_KEY, JSON.stringify( seeded ) );
-		return seeded;
+		if ( ! profile ) {
+			profile = JSON.parse( JSON.stringify( DEFAULT_ADMIN_PROFILE ) );
+		}
+		// One-time migration: an earlier version stored the admin's photo
+		// under its own separate key, before this profile record existed
+		// as a single unified object the way teacher/student records
+		// always have. Fold it in here so every page that reads the
+		// profile sees the photo too, not just the one place that knew
+		// to check the old key.
+		if ( ! profile.photo ) {
+			try {
+				var legacyPhoto = localStorage.getItem( 'mahtela-admin-photo' );
+				if ( legacyPhoto ) {
+					profile.photo = legacyPhoto;
+					localStorage.setItem( ADMIN_PROFILE_KEY, JSON.stringify( profile ) );
+					localStorage.removeItem( 'mahtela-admin-photo' );
+				}
+			} catch ( e ) { /* ignore */ }
+		}
+		if ( ! localStorage.getItem( ADMIN_PROFILE_KEY ) ) {
+			localStorage.setItem( ADMIN_PROFILE_KEY, JSON.stringify( profile ) );
+		}
+		return profile;
 	}
 
 	function saveAdminProfile( profile ) {

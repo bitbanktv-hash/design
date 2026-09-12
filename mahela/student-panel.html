@@ -74,7 +74,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.42.2</div>
+			<div class="sidebar__version">MahFLA v1.42.3</div>
 		</div>
 	</aside>
 
@@ -440,7 +440,8 @@
 			var isMine = m.dir === 'in';
 			var bubble = document.createElement( 'div' );
 			bubble.className = 'message-bubble message-bubble--' + ( isMine ? 'out' : 'in' );
-			var teacherAvatar = '<span class="message-bubble__avatar" style="background:var(--brand); color:var(--on-brand);">JD</span>';
+			var teacher = myTeacher();
+			var teacherAvatar = '<span class="message-bubble__avatar" style="background:var(--brand); color:var(--on-brand);">' + ( teacher ? window.mahtelaRoster.avatarHTML( teacher, window.mahtelaRoster.initials( teacher.name ) ) : 'JD' ) + '</span>';
 			var mineAvatar = '<span class="message-bubble__avatar" style="background:var(--student-accent); color:var(--c-ink);">' + convo.initials + '</span>';
 			bubble.innerHTML = ( isMine ? '' : teacherAvatar ) +
 				'<div class="message-bubble__content"><div class="message-bubble__text">' + m.html + '</div><span class="message-bubble__time">' + m.time + '</span></div>' +
@@ -452,6 +453,7 @@
 
 	renderMessagesTab();
 	document.addEventListener( 'mahtela:messageschange', renderMessagesTab );
+	document.addEventListener( 'mahtela:teacherschange', renderMessagesTab );
 
 	function sendMessage( e ) {
 		e.preventDefault();

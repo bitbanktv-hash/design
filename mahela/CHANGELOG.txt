@@ -1,8 +1,45 @@
 MahFLA Prototype — Changelog
 ==============================
 
-v1.42.2 — Current
+v1.42.3 — Current
 ------------------
+- Fixed a real bug reported with a screenshot: a teacher's chat
+  bubbles in student-detail.html's own Messages tab still showed a
+  hardcoded "JD" avatar, never updating to the real name or photo.
+  This is the same bug fixed for messages.html a few versions back --
+  but that was a different file with its own separate, duplicated
+  copy of the same rendering logic, missed at the time. Searched the
+  whole codebase this time rather than assuming one fix covered every
+  instance, and found a second, previously-unreported copy of the
+  identical bug in student-panel.html (a student's own view of their
+  teacher's messages). Fixed all three consistently, using the same
+  real-data avatar rendering, and added the same missing
+  teacherschange listener to messages.html and student-panel.html so
+  an open chat's avatar updates live if the teacher's data changes
+  while it's open, not just on next load.
+- Fixed a second real bug, also reported with screenshots: an admin's
+  uploaded profile photo only ever appeared while actually on the
+  Settings page itself, reverting to plain initials everywhere else.
+  Root cause: the admin's photo had been stored under its own
+  separate, standalone key from before the admin profile was a real
+  unified record -- so the newer code that reads the admin profile on
+  every other page never saw it, since photo isn't part of that
+  record. Consolidated: photo is now part of the same profile object
+  teacher and student records have always kept it in, read and
+  written through the same functions everywhere. Added a one-time
+  migration for anyone who already had a photo saved under the old
+  key, so it carries over automatically rather than appearing lost.
+- Verified directly: renamed the teacher and gave a photo, then
+  confirmed all three previously-broken chat views show it instead of
+  "JD"; separately set an admin photo and confirmed it now appears on
+  all four admin pages and student-detail.html's admin-viewer
+  footer, not just Settings; ran the legacy-key migration scenario
+  explicitly and confirmed the old key is cleaned up and the photo
+  carries over correctly.
+- Full 21-page load audit run clean.
+
+v1.42.2
+--------
 - Site-wide audit of every place a monetary amount is displayed, per
   explicit request, to confirm thousand-separators are applied
   everywhere -- Toman, Rial, and Dollar alike.

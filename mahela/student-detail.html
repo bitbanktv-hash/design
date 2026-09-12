@@ -115,7 +115,7 @@
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
 				<span data-i18n="nav_logout">Log Out</span>
 			</a>
-			<div class="sidebar__version">MahFLA v1.42.2</div>
+			<div class="sidebar__version">MahFLA v1.42.3</div>
 		</div>
 	</aside>
 
@@ -1071,6 +1071,7 @@
 	function renderMessagesTab() {
 		var key = currentStudentKey();
 		var student = STUDENTS[ key ];
+		var teacher = window.mahtelaRoster.loadTeachers()[ 'jane' ];
 		var convos = window.mahtelaData.loadConversations();
 		var messages = ( convos[ key ] && convos[ key ].messages ) ? convos[ key ].messages : [];
 		var thread = document.getElementById( 'chat-thread' );
@@ -1080,8 +1081,8 @@
 		messages.forEach( function ( m ) {
 			var bubble = document.createElement( 'div' );
 			bubble.className = 'message-bubble message-bubble--' + m.dir;
-			var avatarIn = m.dir === 'in' ? '<span class="message-bubble__avatar">' + student.initials + '</span>' : '';
-			var avatarOut = m.dir === 'out' ? '<span class="message-bubble__avatar" style="background:var(--brand); color:var(--on-brand);">JD</span>' : '';
+			var avatarIn = m.dir === 'in' ? '<span class="message-bubble__avatar">' + window.mahtelaRoster.avatarHTML( student, student.initials ) + '</span>' : '';
+			var avatarOut = m.dir === 'out' ? '<span class="message-bubble__avatar" style="background:var(--brand); color:var(--on-brand);">' + window.mahtelaRoster.avatarHTML( teacher, window.mahtelaRoster.initials( teacher.name ) ) + '</span>' : '';
 			bubble.innerHTML = avatarIn +
 				'<div class="message-bubble__content"><div class="message-bubble__text">' + m.html + '</div><span class="message-bubble__time">' + m.time + '</span></div>' +
 				avatarOut;
@@ -1092,6 +1093,7 @@
 
 	renderMessagesTab();
 	document.addEventListener( 'mahtela:messageschange', renderMessagesTab );
+	document.addEventListener( 'mahtela:teacherschange', renderMessagesTab );
 </script>
 </body>
 </html>
